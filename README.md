@@ -19,8 +19,8 @@ visually appealing. I recently moved to a Tiling Window Manager(Qtile)
 from Fluxbox and was very impressed with the amount of visual
 customization it provided. I then started doing some research into 
 color themes and found that many Linux tools, such as Terminal Emulators, 
-also can use color themes and many of can use the "same" theme. So 
-ThemeSwitcher came from the motivation of wanting an easier way to 
-manage and apply themes across these applications that support it as well
-as having already built an NCurses windowing framework in a different
-project.
+also use themes and can apply the "same" color palettes. So ThemeSwitcher
+came from this main motivation of wanting an easier way to manage and apply 
+color themes across Linux applications that support them. Secondly, I have
+having already built an NCurses windowing framework in a different
+project that would accelerate the development process.
