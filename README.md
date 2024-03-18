@@ -22,5 +22,5 @@ color themes and found that many Linux tools, such as Terminal Emulators,
 also use themes and can apply the "same" color palettes. So ThemeSwitcher
 came from this main motivation of wanting an easier way to manage and apply 
 color themes across Linux applications that support them. Secondly, I have
-having already built an NCurses windowing framework in a different
-project that would accelerate the development process.
+already built an NCurses windowing framework in a different project that
+will accelerate the development process.
