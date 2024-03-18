@@ -98,7 +98,7 @@ int main()
 #if _CURSES
       // clear windows before printing
       clearAllWins(wins);
-
+      updateWinDimensions(wins);
       // draw the windows as boxes
       drawBoxes(wins);
 
