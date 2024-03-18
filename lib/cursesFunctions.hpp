@@ -9,6 +9,11 @@ void initializeCurses();
 void initializeStartingWindows(std::unordered_map<int, CursesWindow*>& wins);
 void refreshAllWins(const std::unordered_map<int, CursesWindow*>& wins);
 void clearAllWins(const std::unordered_map<int, CursesWindow*>& wins);
+void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
+                               const int& numLines,
+                               const int& numCols,
+                               const int& startY,
+                               const int& startX);
 void updateWinDimensions(const std::unordered_map<int, CursesWindow*>& wins);
 void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins);
 
