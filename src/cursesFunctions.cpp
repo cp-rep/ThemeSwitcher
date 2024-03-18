@@ -85,6 +85,33 @@ void initializeWins(std::unordered_map<int, CursesWindow*>& wins)
 
 
 
+/*
+  Function:
+   defineWins
+
+  Description:
+   Defines the incoming wins object with starting dimension values.  This is
+   intended to be used strictly with the "Main Wins" constants from the _WINS
+   enumeration structure from the _cursesWinConsts.hpp file.
+
+  Input/Output:
+   wins                     - A reference to an unordered map <int, CursesWindow*>
+                              object type that will be used to store each
+                              CursesWindow object initialized in this function.  The
+                              keys are from _cursesWinConsts.hpp and match the
+                              corresponding CursesWindow objects they are pointing
+                              to.
+   NONE
+
+  Input:
+   NONE
+
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
 void defineWins(std::unordered_map<int, CursesWindow*>& wins)
 {
   int numLines = 0;
