@@ -522,8 +522,13 @@ void updateSavedFilesWinDimensions(const std::unordered_map<int, CursesWindow*>&
                                    const int& numLines,
                                    const int& numCols)
 {
-  if(wins.at(_SAVEDFILESWIN)->getNumCols() + wins.at(_SAVEDFILESWIN)->getStartX() > numCols ||
-     wins.at(_SAVEDFILESWIN)->getStartY() + wins.at(_SAVEDFILESWIN)->getNumLines() >= numLines)
+  const int savedFilesWinCols = wins.at(_SAVEDFILESWIN)->getNumCols();
+  const int savedFilesWinLines = wins.at(_SAVEDFILESWIN)->getNumLines();
+  const int savedFilesWinStartX = wins.at(_SAVEDFILESWIN)->getStartX();
+  const int savedFilesWinStartY = wins.at(_SAVEDFILESWIN)->getStartY();
+
+  if(savedFilesWinCols + savedFilesWinStartX > numCols ||
+     savedFilesWinStartY + savedFilesWinLines >= numLines)
     {
       wins.at(_SAVEDFILESWIN)->deleteWindow();
       wins.at(_SAVEDFILESWIN)->setWindow(nullptr);
@@ -532,15 +537,15 @@ void updateSavedFilesWinDimensions(const std::unordered_map<int, CursesWindow*>&
     {
       if(wins.at(_SAVEDFILESWIN)->getWindow() == nullptr)
         {
-          wins.at(_SAVEDFILESWIN)->defineWindow(newwin(wins.at(_SAVEDFILESWIN)->getNumLines(),
-                                                   wins.at(_SAVEDFILESWIN)->getNumCols(),
-                                                   wins.at(_SAVEDFILESWIN)->getStartY(),
-                                                   wins.at(_SAVEDFILESWIN)->getStartX()),
-                                            wins.at(_SAVEDFILESWIN)->getWindowName(),
-                                            wins.at(_SAVEDFILESWIN)->getNumLines(),
-                                            wins.at(_SAVEDFILESWIN)->getNumCols(),
-                                            wins.at(_SAVEDFILESWIN)->getStartY(),
-                                            wins.at(_SAVEDFILESWIN)->getStartX());
+          wins.at(_SAVEDFILESWIN)->defineWindow(newwin(savedFilesWinLines,
+                                                     savedFilesWinCols,
+                                                     savedFilesWinStartY,
+                                                     savedFilesWinStartX),
+                                              wins.at(_SAVEDFILESWIN)->getWindowName(),
+                                              savedFilesWinLines,
+                                              savedFilesWinCols,
+                                              savedFilesWinStartY,
+                                              savedFilesWinStartX);
         }
     }
 } // end of "updateSavedFilesWinDimensions"
@@ -581,25 +586,30 @@ void updateSavedThemesWinDimensions(const std::unordered_map<int, CursesWindow*>
                                     const int& numLines,
                                     const int& numCols)
 {
-  if(wins.at(_SAVEDTHEMESWIN)->getNumCols() + wins.at(_SAVEDTHEMESWIN)->getStartX() > numCols ||
-     wins.at(_SAVEDTHEMESWIN)->getStartY() + wins.at(_SAVEDTHEMESWIN)->getNumLines() >= numLines)
+  const int savedThemesWinCols = wins.at(_SAVEDFILESWIN)->getNumCols();
+  const int savedThemesWinLines = wins.at(_SAVEDFILESWIN)->getNumLines();
+  const int savedThemesWinStartX = wins.at(_SAVEDFILESWIN)->getStartX();
+  const int savedThemesWinStartY = wins.at(_SAVEDFILESWIN)->getStartY();
+
+  if(savedThemesWinCols + savedThemesWinStartX > numCols ||
+     savedThemesWinStartY + savedThemesWinLines >= numLines)
     {
-      wins.at(_SAVEDTHEMESWIN)->deleteWindow();
-      wins.at(_SAVEDTHEMESWIN)->setWindow(nullptr);
+      wins.at(_SAVEDFILESWIN)->deleteWindow();
+      wins.at(_SAVEDFILESWIN)->setWindow(nullptr);
     }
   else
     {
-      if(wins.at(_SAVEDTHEMESWIN)->getWindow() == nullptr)
+      if(wins.at(_SAVEDFILESWIN)->getWindow() == nullptr)
         {
-          wins.at(_SAVEDTHEMESWIN)->defineWindow(newwin(wins.at(_SAVEDTHEMESWIN)->getNumLines(),
-                                                   wins.at(_SAVEDTHEMESWIN)->getNumCols(),
-                                                   wins.at(_SAVEDTHEMESWIN)->getStartY(),
-                                                   wins.at(_SAVEDTHEMESWIN)->getStartX()),
-                                            wins.at(_SAVEDTHEMESWIN)->getWindowName(),
-                                            wins.at(_SAVEDTHEMESWIN)->getNumLines(),
-                                            wins.at(_SAVEDTHEMESWIN)->getNumCols(),
-                                            wins.at(_SAVEDTHEMESWIN)->getStartY(),
-                                            wins.at(_SAVEDTHEMESWIN)->getStartX());
+          wins.at(_SAVEDFILESWIN)->defineWindow(newwin(savedThemesWinLines,
+                                                       savedThemesWinCols,
+                                                       savedThemesWinStartY,
+                                                       savedThemesWinStartX),
+                                                wins.at(_SAVEDFILESWIN)->getWindowName(),
+                                                savedThemesWinLines,
+                                                savedThemesWinCols,
+                                                savedThemesWinStartY,
+                                                savedThemesWinStartX);
         }
     }
 } // end of "updateSavedThemesWinDimensions"
