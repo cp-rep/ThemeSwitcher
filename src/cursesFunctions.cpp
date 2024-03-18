@@ -458,8 +458,13 @@ void updateProgramsWinDimensions(const std::unordered_map<int, CursesWindow*>& w
                                  const int& numLines,
                                  const int& numCols)
 {
-  if(wins.at(_PROGRAMSWIN)->getNumCols() + wins.at(_PROGRAMSWIN)->getStartX() > numCols ||
-     wins.at(_PROGRAMSWIN)->getStartY() + wins.at(_PROGRAMSWIN)->getNumLines() >= numLines)
+  const int programsWinCols = wins.at(_PROGRAMSWIN)->getNumCols();
+  const int programsWinLines = wins.at(_PROGRAMSWIN)->getNumLines();
+  const int programsWinStartX = wins.at(_PROGRAMSWIN)->getStartX();
+  const int programsWinStartY = wins.at(_PROGRAMSWIN)->getStartY();
+
+  if(programsWinCols + programsWinStartX > numCols ||
+     programsWinStartY + programsWinLines >= numLines)
     {
       wins.at(_PROGRAMSWIN)->deleteWindow();
       wins.at(_PROGRAMSWIN)->setWindow(nullptr);
@@ -468,15 +473,15 @@ void updateProgramsWinDimensions(const std::unordered_map<int, CursesWindow*>& w
     {
       if(wins.at(_PROGRAMSWIN)->getWindow() == nullptr)
         {
-          wins.at(_PROGRAMSWIN)->defineWindow(newwin(wins.at(_PROGRAMSWIN)->getNumLines(),
-                                                   wins.at(_PROGRAMSWIN)->getNumCols(),
-                                                   wins.at(_PROGRAMSWIN)->getStartY(),
-                                                   wins.at(_PROGRAMSWIN)->getStartX()),
-                                            wins.at(_PROGRAMSWIN)->getWindowName(),
-                                            wins.at(_PROGRAMSWIN)->getNumLines(),
-                                            wins.at(_PROGRAMSWIN)->getNumCols(),
-                                            wins.at(_PROGRAMSWIN)->getStartY(),
-                                            wins.at(_PROGRAMSWIN)->getStartX());
+          wins.at(_PROGRAMSWIN)->defineWindow(newwin(programsWinLines,
+                                                     programsWinCols,
+                                                     programsWinStartY,
+                                                     programsWinStartX),
+                                              wins.at(_PROGRAMSWIN)->getWindowName(),
+                                              programsWinLines,
+                                              programsWinCols,
+                                              programsWinStartY,
+                                              programsWinStartX);
         }
     }
 } // end of "updateProgramsWinDimensions"
