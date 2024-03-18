@@ -57,27 +57,29 @@ void initializeCurses()
    dynamic allocation and stores them in an unordered_map for later use.
 
   Input/Output:
+   mainWins                 - A reference to an unordered map <int, CursesWindow*>
+                              object type that will be used to store each
+                              CursesWindow object initialized in this function.  The
+                              keys are from _cursesWinConsts.hpp and match the
+                              corresponding CursesWindow objects they are pointing
+                              to.
    NONE
 
   Input:
    NONE
 
   Output:
-   wins                 - A reference to an unordered map <int, CursesWindow*>
-                          object type that will be used to store each
-                          CursesWindow object initialized in this function.  The
-                          keys are from _cursesWinConsts.hpp and match the
-                          corresponding CursesWindow objects they are pointing
-                          to.
+   NONE
+
   Returns:
    NONE
 */
-void initializeStartingWindows(std::unordered_map<int, CursesWindow*>& wins)
+void initializeStartingWindows(std::unordered_map<int, CursesWindow*>& mainWins)
 {
   for(int i = _MAINWIN; i <= _SAVEDTHEMESWIN; i++)
     {
       CursesWindow* newWindow = new CursesWindow();
-      wins.insert(std::make_pair(i, newWindow));
+      mainWins.insert(std::make_pair(i, newWindow));
     }
 
   int numLines = 0;
@@ -87,89 +89,89 @@ void initializeStartingWindows(std::unordered_map<int, CursesWindow*>& wins)
 
   // _MAINWIN
   getmaxyx(stdscr, numLines, numCols);
-  wins.at(_MAINWIN)->defineWindow(stdscr,
-                                  "_MAINWIN",
-                                  numLines,
-                                  numCols,
-                                  startY,
-                                  startX);
-  // _HELPWIN
-  numLines = (wins.at(_MAINWIN)->getNumLines() / 2) - 3;
-  numCols = 60;
-  startY = 2;
-  startX =  wins.at(_MAINWIN)->getNumCols() - numCols - 3;
-  wins.at(_HELPWIN)->defineWindow(newwin(numLines,
-                                         numCols,
-                                         startY,
-                                         startX),
-                                  "_HELPWIN",
-                                  numLines,
-                                  numCols,
-                                  startY,
-                                  startX);
-  // _PROGRAMSWIN
-  numLines = (wins.at(_MAINWIN)->getNumLines() / 2) - 2;
-  numCols = 60;
-  startY = wins.at(_HELPWIN)->getNumLines() + 3;
-  startX =  wins.at(_MAINWIN)->getNumCols() - numCols - 3;
-  wins.at(_PROGRAMSWIN)->defineWindow(newwin(numLines,
-                                             numCols,
-                                             startY,
-                                             startX),
-                                      "_PROGRAMSWIN",
+  mainWins.at(_MAINWIN)->defineWindow(stdscr,
+                                      "_MAINWIN",
                                       numLines,
                                       numCols,
                                       startY,
                                       startX);
+  // _HELPWIN
+  numLines = (mainWins.at(_MAINWIN)->getNumLines() / 2) - 3;
+  numCols = 60;
+  startY = 2;
+  startX =  mainWins.at(_MAINWIN)->getNumCols() - numCols - 3;
+  mainWins.at(_HELPWIN)->defineWindow(newwin(numLines,
+                                             numCols,
+                                             startY,
+                                             startX),
+                                      "_HELPWIN",
+                                      numLines,
+                                      numCols,
+                                      startY,
+                                      startX);
+  // _PROGRAMSWIN
+  numLines = (mainWins.at(_MAINWIN)->getNumLines() / 2) - 2;
+  numCols = 60;
+  startY = mainWins.at(_HELPWIN)->getNumLines() + 3;
+  startX =  mainWins.at(_MAINWIN)->getNumCols() - numCols - 3;
+  mainWins.at(_PROGRAMSWIN)->defineWindow(newwin(numLines,
+                                                 numCols,
+                                                 startY,
+                                                 startX),
+                                          "_PROGRAMSWIN",
+                                          numLines,
+                                          numCols,
+                                          startY,
+                                          startX);
   // _PROMPTWIN
   numLines = 6;
-  numCols = wins.at(_MAINWIN)->getNumCols() -
-    wins.at(_HELPWIN)->getNumCols() - 8;
+  numCols = mainWins.at(_MAINWIN)->getNumCols() -
+    mainWins.at(_HELPWIN)->getNumCols() - 8;
   startY = 2;
   startX = 3;
-  wins.at(_PROMPTWIN)->defineWindow(newwin(numLines,
-                                           numCols,
-                                           startY,
-                                           startX),
-                                    "_PROMPTWIN",
-                                    numLines,
-                                    numCols,
-                                    startY,
-                                    startX);
-  // _SAVEDFILESWIN
-  numLines = ((wins.at(_MAINWIN)->getNumLines() -
-               wins.at(_PROMPTWIN)->getNumLines()) / 2) - 3;
-  numCols = wins.at(_MAINWIN)->getNumCols() -
-    wins.at(_HELPWIN)->getNumCols() - 8;
-  startY = wins.at(_PROMPTWIN)->getStartY() +
-    wins.at(_PROMPTWIN)->getNumLines() + 1;
-  startX = 3;
-  wins.at(_SAVEDFILESWIN)->defineWindow(newwin(numLines,
+  mainWins.at(_PROMPTWIN)->defineWindow(newwin(numLines,
                                                numCols,
                                                startY,
                                                startX),
-                                        "_SAVEDFILESWIN",
+                                        "_PROMPTWIN",
                                         numLines,
                                         numCols,
                                         startY,
                                         startX);
-  // _SAVEDTHEMESWIN
-  numLines = ((wins.at(_MAINWIN)->getNumLines() -
-               wins.at(_PROMPTWIN)->getNumLines()) / 2) - 3;
-  numCols = wins.at(_MAINWIN)->getNumCols() -
-    wins.at(_HELPWIN)->getNumCols() - 8;
-  startY = wins.at(_SAVEDFILESWIN)->getStartY() +
-    wins.at(_SAVEDFILESWIN)->getNumLines() + 1;
+  // _SAVEDFILESWIN
+  numLines = ((mainWins.at(_MAINWIN)->getNumLines() -
+               mainWins.at(_PROMPTWIN)->getNumLines()) / 2) - 3;
+  numCols = mainWins.at(_MAINWIN)->getNumCols() -
+    mainWins.at(_HELPWIN)->getNumCols() - 8;
+  startY = mainWins.at(_PROMPTWIN)->getStartY() +
+    mainWins.at(_PROMPTWIN)->getNumLines() + 1;
   startX = 3;
-  wins.at(_SAVEDTHEMESWIN)->defineWindow(newwin(numLines,
-                                                numCols,
-                                                startY,
-                                                startX),
-                                         "_SAVEDTHEMESWIN",
-                                         numLines,
-                                         numCols,
-                                         startY,
-                                         startX);
+  mainWins.at(_SAVEDFILESWIN)->defineWindow(newwin(numLines,
+                                                   numCols,
+                                                   startY,
+                                                   startX),
+                                            "_SAVEDFILESWIN",
+                                            numLines,
+                                            numCols,
+                                            startY,
+                                            startX);
+  // _SAVEDTHEMESWIN
+  numLines = ((mainWins.at(_MAINWIN)->getNumLines() -
+               mainWins.at(_PROMPTWIN)->getNumLines()) / 2) - 3;
+  numCols = mainWins.at(_MAINWIN)->getNumCols() -
+    mainWins.at(_HELPWIN)->getNumCols() - 8;
+  startY = mainWins.at(_SAVEDFILESWIN)->getStartY() +
+    mainWins.at(_SAVEDFILESWIN)->getNumLines() + 1;
+  startX = 3;
+  mainWins.at(_SAVEDTHEMESWIN)->defineWindow(newwin(numLines,
+                                                    numCols,
+                                                    startY,
+                                                    startX),
+                                             "_SAVEDTHEMESWIN",
+                                             numLines,
+                                             numCols,
+                                             startY,
+                                             startX);
 
 } // end of "initializeStartingWindows"
 
@@ -177,7 +179,7 @@ void initializeStartingWindows(std::unordered_map<int, CursesWindow*>& wins)
 
 /*
   Function:
-   refreshAllWins
+   refreshAllMainWins
 
   Description:
    Refreshes all CursesWindow objects member variables that point to a
@@ -185,11 +187,11 @@ void initializeStartingWindows(std::unordered_map<int, CursesWindow*>& wins)
    sorted before refreshing to ensure the proper write order.
 
   Input/Output:
-   wins                 - A reference to a const unordered map
-                          <int, CursesWindow*> type that contains pointers
-                          to all currently allocated CursesWindow objects
-                          that can be indexed by key values in the file
-                          _cursesWinConsts.hpp.
+   mainWins                 - A reference to a const unordered map
+                              <int, CursesWindow*> type that contains pointers
+                              to all currently allocated CursesWindow objects
+                              that can be indexed by key values in the file
+                              _cursesWinConsts.hpp.
   Input:
    NONE
 
@@ -199,37 +201,37 @@ void initializeStartingWindows(std::unordered_map<int, CursesWindow*>& wins)
   Returns:
    NONE
 */
-void refreshAllWins(const std::unordered_map<int, CursesWindow*>& wins)
+void refreshAllMainWins(const std::unordered_map<int, CursesWindow*>& mainWins)
 {
-  std::unordered_map<int, CursesWindow*>::const_iterator it = wins.begin();
-  std::vector<int> tempWins;
+  std::unordered_map<int, CursesWindow*>::const_iterator it = mainWins.begin();
+  std::vector<int> tempMainWins;
 
   // store all currently initialized window indexes
-  for(it = wins.begin(); it != wins.end(); it++)
+  for(it = mainWins.begin(); it != mainWins.end(); it++)
     {
       if(it->second->getWindow() != nullptr)
         {
-          tempWins.push_back(it->first);
+          tempMainWins.push_back(it->first);
         }
     }
 
   // sort them in ascending order
-  std::sort(tempWins.begin(), tempWins.end());
+  std::sort(tempMainWins.begin(), tempMainWins.end());
 
   // refresh the initialized windows
-  for(std::vector<int>::iterator vecIt = tempWins.begin();
-      vecIt != tempWins.end();
+  for(std::vector<int>::iterator vecIt = tempMainWins.begin();
+      vecIt != tempMainWins.end();
       vecIt++)
     {
-      wnoutrefresh(wins.at(*vecIt)->getWindow());
+      wnoutrefresh(mainWins.at(*vecIt)->getWindow());
     }
-} // end of "refreshAllWins"
+} // end of "refreshAllMainWins"
 
 
 
 /*
   Function:
-   clearAllWins
+   clearAllMainWins
 
   Description:
    Clears all currently active and defined CursesWindow object screens. All
@@ -240,7 +242,7 @@ void refreshAllWins(const std::unordered_map<int, CursesWindow*>& wins)
    NONE
 
   Input:
-   wins                 - A reference to a const unordered map
+   mainWins             - A reference to a const unordered map
                           <int, CursesWindow*> type that contains pointers
                           to all currently allocated CursesWindow objects
                           that can be indexed by key values in the file
@@ -251,14 +253,14 @@ void refreshAllWins(const std::unordered_map<int, CursesWindow*>& wins)
   Returns:
    NONE
 */
-void clearAllWins(const std::unordered_map<int, CursesWindow*>& wins)
+void clearAllMainWins(const std::unordered_map<int, CursesWindow*>& mainWins)
 {
   std::unordered_map<int, CursesWindow*>::const_iterator it;
-  for(it = wins.begin(); it != wins.end(); it++)
+  for(it = mainWins.begin(); it != mainWins.end(); it++)
     {
       werase(it->second->getWindow());
     }
-} // end of "clearAllWins"
+} // end of "clearAllMainWins"
 
 
 
@@ -274,7 +276,7 @@ void clearAllWins(const std::unordered_map<int, CursesWindow*>& wins)
    done in the terminal.
 
   Input/Output:
-   wins                 - A reference to a const unordered map
+   mainWins             - A reference to a const unordered map
                           <int, CursesWindow*> type that contains pointers
                           to all currently allocated CursesWindow objects
                           that can be indexed by key values in the file
@@ -292,29 +294,29 @@ void clearAllWins(const std::unordered_map<int, CursesWindow*>& wins)
   Returns:
    NONE
 */
-void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
+void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& mainWins,
                                const int& numLines,
                                const int& numCols)
 {
-  if(wins.at(_PROMPTWIN)->getNumCols() + wins.at(_PROMPTWIN)->getStartX() > numCols ||
-     wins.at(_PROMPTWIN)->getStartY() +  wins.at(_PROMPTWIN)->getNumLines() >= numLines)
+  if(mainWins.at(_PROMPTWIN)->getNumCols() + mainWins.at(_PROMPTWIN)->getStartX() > numCols ||
+     mainWins.at(_PROMPTWIN)->getStartY() +  mainWins.at(_PROMPTWIN)->getNumLines() >= numLines)
     {
-      wins.at(_PROMPTWIN)->deleteWindow();
-      wins.at(_PROMPTWIN)->setWindow(nullptr);
+      mainWins.at(_PROMPTWIN)->deleteWindow();
+      mainWins.at(_PROMPTWIN)->setWindow(nullptr);
     }
   else
     {
-      if(wins.at(_PROMPTWIN)->getWindow() == nullptr)
+      if(mainWins.at(_PROMPTWIN)->getWindow() == nullptr)
         {
-          wins.at(_PROMPTWIN)->defineWindow(newwin(wins.at(_PROMPTWIN)->getNumLines(),
-                                                   wins.at(_PROMPTWIN)->getNumCols(),
-                                                   wins.at(_PROMPTWIN)->getStartY(),
-                                                   wins.at(_PROMPTWIN)->getStartX()),
-                                            wins.at(_PROMPTWIN)->getWindowName(),
-                                            wins.at(_PROMPTWIN)->getNumLines(),
-                                            wins.at(_PROMPTWIN)->getNumCols(),
-                                            wins.at(_PROMPTWIN)->getStartY(),
-                                            wins.at(_PROMPTWIN)->getStartX());
+          mainWins.at(_PROMPTWIN)->defineWindow(newwin(mainWins.at(_PROMPTWIN)->getNumLines(),
+                                                   mainWins.at(_PROMPTWIN)->getNumCols(),
+                                                   mainWins.at(_PROMPTWIN)->getStartY(),
+                                                   mainWins.at(_PROMPTWIN)->getStartX()),
+                                            mainWins.at(_PROMPTWIN)->getWindowName(),
+                                            mainWins.at(_PROMPTWIN)->getNumLines(),
+                                            mainWins.at(_PROMPTWIN)->getNumCols(),
+                                            mainWins.at(_PROMPTWIN)->getStartY(),
+                                            mainWins.at(_PROMPTWIN)->getStartX());
         }
     }
 } // end of "updatePromptWinDimensions"
@@ -333,7 +335,7 @@ void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& win
    done in the terminal.
 
   Input/Output:
-   wins                 - A reference to a const unordered map
+   mainWins             - A reference to a const unordered map
                           <int, CursesWindow*> type that contains pointers
                           to all currently allocated CursesWindow objects
                           that can be indexed by key values in the file
@@ -351,29 +353,29 @@ void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& win
   Returns:
    NONE
 */
-void updateHelpWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
+void updateHelpWinDimensions(const std::unordered_map<int, CursesWindow*>& mainWins,
                                const int& numLines,
                                const int& numCols)
 {
-  if(wins.at(_HELPWIN)->getNumCols() + wins.at(_HELPWIN)->getStartX() > numCols ||
-     wins.at(_HELPWIN)->getStartY() + wins.at(_HELPWIN)->getNumLines() >= numLines)
+  if(mainWins.at(_HELPWIN)->getNumCols() + mainWins.at(_HELPWIN)->getStartX() > numCols ||
+     mainWins.at(_HELPWIN)->getStartY() + mainWins.at(_HELPWIN)->getNumLines() >= numLines)
     {
-      wins.at(_HELPWIN)->deleteWindow();
-      wins.at(_HELPWIN)->setWindow(nullptr);
+      mainWins.at(_HELPWIN)->deleteWindow();
+      mainWins.at(_HELPWIN)->setWindow(nullptr);
     }
   else
     {
-      if(wins.at(_HELPWIN)->getWindow() == nullptr)
+      if(mainWins.at(_HELPWIN)->getWindow() == nullptr)
         {
-          wins.at(_HELPWIN)->defineWindow(newwin(wins.at(_HELPWIN)->getNumLines(),
-                                                   wins.at(_HELPWIN)->getNumCols(),
-                                                   wins.at(_HELPWIN)->getStartY(),
-                                                   wins.at(_HELPWIN)->getStartX()),
-                                            wins.at(_HELPWIN)->getWindowName(),
-                                            wins.at(_HELPWIN)->getNumLines(),
-                                            wins.at(_HELPWIN)->getNumCols(),
-                                            wins.at(_HELPWIN)->getStartY(),
-                                            wins.at(_HELPWIN)->getStartX());
+          mainWins.at(_HELPWIN)->defineWindow(newwin(mainWins.at(_HELPWIN)->getNumLines(),
+                                                   mainWins.at(_HELPWIN)->getNumCols(),
+                                                   mainWins.at(_HELPWIN)->getStartY(),
+                                                   mainWins.at(_HELPWIN)->getStartX()),
+                                            mainWins.at(_HELPWIN)->getWindowName(),
+                                            mainWins.at(_HELPWIN)->getNumLines(),
+                                            mainWins.at(_HELPWIN)->getNumCols(),
+                                            mainWins.at(_HELPWIN)->getStartY(),
+                                            mainWins.at(_HELPWIN)->getStartX());
         }
     }
 } // end of "updateHelpWinWinDimensions"
@@ -392,7 +394,7 @@ void updateHelpWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
    done in the terminal.
 
   Input/Output:
-   wins                 - A reference to a const unordered map
+   mainWins             - A reference to a const unordered map
                           <int, CursesWindow*> type that contains pointers
                           to all currently allocated CursesWindow objects
                           that can be indexed by key values in the file
@@ -410,29 +412,29 @@ void updateHelpWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-void updateProgramsWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
+void updateProgramsWinDimensions(const std::unordered_map<int, CursesWindow*>& mainWins,
                                  const int& numLines,
                                  const int& numCols)
 {
-  if(wins.at(_PROGRAMSWIN)->getNumCols() + wins.at(_PROGRAMSWIN)->getStartX() > numCols ||
-     wins.at(_PROGRAMSWIN)->getStartY() + wins.at(_PROGRAMSWIN)->getNumLines() >= numLines)
+  if(mainWins.at(_PROGRAMSWIN)->getNumCols() + mainWins.at(_PROGRAMSWIN)->getStartX() > numCols ||
+     mainWins.at(_PROGRAMSWIN)->getStartY() + mainWins.at(_PROGRAMSWIN)->getNumLines() >= numLines)
     {
-      wins.at(_PROGRAMSWIN)->deleteWindow();
-      wins.at(_PROGRAMSWIN)->setWindow(nullptr);
+      mainWins.at(_PROGRAMSWIN)->deleteWindow();
+      mainWins.at(_PROGRAMSWIN)->setWindow(nullptr);
     }
   else
     {
-      if(wins.at(_PROGRAMSWIN)->getWindow() == nullptr)
+      if(mainWins.at(_PROGRAMSWIN)->getWindow() == nullptr)
         {
-          wins.at(_PROGRAMSWIN)->defineWindow(newwin(wins.at(_PROGRAMSWIN)->getNumLines(),
-                                                   wins.at(_PROGRAMSWIN)->getNumCols(),
-                                                   wins.at(_PROGRAMSWIN)->getStartY(),
-                                                   wins.at(_PROGRAMSWIN)->getStartX()),
-                                            wins.at(_PROGRAMSWIN)->getWindowName(),
-                                            wins.at(_PROGRAMSWIN)->getNumLines(),
-                                            wins.at(_PROGRAMSWIN)->getNumCols(),
-                                            wins.at(_PROGRAMSWIN)->getStartY(),
-                                            wins.at(_PROGRAMSWIN)->getStartX());
+          mainWins.at(_PROGRAMSWIN)->defineWindow(newwin(mainWins.at(_PROGRAMSWIN)->getNumLines(),
+                                                   mainWins.at(_PROGRAMSWIN)->getNumCols(),
+                                                   mainWins.at(_PROGRAMSWIN)->getStartY(),
+                                                   mainWins.at(_PROGRAMSWIN)->getStartX()),
+                                            mainWins.at(_PROGRAMSWIN)->getWindowName(),
+                                            mainWins.at(_PROGRAMSWIN)->getNumLines(),
+                                            mainWins.at(_PROGRAMSWIN)->getNumCols(),
+                                            mainWins.at(_PROGRAMSWIN)->getStartY(),
+                                            mainWins.at(_PROGRAMSWIN)->getStartX());
         }
     }
 } // end of "updateProgramsWinDimensions"
@@ -451,7 +453,7 @@ void updateProgramsWinDimensions(const std::unordered_map<int, CursesWindow*>& w
    done in the terminal.
 
   Input/Output:
-   wins                 - A reference to a const unordered map
+   mainWins             - A reference to a const unordered map
                           <int, CursesWindow*> type that contains pointers
                           to all currently allocated CursesWindow objects
                           that can be indexed by key values in the file
@@ -469,29 +471,29 @@ void updateProgramsWinDimensions(const std::unordered_map<int, CursesWindow*>& w
   Returns:
    NONE
 */
-void updateSavedFilesWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
+void updateSavedFilesWinDimensions(const std::unordered_map<int, CursesWindow*>& mainWins,
                                    const int& numLines,
                                    const int& numCols)
 {
-  if(wins.at(_SAVEDFILESWIN)->getNumCols() + wins.at(_SAVEDFILESWIN)->getStartX() > numCols ||
-     wins.at(_SAVEDFILESWIN)->getStartY() + wins.at(_SAVEDFILESWIN)->getNumLines() >= numLines)
+  if(mainWins.at(_SAVEDFILESWIN)->getNumCols() + mainWins.at(_SAVEDFILESWIN)->getStartX() > numCols ||
+     mainWins.at(_SAVEDFILESWIN)->getStartY() + mainWins.at(_SAVEDFILESWIN)->getNumLines() >= numLines)
     {
-      wins.at(_SAVEDFILESWIN)->deleteWindow();
-      wins.at(_SAVEDFILESWIN)->setWindow(nullptr);
+      mainWins.at(_SAVEDFILESWIN)->deleteWindow();
+      mainWins.at(_SAVEDFILESWIN)->setWindow(nullptr);
     }
   else
     {
-      if(wins.at(_SAVEDFILESWIN)->getWindow() == nullptr)
+      if(mainWins.at(_SAVEDFILESWIN)->getWindow() == nullptr)
         {
-          wins.at(_SAVEDFILESWIN)->defineWindow(newwin(wins.at(_SAVEDFILESWIN)->getNumLines(),
-                                                   wins.at(_SAVEDFILESWIN)->getNumCols(),
-                                                   wins.at(_SAVEDFILESWIN)->getStartY(),
-                                                   wins.at(_SAVEDFILESWIN)->getStartX()),
-                                            wins.at(_SAVEDFILESWIN)->getWindowName(),
-                                            wins.at(_SAVEDFILESWIN)->getNumLines(),
-                                            wins.at(_SAVEDFILESWIN)->getNumCols(),
-                                            wins.at(_SAVEDFILESWIN)->getStartY(),
-                                            wins.at(_SAVEDFILESWIN)->getStartX());
+          mainWins.at(_SAVEDFILESWIN)->defineWindow(newwin(mainWins.at(_SAVEDFILESWIN)->getNumLines(),
+                                                   mainWins.at(_SAVEDFILESWIN)->getNumCols(),
+                                                   mainWins.at(_SAVEDFILESWIN)->getStartY(),
+                                                   mainWins.at(_SAVEDFILESWIN)->getStartX()),
+                                            mainWins.at(_SAVEDFILESWIN)->getWindowName(),
+                                            mainWins.at(_SAVEDFILESWIN)->getNumLines(),
+                                            mainWins.at(_SAVEDFILESWIN)->getNumCols(),
+                                            mainWins.at(_SAVEDFILESWIN)->getStartY(),
+                                            mainWins.at(_SAVEDFILESWIN)->getStartX());
         }
     }
 } // end of "updateSavedFilesWinDimensions"
@@ -510,7 +512,7 @@ void updateSavedFilesWinDimensions(const std::unordered_map<int, CursesWindow*>&
    done in the terminal.
 
   Input/Output:
-   wins                 - A reference to a const unordered map
+   mainWins             - A reference to a const unordered map
                           <int, CursesWindow*> type that contains pointers
                           to all currently allocated CursesWindow objects
                           that can be indexed by key values in the file
@@ -528,29 +530,29 @@ void updateSavedFilesWinDimensions(const std::unordered_map<int, CursesWindow*>&
   Returns:
    NONE
 */
-void updateSavedThemesWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
+void updateSavedThemesWinDimensions(const std::unordered_map<int, CursesWindow*>& mainWins,
                                     const int& numLines,
                                     const int& numCols)
 {
-  if(wins.at(_SAVEDTHEMESWIN)->getNumCols() + wins.at(_SAVEDTHEMESWIN)->getStartX() > numCols ||
-     wins.at(_SAVEDTHEMESWIN)->getStartY() + wins.at(_SAVEDTHEMESWIN)->getNumLines() >= numLines)
+  if(mainWins.at(_SAVEDTHEMESWIN)->getNumCols() + mainWins.at(_SAVEDTHEMESWIN)->getStartX() > numCols ||
+     mainWins.at(_SAVEDTHEMESWIN)->getStartY() + mainWins.at(_SAVEDTHEMESWIN)->getNumLines() >= numLines)
     {
-      wins.at(_SAVEDTHEMESWIN)->deleteWindow();
-      wins.at(_SAVEDTHEMESWIN)->setWindow(nullptr);
+      mainWins.at(_SAVEDTHEMESWIN)->deleteWindow();
+      mainWins.at(_SAVEDTHEMESWIN)->setWindow(nullptr);
     }
   else
     {
-      if(wins.at(_SAVEDTHEMESWIN)->getWindow() == nullptr)
+      if(mainWins.at(_SAVEDTHEMESWIN)->getWindow() == nullptr)
         {
-          wins.at(_SAVEDTHEMESWIN)->defineWindow(newwin(wins.at(_SAVEDTHEMESWIN)->getNumLines(),
-                                                   wins.at(_SAVEDTHEMESWIN)->getNumCols(),
-                                                   wins.at(_SAVEDTHEMESWIN)->getStartY(),
-                                                   wins.at(_SAVEDTHEMESWIN)->getStartX()),
-                                            wins.at(_SAVEDTHEMESWIN)->getWindowName(),
-                                            wins.at(_SAVEDTHEMESWIN)->getNumLines(),
-                                            wins.at(_SAVEDTHEMESWIN)->getNumCols(),
-                                            wins.at(_SAVEDTHEMESWIN)->getStartY(),
-                                            wins.at(_SAVEDTHEMESWIN)->getStartX());
+          mainWins.at(_SAVEDTHEMESWIN)->defineWindow(newwin(mainWins.at(_SAVEDTHEMESWIN)->getNumLines(),
+                                                   mainWins.at(_SAVEDTHEMESWIN)->getNumCols(),
+                                                   mainWins.at(_SAVEDTHEMESWIN)->getStartY(),
+                                                   mainWins.at(_SAVEDTHEMESWIN)->getStartX()),
+                                            mainWins.at(_SAVEDTHEMESWIN)->getWindowName(),
+                                            mainWins.at(_SAVEDTHEMESWIN)->getNumLines(),
+                                            mainWins.at(_SAVEDTHEMESWIN)->getNumCols(),
+                                            mainWins.at(_SAVEDTHEMESWIN)->getStartY(),
+                                            mainWins.at(_SAVEDTHEMESWIN)->getStartX());
         }
     }
 } // end of "updateSavedThemesWinDimensions"
@@ -567,7 +569,7 @@ void updateSavedThemesWinDimensions(const std::unordered_map<int, CursesWindow*>
    functions are called to assist with this determination.
 
   Input/Output:
-   wins                 - A reference to a const unordered map
+   mainWins             - A reference to a const unordered map
                           <int, CursesWindow*> type that contains pointers
                           to all currently allocated CursesWindow objects
                           that can be indexed by key values in the file
@@ -581,30 +583,30 @@ void updateSavedThemesWinDimensions(const std::unordered_map<int, CursesWindow*>
   Returns:
    NONE
 */
-void updateWinDimensions(const std::unordered_map<int, CursesWindow*>& wins)
+void updateWinDimensions(const std::unordered_map<int, CursesWindow*>& mainWins)
 {
-  int numLines;
-  int numCols;
+  int numLines = 0;
+  int numCols = 0;
 
   getmaxyx(stdscr, numLines, numCols);
-  wins.at(_MAINWIN)->setNumLines(numLines);
-  wins.at(_MAINWIN)->setNumCols(numCols);
-  updatePromptWinDimensions(wins,
+  mainWins.at(_MAINWIN)->setNumLines(numLines);
+  mainWins.at(_MAINWIN)->setNumCols(numCols);
+  updatePromptWinDimensions(mainWins,
                             numLines,
                             numCols);
-  updateHelpWinDimensions(wins,
+  updateHelpWinDimensions(mainWins,
                           numLines,
                           numCols);
-  updateSavedFilesWinDimensions(wins,
+  updateSavedFilesWinDimensions(mainWins,
                                 numLines,
                                 numCols);
-  updateProgramsWinDimensions(wins,
+  updateProgramsWinDimensions(mainWins,
                               numLines,
                               numCols);
-  updateSavedThemesWinDimensions(wins,
+  updateSavedThemesWinDimensions(mainWins,
                                  numLines,
                                  numCols);
-  refreshAllWins(wins);
+  refreshAllMainWins(mainWins);
 } // end of "updateWinDimensions"
 
 
@@ -615,10 +617,10 @@ void updateWinDimensions(const std::unordered_map<int, CursesWindow*>& wins)
 
   Description:
    Draws a box for every "WINDOW" that is currently initialized and stored
-   in the "wins" object.
+   in the "mainWins" object.
 
   Input/Output:
-   wins                 - A reference to a const unordered map
+   mainWins             - A reference to a const unordered map
                           <int, CursesWindow*> type that contains pointers
                           to CursesWindow objects that can be indexed by values
                           in the file _cursesWinConsts.hpp.
@@ -631,12 +633,12 @@ void updateWinDimensions(const std::unordered_map<int, CursesWindow*>& wins)
   Returns:
    NONE
 */
-void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins)
+void drawBoxes(const std::unordered_map<int, CursesWindow*>& mainWins)
 {
   char val = 'A';
   std::unordered_map<int, CursesWindow*>::const_iterator it;
 
-  for(it = wins.begin(); it != wins.end(); it++)
+  for(it = mainWins.begin(); it != mainWins.end(); it++)
     {
       if(val == '[')
         {
