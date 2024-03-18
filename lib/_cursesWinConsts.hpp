@@ -13,23 +13,23 @@ enum CursesColors {
 
 // window index constants
 enum _WINS {
-  // stdscr
+  // STDSCR
   _MAINWIN,
 
-  // main wins
+  // MAIN WINS
   _HELPWIN,
   _PROGRAMSWIN,
   _PROMPTWIN,
   _SAVEDFILESWIN,
   _SAVEDTHEMESWIN,
 
-  // secondary wins
+  // SECONDARY WINS
   _SAVEDFILESWINSAVED,
   _SAVEDFILESWINTHEMES,
   _SAVEDTHEMESSAVEDWIN,
   _PROGRAMSWINSAVED,
 
-  // text win
+  // TEXT WIN
   _TEXTWIN
 };
 
