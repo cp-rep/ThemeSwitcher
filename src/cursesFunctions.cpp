@@ -296,7 +296,7 @@ void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& win
                                const int& numCols)
 {
   if(wins.at(_PROMPTWIN)->getNumCols() + wins.at(_PROMPTWIN)->getStartX() > numCols ||
-     wins.at(_PROMPTWIN)->getStartY() >= numLines)
+     wins.at(_PROMPTWIN)->getStartY() +  wins.at(_PROMPTWIN)->getNumLines() >= numLines)
     {
       wins.at(_PROMPTWIN)->deleteWindow();
       wins.at(_PROMPTWIN)->setWindow(nullptr);
@@ -326,7 +326,7 @@ void updateHelpWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
                                const int& numCols)
 {
   if(wins.at(_HELPWIN)->getNumCols() + wins.at(_HELPWIN)->getStartX() > numCols ||
-     wins.at(_HELPWIN)->getStartY() >= numLines)
+     wins.at(_HELPWIN)->getStartY() + wins.at(_HELPWIN)->getNumLines() >= numLines)
     {
       wins.at(_HELPWIN)->deleteWindow();
       wins.at(_HELPWIN)->setWindow(nullptr);
@@ -354,7 +354,7 @@ void updateProgramsWinDimensions(const std::unordered_map<int, CursesWindow*>& w
                                  const int& numCols)
 {
   if(wins.at(_PROGRAMSWIN)->getNumCols() + wins.at(_PROGRAMSWIN)->getStartX() > numCols ||
-     wins.at(_PROGRAMSWIN)->getStartY() >= numLines)
+     wins.at(_PROGRAMSWIN)->getStartY() + wins.at(_PROGRAMSWIN)->getNumLines() >= numLines)
     {
       wins.at(_PROGRAMSWIN)->deleteWindow();
       wins.at(_PROGRAMSWIN)->setWindow(nullptr);
@@ -382,7 +382,7 @@ void updateSavedFilesWinDimensions(const std::unordered_map<int, CursesWindow*>&
                                    const int& numCols)
 {
   if(wins.at(_SAVEDFILESWIN)->getNumCols() + wins.at(_SAVEDFILESWIN)->getStartX() > numCols ||
-     wins.at(_SAVEDFILESWIN)->getStartY() >= numLines)
+     wins.at(_SAVEDFILESWIN)->getStartY() + wins.at(_SAVEDFILESWIN)->getNumLines() >= numLines)
     {
       wins.at(_SAVEDFILESWIN)->deleteWindow();
       wins.at(_SAVEDFILESWIN)->setWindow(nullptr);
@@ -411,7 +411,7 @@ void updateSavedThemesWinDimensions(const std::unordered_map<int, CursesWindow*>
                                     const int& numCols)
 {
   if(wins.at(_SAVEDTHEMESWIN)->getNumCols() + wins.at(_SAVEDTHEMESWIN)->getStartX() > numCols ||
-     wins.at(_SAVEDTHEMESWIN)->getStartY() >= numLines)
+     wins.at(_SAVEDTHEMESWIN)->getStartY() + wins.at(_SAVEDTHEMESWIN)->getNumLines() >= numLines)
     {
       wins.at(_SAVEDTHEMESWIN)->deleteWindow();
       wins.at(_SAVEDTHEMESWIN)->setWindow(nullptr);
