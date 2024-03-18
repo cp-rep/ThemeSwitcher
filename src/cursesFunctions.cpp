@@ -129,8 +129,8 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
                                       startX);
   // _HELPWIN
   numLines = (wins.at(_MAINWIN)->getNumLines() / 2) - 3;
-  numCols = 60;
-  startY = 2;
+  numCols = _HELPWINSTARTCOLS;
+  startY = _HELPWINSTARTY;
   startX =  wins.at(_MAINWIN)->getNumCols() - numCols - 3;
   wins.at(_HELPWIN)->defineWindow(newwin(numLines,
                                              numCols,
@@ -143,7 +143,7 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
                                       startX);
   // _PROGRAMSWIN
   numLines = (wins.at(_MAINWIN)->getNumLines() / 2) - 2;
-  numCols = 60;
+  numCols = _PROGRAMSWINSTARTCOLS;
   startY = wins.at(_HELPWIN)->getNumLines() + 3;
   startX =  wins.at(_MAINWIN)->getNumCols() - numCols - 3;
   wins.at(_PROGRAMSWIN)->defineWindow(newwin(numLines,
@@ -156,11 +156,11 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
                                           startY,
                                           startX);
   // _PROMPTWIN
-  numLines = 6;
+  numLines = _PROMPTWINMINLINES;
   numCols = wins.at(_MAINWIN)->getNumCols() -
     wins.at(_HELPWIN)->getNumCols() - 8;
-  startY = 2;
-  startX = 3;
+  startY = _PROMPTWINSTARTY;
+  startX = _PROMPTWINSTARTX;
   wins.at(_PROMPTWIN)->defineWindow(newwin(numLines,
                                                numCols,
                                                startY,
@@ -177,7 +177,7 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
     wins.at(_HELPWIN)->getNumCols() - 8;
   startY = wins.at(_PROMPTWIN)->getStartY() +
     wins.at(_PROMPTWIN)->getNumLines() + 1;
-  startX = 3;
+  startX = _SAVEDFILESWINSTARTX;
   wins.at(_SAVEDFILESWIN)->defineWindow(newwin(numLines,
                                                    numCols,
                                                    startY,
@@ -194,7 +194,7 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
     wins.at(_HELPWIN)->getNumCols() - 8;
   startY = wins.at(_SAVEDFILESWIN)->getStartY() +
     wins.at(_SAVEDFILESWIN)->getNumLines() + 1;
-  startX = 3;
+  startX = _SAVEDTHEMESWINSTARTX;
   wins.at(_SAVEDTHEMESWIN)->defineWindow(newwin(numLines,
                                                     numCols,
                                                     startY,
