@@ -19,6 +19,7 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <ncurses.h>
 #include <unistd.h>
 #include <unordered_map>
@@ -84,13 +85,15 @@ int main()
 #endif // _LOG
 
   // local variables
-  std::unordered_map<int, CursesWindow*> mainWins;
+  std::unordered_map<int, CursesWindow*> wins;
 
   // ## initialize curses and starting windows ##
 #if _CURSES
   initializeCurses();
-  initializeStartingWindows(mainWins);
-  //initializePromptWins();
+  initializeWins(wins);
+  defineWins(wins);
+
+  //inititalizeSecondaryWins(secondaryWins);
 #endif // _CURSES
 
   // add small delay
@@ -98,14 +101,14 @@ int main()
     {
 #if _CURSES
       // prepare windows for printing
-      clearAllMainWins(mainWins);
-      updateWinDimensions(mainWins);
+      clearWins(wins);
+      updateWinDimensions(wins);
 
       // draw the windows as boxes
-      drawBoxes(mainWins);
+      drawBoxes(wins);
 
       // print windows and update the screen
-      refreshAllMainWins(mainWins);
+      refreshWins(wins);
       doupdate();
 #endif // _CURSES
 
@@ -115,12 +118,12 @@ int main()
   // clean up
 #if _CURSES
   endwin();
-  for(std::unordered_map<int, CursesWindow*>::iterator it = mainWins.begin();
-      it != mainWins.end(); it++)
+  for(std::unordered_map<int, CursesWindow*>::iterator it = wins.begin();
+      it != wins.end(); it++)
     {
       it->second->deleteWindow();
     }
-  mainWins.clear();
+  wins.clear();
 #endif // _CURSES
 
   return 0;
