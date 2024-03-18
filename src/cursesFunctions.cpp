@@ -329,25 +329,31 @@ void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& win
                                const int& numLines,
                                const int& numCols)
 {
-  if(wins.at(_PROMPTWIN)->getNumCols() + wins.at(_PROMPTWIN)->getStartX() > numCols ||
-     wins.at(_PROMPTWIN)->getStartY() +  wins.at(_PROMPTWIN)->getNumLines() >= numLines)
+  const int promptWinCols = wins.at(_PROMPTWIN)->getNumCols();
+  const int promptWinLines = wins.at(_PROMPTWIN)->getNumLines();
+  const int promptWinStartX = wins.at(_PROMPTWIN)->getStartX();
+  const int promptWinStartY = wins.at(_PROMPTWIN)->getStartY();
+
+
+  if(promptWinCols + promptWinStartX > numCols ||
+     promptWinStartY + promptWinLines >= numLines)
     {
-      wins.at(_PROMPTWIN)->deleteWindow();
-      wins.at(_PROMPTWIN)->setWindow(nullptr);
+      wins.at(_HELPWIN)->deleteWindow();
+      wins.at(_HELPWIN)->setWindow(nullptr);
     }
   else
     {
-      if(wins.at(_PROMPTWIN)->getWindow() == nullptr)
+      if(wins.at(_HELPWIN)->getWindow() == nullptr)
         {
-          wins.at(_PROMPTWIN)->defineWindow(newwin(wins.at(_PROMPTWIN)->getNumLines(),
-                                                   wins.at(_PROMPTWIN)->getNumCols(),
-                                                   wins.at(_PROMPTWIN)->getStartY(),
-                                                   wins.at(_PROMPTWIN)->getStartX()),
-                                            wins.at(_PROMPTWIN)->getWindowName(),
-                                            wins.at(_PROMPTWIN)->getNumLines(),
-                                            wins.at(_PROMPTWIN)->getNumCols(),
-                                            wins.at(_PROMPTWIN)->getStartY(),
-                                            wins.at(_PROMPTWIN)->getStartX());
+          wins.at(_HELPWIN)->defineWindow(newwin(promptWinLines,
+                                                 promptWinCols,
+                                                 promptWinStartY,
+                                                 promptWinStartX),
+                                          wins.at(_HELPWIN)->getWindowName(),
+                                          promptWinLines,
+                                          promptWinCols,
+                                          promptWinStartY,
+                                          promptWinStartX);
         }
     }
 } // end of "updatePromptWinDimensions"
