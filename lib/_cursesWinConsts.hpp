@@ -33,35 +33,34 @@ enum _WINS {
   _TEXTWIN
 };
 
+// _HELPWIN DIMENSION CONSTS
+const unsigned int _HELPWINSTARTY = 2;
+const unsigned int _HELPWINSTARTCOLS = 60;
+const unsigned int _HELPWINMINLINES = 10;
+const unsigned int _HELPWINMINCOLS = 40;
+
+// _PROGRAMSWIN DIMENSION CONSTS
+const unsigned int _PROGRAMSWINSTARTCOLS = 60;//
+const unsigned int _PROGRAMSWINMINLINES = 10;//
+const unsigned int _PROGRAMSWINMINCOLS = 40;
+
 // _PROMPTWIN DIMENSION CONSTS
 const unsigned int _PROMPTWINSTARTY = 2;
-const unsigned int _PROMPTWINSTARTX = 2;
-const unsigned int _PROMPTWINLINES = 10;
+const unsigned int _PROMPTWINSTARTX = 3;
+const unsigned int _PROMPTWINMINLINES = 6;
 const unsigned int _PROMPTWINCOLS = 120;
 
 // _SAVEDFILESWIN DIMENSION CONSTS
 const unsigned int _SAVEDFILESWINSTARTY = 2;
-const unsigned int _SAVEDFILESWINSTARTX = 2;
-const unsigned int _SAVEDFILESWINLINES = 10;
-const unsigned int _SAVEDFILESWINCOLS = 120;
+const unsigned int _SAVEDFILESWINSTARTX = 3;
+const unsigned int _SAVEDFILESWINMINLINES = 10;
+const unsigned int _SAVEDFILESWINMINCOLS = 60;
 
 // _SAVEDTHEMESWIN DIMENSION CONSTS
-const unsigned int _SAVEDTHEMESWINSTARTY = 0;
-const unsigned int _SAVEDTHEMESWINSTARTX = 0;
-const unsigned int _SAVEDTHEMESWINLINES = 0;
-const unsigned int _SAVEDTHEMESWINCOLS = 0;
-
-// _PROGRAMSWIN DIMENSION CONSTS
-const unsigned int _PROGRAMSWINSTARTY = 2;
-const unsigned int _PROGRAMSWINSTARTX = 2;
-const unsigned int _PROGRAMSWINLINES = 10;
-const unsigned int _PROGRAMSWINCOLS = 120;
-
-// _HELPWIN DIMENSION CONSTS
-const unsigned int _HELPWINSTARTY = 2;
-const unsigned int _HELPWINSTARTX = 2;
-const unsigned int _HELPWINLINES = 10;
-const unsigned int _HELPWINCOLS = 120;
+const unsigned int _SAVEDTHEMESWINSTARTY = 2;
+const unsigned int _SAVEDTHEMESWINSTARTX = 3;
+const unsigned int _SAVEDTHEMESWINMINLINES = 10;
+const unsigned int _SAVEDTHEMESWINMINCOLS = 60;
 
 // _TEXTWIN DIMENSION CONSTS
 const unsigned int _TEXTWINSTARTY = 0;
