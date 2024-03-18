@@ -279,7 +279,11 @@ void clearAllWins(const std::unordered_map<int, CursesWindow*>& wins)
                           that can be indexed by key values in the file
                           _cursesWinConsts.hpp.
   Input:
-   NONE
+   numLines             - a reference to a constant integer containing the current
+                          maximum number of lines of the main curses window.
+
+   numCols              - a reference to a constant integer containing the current
+                          maximum number of columns of the main curses window.
 
   Output:
    NONE
@@ -289,11 +293,8 @@ void clearAllWins(const std::unordered_map<int, CursesWindow*>& wins)
 */
 void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
                                const int& numLines,
-                               const int& numCols,
-                               const int& startY,
-                               const int& startX)
+                               const int& numCols)
 {
-
 } // end of "updatePromptWinDimensions"
 
 
@@ -326,17 +327,13 @@ void updateWinDimensions(const std::unordered_map<int, CursesWindow*>& wins)
 {
   int numLines;
   int numCols;
-  int startY;
-  int startX;
 
   getmaxyx(stdscr, numLines, numCols);
   wins.at(_MAINWIN)->setNumLines(numLines);
   wins.at(_MAINWIN)->setNumCols(numCols);
   updatePromptWinDimensions(wins,
                             numLines,
-                            numCols,
-                            startY,
-                            startX);
+                            numCols);
 
   refreshAllWins(wins);
 } // end of "updateWinDimensions"
