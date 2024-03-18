@@ -16,13 +16,21 @@ enum _WINS {
   // stdscr
   _MAINWIN,
 
-  // other wins
+  // main wins
   _HELPWIN,
   _PROGRAMSWIN,
   _PROMPTWIN,
   _SAVEDFILESWIN,
   _SAVEDTHEMESWIN,
-  _TEXTWIN,
+
+  // secondary wins
+  _SAVEDFILESWINSAVED,
+  _SAVEDFILESWINTHEMES,
+  _SAVEDTHEMESSAVEDWIN,
+  _PROGRAMSWINSAVED,
+
+  // text win
+  _TEXTWIN
 };
 
 // _PROMPTWIN DIMENSION CONSTS
