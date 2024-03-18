@@ -388,8 +388,13 @@ void updateHelpWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
                                const int& numLines,
                                const int& numCols)
 {
-  if(wins.at(_HELPWIN)->getNumCols() + wins.at(_HELPWIN)->getStartX() > numCols ||
-     wins.at(_HELPWIN)->getStartY() + wins.at(_HELPWIN)->getNumLines() >= numLines)
+  const int helpWinCols = wins.at(_HELPWIN)->getNumCols();
+  const int helpWinLines = wins.at(_HELPWIN)->getNumLines();
+  const int helpWinStartX = wins.at(_HELPWIN)->getStartX();
+  const int helpWinStartY = wins.at(_HELPWIN)->getStartY();
+
+  if(helpWinCols + helpWinStartX > numCols ||
+     helpWinStartY + helpWinLines >= numLines)
     {
       wins.at(_HELPWIN)->deleteWindow();
       wins.at(_HELPWIN)->setWindow(nullptr);
@@ -398,15 +403,15 @@ void updateHelpWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
     {
       if(wins.at(_HELPWIN)->getWindow() == nullptr)
         {
-          wins.at(_HELPWIN)->defineWindow(newwin(wins.at(_HELPWIN)->getNumLines(),
-                                                   wins.at(_HELPWIN)->getNumCols(),
-                                                   wins.at(_HELPWIN)->getStartY(),
-                                                   wins.at(_HELPWIN)->getStartX()),
-                                            wins.at(_HELPWIN)->getWindowName(),
-                                            wins.at(_HELPWIN)->getNumLines(),
-                                            wins.at(_HELPWIN)->getNumCols(),
-                                            wins.at(_HELPWIN)->getStartY(),
-                                            wins.at(_HELPWIN)->getStartX());
+          wins.at(_HELPWIN)->defineWindow(newwin(helpWinLines,
+                                                 helpWinCols,
+                                                 helpWinStartY,
+                                                 helpWinStartX),
+                                          wins.at(_HELPWIN)->getWindowName(),
+                                          helpWinLines,
+                                          helpWinCols,
+                                          helpWinStartY,
+                                          helpWinStartX);
         }
     }
 } // end of "updateHelpWinWinDimensions"
