@@ -295,6 +295,142 @@ void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& win
                                const int& numLines,
                                const int& numCols)
 {
+  if(wins.at(_PROMPTWIN)->getNumCols() + wins.at(_PROMPTWIN)->getStartX() > numCols ||
+     wins.at(_PROMPTWIN)->getStartY() >= numLines)
+    {
+      wins.at(_PROMPTWIN)->deleteWindow();
+      wins.at(_PROMPTWIN)->setWindow(nullptr);
+    }
+  else
+    {
+      if(wins.at(_PROMPTWIN)->getWindow() == nullptr)
+        {
+          wins.at(_PROMPTWIN)->defineWindow(newwin(wins.at(_PROMPTWIN)->getNumLines(),
+                                                   wins.at(_PROMPTWIN)->getNumCols(),
+                                                   wins.at(_PROMPTWIN)->getStartY(),
+                                                   wins.at(_PROMPTWIN)->getStartX()),
+                                            wins.at(_PROMPTWIN)->getWindowName(),
+                                            wins.at(_PROMPTWIN)->getNumLines(),
+                                            wins.at(_PROMPTWIN)->getNumCols(),
+                                            wins.at(_PROMPTWIN)->getStartY(),
+                                            wins.at(_PROMPTWIN)->getStartX());
+        }
+    }
+} // end of "updatePromptWinDimensions"
+
+
+
+
+void updateHelpWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
+                               const int& numLines,
+                               const int& numCols)
+{
+  if(wins.at(_HELPWIN)->getNumCols() + wins.at(_HELPWIN)->getStartX() > numCols ||
+     wins.at(_HELPWIN)->getStartY() >= numLines)
+    {
+      wins.at(_HELPWIN)->deleteWindow();
+      wins.at(_HELPWIN)->setWindow(nullptr);
+    }
+  else
+    {
+      if(wins.at(_HELPWIN)->getWindow() == nullptr)
+        {
+          wins.at(_HELPWIN)->defineWindow(newwin(wins.at(_HELPWIN)->getNumLines(),
+                                                   wins.at(_HELPWIN)->getNumCols(),
+                                                   wins.at(_HELPWIN)->getStartY(),
+                                                   wins.at(_HELPWIN)->getStartX()),
+                                            wins.at(_HELPWIN)->getWindowName(),
+                                            wins.at(_HELPWIN)->getNumLines(),
+                                            wins.at(_HELPWIN)->getNumCols(),
+                                            wins.at(_HELPWIN)->getStartY(),
+                                            wins.at(_HELPWIN)->getStartX());
+        }
+    }
+} // end of "updatePromptWinDimensions"
+
+
+void updateProgramsWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
+                                 const int& numLines,
+                                 const int& numCols)
+{
+  if(wins.at(_PROGRAMSWIN)->getNumCols() + wins.at(_PROGRAMSWIN)->getStartX() > numCols ||
+     wins.at(_PROGRAMSWIN)->getStartY() >= numLines)
+    {
+      wins.at(_PROGRAMSWIN)->deleteWindow();
+      wins.at(_PROGRAMSWIN)->setWindow(nullptr);
+    }
+  else
+    {
+      if(wins.at(_PROGRAMSWIN)->getWindow() == nullptr)
+        {
+          wins.at(_PROGRAMSWIN)->defineWindow(newwin(wins.at(_PROGRAMSWIN)->getNumLines(),
+                                                   wins.at(_PROGRAMSWIN)->getNumCols(),
+                                                   wins.at(_PROGRAMSWIN)->getStartY(),
+                                                   wins.at(_PROGRAMSWIN)->getStartX()),
+                                            wins.at(_PROGRAMSWIN)->getWindowName(),
+                                            wins.at(_PROGRAMSWIN)->getNumLines(),
+                                            wins.at(_PROGRAMSWIN)->getNumCols(),
+                                            wins.at(_PROGRAMSWIN)->getStartY(),
+                                            wins.at(_PROGRAMSWIN)->getStartX());
+        }
+    }
+} // end of "updatePromptWinDimensions"
+
+
+void updateSavedFilesWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
+                                   const int& numLines,
+                                   const int& numCols)
+{
+  if(wins.at(_SAVEDFILESWIN)->getNumCols() + wins.at(_SAVEDFILESWIN)->getStartX() > numCols ||
+     wins.at(_SAVEDFILESWIN)->getStartY() >= numLines)
+    {
+      wins.at(_SAVEDFILESWIN)->deleteWindow();
+      wins.at(_SAVEDFILESWIN)->setWindow(nullptr);
+    }
+  else
+    {
+      if(wins.at(_SAVEDFILESWIN)->getWindow() == nullptr)
+        {
+          wins.at(_SAVEDFILESWIN)->defineWindow(newwin(wins.at(_SAVEDFILESWIN)->getNumLines(),
+                                                   wins.at(_SAVEDFILESWIN)->getNumCols(),
+                                                   wins.at(_SAVEDFILESWIN)->getStartY(),
+                                                   wins.at(_SAVEDFILESWIN)->getStartX()),
+                                            wins.at(_SAVEDFILESWIN)->getWindowName(),
+                                            wins.at(_SAVEDFILESWIN)->getNumLines(),
+                                            wins.at(_SAVEDFILESWIN)->getNumCols(),
+                                            wins.at(_SAVEDFILESWIN)->getStartY(),
+                                            wins.at(_SAVEDFILESWIN)->getStartX());
+        }
+    }
+} // end of "updatePromptWinDimensions"
+
+
+
+void updateSavedThemesWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
+                                    const int& numLines,
+                                    const int& numCols)
+{
+  if(wins.at(_SAVEDTHEMESWIN)->getNumCols() + wins.at(_SAVEDTHEMESWIN)->getStartX() > numCols ||
+     wins.at(_SAVEDTHEMESWIN)->getStartY() >= numLines)
+    {
+      wins.at(_SAVEDTHEMESWIN)->deleteWindow();
+      wins.at(_SAVEDTHEMESWIN)->setWindow(nullptr);
+    }
+  else
+    {
+      if(wins.at(_SAVEDTHEMESWIN)->getWindow() == nullptr)
+        {
+          wins.at(_SAVEDTHEMESWIN)->defineWindow(newwin(wins.at(_SAVEDTHEMESWIN)->getNumLines(),
+                                                   wins.at(_SAVEDTHEMESWIN)->getNumCols(),
+                                                   wins.at(_SAVEDTHEMESWIN)->getStartY(),
+                                                   wins.at(_SAVEDTHEMESWIN)->getStartX()),
+                                            wins.at(_SAVEDTHEMESWIN)->getWindowName(),
+                                            wins.at(_SAVEDTHEMESWIN)->getNumLines(),
+                                            wins.at(_SAVEDTHEMESWIN)->getNumCols(),
+                                            wins.at(_SAVEDTHEMESWIN)->getStartY(),
+                                            wins.at(_SAVEDTHEMESWIN)->getStartX());
+        }
+    }
 } // end of "updatePromptWinDimensions"
 
 
@@ -334,7 +470,18 @@ void updateWinDimensions(const std::unordered_map<int, CursesWindow*>& wins)
   updatePromptWinDimensions(wins,
                             numLines,
                             numCols);
-
+  updateHelpWinDimensions(wins,
+                          numLines,
+                          numCols);
+  updateSavedFilesWinDimensions(wins,
+                                numLines,
+                                numCols);
+  updateProgramsWinDimensions(wins,
+                              numLines,
+                              numCols);
+  updateSavedThemesWinDimensions(wins,
+                                 numLines,
+                                 numCols);
   refreshAllWins(wins);
 } // end of "updateWinDimensions"
 

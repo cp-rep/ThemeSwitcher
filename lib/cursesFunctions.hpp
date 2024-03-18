@@ -12,6 +12,15 @@ void clearAllWins(const std::unordered_map<int, CursesWindow*>& wins);
 void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
                                const int& numLines,
                                const int& numCols);
+void updateHelpWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
+                               const int& numLines,
+                               const int& numCols);
+void updateProgramsWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
+                                 const int& numLines,
+                                 const int& numCols);
+void updateSavedFilesWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
+                                   const int& numLines,
+                                   const int& numCols);
 void updateWinDimensions(const std::unordered_map<int, CursesWindow*>& wins);
 void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins);
 
