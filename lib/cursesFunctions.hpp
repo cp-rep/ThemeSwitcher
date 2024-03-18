@@ -6,25 +6,26 @@
 #include "cursesWindow.hpp"
 
 void initializeCurses();
-void initializeStartingWindows(std::unordered_map<int, CursesWindow*>& mainWins);
-void refreshAllMainWins(const std::unordered_map<int, CursesWindow*>& mainWins);
-void clearAllMainWins(const std::unordered_map<int, CursesWindow*>& mainWins);
-void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& mainWins,
+void initializeWins(std::unordered_map<int, CursesWindow*>& wins);
+void defineWins(std::unordered_map<int, CursesWindow*>& wins);
+void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
+void clearWins(const std::unordered_map<int, CursesWindow*>& wins);
+void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
                                const int& numLines,
                                const int& numCols);
-void updateHelpWinDimensions(const std::unordered_map<int, CursesWindow*>& mainWins,
+void updateHelpWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
                                const int& numLines,
                                const int& numCols);
-void updateProgramsWinDimensions(const std::unordered_map<int, CursesWindow*>& mainWins,
+void updateProgramsWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
                                  const int& numLines,
                                  const int& numCols);
-void updateSavedFilesWinDimensions(const std::unordered_map<int, CursesWindow*>& mainWins,
+void updateSavedFilesWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
                                    const int& numLines,
                                    const int& numCols);
-void updateSavedThemesWinDimensions(const std::unordered_map<int, CursesWindow*>& mainWins,
+void updateSavedThemesWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
                                     const int& numLines,
                                     const int& numCols);
-void updateWinDimensions(const std::unordered_map<int, CursesWindow*>& mainWins);
-void drawBoxes(const std::unordered_map<int, CursesWindow*>& mainWins);
+void updateWinDimensions(const std::unordered_map<int, CursesWindow*>& wins);
+void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins);
 
 #endif // CURSESFUNCTIONS_HPP
