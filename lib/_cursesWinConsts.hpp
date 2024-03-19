@@ -17,9 +17,9 @@ enum _WINS {
   _MAINWIN,
 
   // MAIN WINS
+  _PROMPTWIN,
   _HELPWIN,
   _PROGRAMSWIN,
-  _PROMPTWIN,
   _SAVEDFILESWIN,
   _SAVEDTHEMESWIN,
 
@@ -48,7 +48,10 @@ const unsigned int _PROGRAMSWINMINCOLS = 40;
 const unsigned int _PROMPTWINSTARTY = 2;
 const unsigned int _PROMPTWINSTARTX = 3;
 const unsigned int _PROMPTWINMINLINES = 6;
-const unsigned int _PROMPTWINCOLS = 120;
+const unsigned int _PROMPTWINMAXLINES = 6;
+const unsigned int _PROMPTWINMINCOLS = 60;
+const unsigned int _PROMPTWINMAXCOLS = 120;
+
 
 // _SAVEDFILESWIN DIMENSION CONSTS
 const unsigned int _SAVEDFILESWINSTARTY = 2;
