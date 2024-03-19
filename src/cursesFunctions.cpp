@@ -188,6 +188,134 @@ void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
 
 /*
   Function:
+   defineSavedFilesWin
+
+  Description:
+   Uses the incoming numLines and numCols variable values, which contain
+   the current max number and columns of STDSCR, to determine if the
+   window being tested should be deleted or created.  This is to allow
+   dynamic window creation/deletion for any window resizing operations
+   done in the terminal.
+
+  Input/Output:
+   wins                 - A reference to a const unordered map
+                          <int, CursesWindow*> type that contains pointers
+                          to all currently allocated CursesWindow objects
+                          that can be indexed by key values in the file
+                          _cursesWinConsts.hpp.
+  Input:
+   numLines             - a reference to a constant integer containing the current
+                          maximum number of lines of the main curses window.
+
+   numCols              - a reference to a constant integer containing the current
+                          maximum number of columns of the main curses window.
+
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
+void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
+                         const int& maxLines,
+                         const int& maxCols)
+{
+  const int colOffset = 7;
+  const int lineOffset = 15;
+
+  //int numLines = (maxLines - _SAVEDFILESWINSTARTY) / 2;
+  int numLines = _SAVEDFILESWINMAXLINES;
+  int numCols = _SAVEDFILESWINMAXCOLS;
+  int startY = _SAVEDFILESWINSTARTY;
+  int startX = _SAVEDFILESWINSTARTX;
+  bool colsCheck = false;
+  bool linesCheck = true;
+
+  // check if the current total columns and lines will fit desired win dimensions
+  if( ((_SAVEDFILESWINMAXCOLS < maxCols - colOffset) ||
+       (_SAVEDFILESWINMINCOLS < maxCols - colOffset)))
+    {
+      colsCheck= true;
+
+      // make sure not to set size bigger than the maximum for that window
+      if(_SAVEDFILESWINMAXCOLS + colOffset < maxCols)
+        {
+          numCols = _SAVEDFILESWINMAXCOLS;
+        }
+      // else, the size is somewhere between the min and max
+      else
+        {
+          numCols = maxCols - colOffset;
+
+        }
+    }
+  // program was opened in too small of window. update to the minimum size for
+  // when resize is in correct parameters
+  else
+    {
+      colsCheck = false;
+      numCols = _SAVEDFILESWINMINCOLS;
+    }
+
+  if( ((_SAVEDFILESWINMAXLINES < maxLines - lineOffset) ||
+       (_SAVEDFILESWINMINLINES < maxLines - lineOffset)))
+    {
+      linesCheck= true;
+
+      // make sure not to set size bigger than the maximum for that window
+      if( (_SAVEDFILESWINMAXLINES + lineOffset) < maxLines)
+        {
+          numLines = _SAVEDFILESWINMAXLINES;
+        }
+      // else, the size is somewhere between the min and max
+      else
+        {
+          numLines = maxLines - lineOffset;
+
+        }
+    }
+  else
+    {
+      linesCheck = false;
+      numLines = _SAVEDFILESWINMINLINES;
+    }
+
+  // the window is within desired dimensions. allocate it
+  if((colsCheck == true) && (linesCheck == true))
+    {
+      // delete the current window if exists before creating a new one
+      if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+        {
+          wins.at(_SAVEDFILESWIN)->deleteWindow();
+          wins.at(_SAVEDFILESWIN)->setWindow(nullptr);
+        }
+
+      // create the new window
+      wins.at(_SAVEDFILESWIN)->defineWindow(newwin(numLines,
+                                               numCols,
+                                               startY,
+                                               startX),
+                                        "_SAVEDFILESWIN",
+                                        numLines,
+                                        numCols,
+                                        startY,
+                                        startX);
+    }
+  // the window has been resized to a bad dimension. delete it
+  else
+    {
+      if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+        {
+          wins.at(_SAVEDFILESWIN)->deleteWindow();
+          wins.at(_SAVEDFILESWIN)->setWindow(nullptr);
+        }
+    }
+} // end of "defineSavedFilesWin"
+
+
+
+/*
+  Function:
    defineWins
 
   Description:
@@ -231,6 +359,9 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
   definePromptWin(wins,
                   numLines,
                   numCols);
+  defineSavedFilesWin(wins,
+                      numLines,
+                      numCols);
   // // _HELPWIN
   // numLines = (wins.at(_MAINWIN)->getNumLines() / 2) - 3;
   // numCols = _HELPWINSTARTCOLS;
@@ -437,6 +568,9 @@ void updateWinDimensions(std::unordered_map<int, CursesWindow*>& wins)
   definePromptWin(wins,
                   numLines,
                   numCols);
+  defineSavedFilesWin(wins,
+                      numLines,
+                      numCols);
   // updateSavedFilesWinDimensions(wins,
   //                               numLines,
   //                               numCols);
