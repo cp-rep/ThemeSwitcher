@@ -221,10 +221,10 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                          const int& maxCols)
 {
   const int colOffset = 7;
-  const int lineOffset = 15;
+  const int lineOffset = 10;
 
-  int maxFileLines = (maxLines - _SAVEDFILESWINSTARTY) / 2;
-  int numLines = (maxLines - _SAVEDFILESWINSTARTY) / 2;
+  int maxFileLines = ((maxLines - _SAVEDFILESWINSTARTY) / 2) - 2;
+  int numLines = (maxLines - _PROMPTWINSTARTY) - lineOffset;
   int numCols = _SAVEDFILESWINMAXCOLS;
   int startY = _SAVEDFILESWINSTARTY;
   int startX = _SAVEDFILESWINSTARTX;
@@ -232,8 +232,8 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
   bool linesCheck = false;
 
   // check if the current total columns and lines will fit desired win dimensions
-  if( ((_SAVEDFILESWINMAXCOLS < maxCols - colOffset) ||
-       (_SAVEDFILESWINMINCOLS < maxCols - colOffset)))
+  if(((_SAVEDFILESWINMAXCOLS < maxCols - colOffset) ||
+      (_SAVEDFILESWINMINCOLS < maxCols - colOffset)))
     {
       colsCheck= true;
 
@@ -250,12 +250,13 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
         }
     }
 
-  if((_SAVEDFILESWINMINLINES < maxFileLines) &&
-      (_SAVEDFILESWINMINLINES < maxFileLines))
-
+  if(_SAVEDFILESWINMINLINES <= numLines)
     {
       linesCheck= true;
-      numLines = ((maxLines - _SAVEDFILESWINSTARTY) / 2) - 3;
+      if(numLines > _SAVEDFILESWINMAXLINES)
+        {
+          numLines = maxFileLines;
+        }
     }
 
   // the window is within desired dimensions. allocate it
@@ -332,14 +333,14 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
   int maxFileLines = (maxLines - _SAVEDFILESWINSTARTY) / 2;
   int numLines = (maxLines - _SAVEDFILESWINSTARTY) / 2;
   int numCols = _SAVEDTHEMESWINMAXCOLS;
-  int startY = _SAVEDTHEMESWINSTARTY;
+  int startY = _SAVEDTHEMESWINSTARTY + numLines + 1;
   int startX = _SAVEDTHEMESWINSTARTX;
   bool colsCheck = false;
   bool linesCheck = false;
 
   // check if the current total columns and lines will fit desired win dimensions
-  if( ((_SAVEDTHEMESWINMAXCOLS < maxCols - colOffset) ||
-       (_SAVEDTHEMESWINMINCOLS < maxCols - colOffset)) )
+  if(((_SAVEDTHEMESWINMAXCOLS < maxCols - colOffset) ||
+      (_SAVEDTHEMESWINMINCOLS < maxCols - colOffset)))
     {
       colsCheck= true;
 
@@ -445,88 +446,9 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
   defineSavedFilesWin(wins,
                       numLines,
                       numCols);
-  defineSavedThemesWin(wins,
-                       numLines,
-                       numCols);
-
-
-  // // _HELPWIN
-  // numLines = (wins.at(_MAINWIN)->getNumLines() / 2) - 3;
-  // numCols = _HELPWINSTARTCOLS;
-  // startY = _HELPWINSTARTY;
-  // startX =  wins.at(_MAINWIN)->getNumCols() - numCols - 3;
-  // wins.at(_HELPWIN)->defineWindow(newwin(numLines,
-  //                                            numCols,
-  //                                            startY,
-  //                                            startX),
-  //                                     "_HELPWIN",
-  //                                     numLines,
-  //                                     numCols,
-  //                                     startY,
-  //                                     startX);
-  // // _PROGRAMSWIN
-  // numLines = (wins.at(_MAINWIN)->getNumLines() / 2) - 2;
-  // numCols = _PROGRAMSWINSTARTCOLS;
-  // startY = wins.at(_HELPWIN)->getNumLines() + 3;
-  // startX =  wins.at(_MAINWIN)->getNumCols() - numCols - 3;
-  // wins.at(_PROGRAMSWIN)->defineWindow(newwin(numLines,
-  //                                                numCols,
-  //                                                startY,
-  //                                                startX),
-  //                                         "_PROGRAMSWIN",
-  //                                         numLines,
-  //                                         numCols,
-  //                                         startY,
-  //                                         startX);
-  // // _PROMPTWIN
-  // numLines = _PROMPTWINMINLINES;
-  // numCols = wins.at(_MAINWIN)->getNumCols() -
-  //   wins.at(_HELPWIN)->getNumCols() - 8;
-  // startY = _PROMPTWINSTARTY;
-  // startX = _PROMPTWINSTARTX;
-  // wins.at(_PROMPTWIN)->defineWindow(newwin(numLines,
-  //                                              numCols,
-  //                                              startY,
-  //                                              startX),
-  //                                       "_PROMPTWIN",
-  //                                       numLines,
-  //                                       numCols,
-  //                                       startY,
-  //                                       startX);
-  // // _SAVEDFILESWIN
-  // numLines = ((wins.at(_MAINWIN)->getNumLines() -
-  //              wins.at(_PROMPTWIN)->getNumLines()) / 2) - 3;
-  // numCols = wins.at(_MAINWIN)->getNumCols() -
-  //   wins.at(_HELPWIN)->getNumCols() - 8;
-  // startY = wins.at(_PROMPTWIN)->getStartY() +
-  //   wins.at(_PROMPTWIN)->getNumLines() + 1;
-  // startX = _SAVEDFILESWINSTARTX;
-  // wins.at(_SAVEDFILESWIN)->defineWindow(newwin(numLines,
-  //                                                  numCols,
-  //                                                  startY,
-  //                                                  startX),
-  //                                           "_SAVEDFILESWIN",
-  //                                           numLines,
-  //                                           numCols,
-  //                                           startY,
-  //                                           startX);
-  // // _SAVEDTHEMESWIN
-  // numLines = ((wins.at(_MAINWIN)->getNumLines() -
-  //              wins.at(_PROMPTWIN)->getNumLines()) / 2) - 3;
-  // numCols = wins.at(_MAINWIN)->getNumCols() -
-  //   wins.at(_HELPWIN)->getNumCols() - 8;
-  // startY = wins.at(_SAVEDFILESWIN)->getStartY() +
-  //   wins.at(_SAVEDFILESWIN)->getNumLines() + 1;
-  // startX = _SAVEDTHEMESWINSTARTX;
-  // wins.at(_SAVEDTHEMESWIN)->defineWindow(newwin(numLines,
-  //                                                   numCols,
-  //                                                   startY,
-  //                                                   startX),
-  //                                            "_SAVEDTHEMESWIN",
-  //                                            numLines,
-  //                                            numCols,
-  //                                            startY,
-  //                                            startX);
+  // defineSavedThemesWin(wins,
+  //                      numLines,
+  //                      numCols);
 } // end of "defineWins"
 
 
