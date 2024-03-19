@@ -7,25 +7,12 @@
 
 void initializeCurses();
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins);
+void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
+                     const int& maxLines, const int& maxCols);
 void defineWins(std::unordered_map<int, CursesWindow*>& wins);
+void updateWinDimensions(std::unordered_map<int, CursesWindow*>& wins);
 void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
 void clearWins(const std::unordered_map<int, CursesWindow*>& wins);
-void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
-                               const int& numLines,
-                               const int& numCols);
-void updateHelpWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
-                               const int& numLines,
-                               const int& numCols);
-void updateProgramsWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
-                                 const int& numLines,
-                                 const int& numCols);
-void updateSavedFilesWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
-                                   const int& numLines,
-                                   const int& numCols);
-void updateSavedThemesWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
-                                    const int& numLines,
-                                    const int& numCols);
-void updateWinDimensions(const std::unordered_map<int, CursesWindow*>& wins);
 void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins);
 
 #endif // CURSESFUNCTIONS_HPP
