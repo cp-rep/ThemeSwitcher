@@ -105,7 +105,6 @@ int main()
       // prepare windows for printing
       clearWins(wins);
 
-
       // check if the window size has changed
       getmaxyx(stdscr, newLines, newCols);
       if( (newLines != wins.at(_MAINWIN)->getNumLines()) ||
