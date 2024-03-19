@@ -87,6 +87,106 @@ void initializeWins(std::unordered_map<int, CursesWindow*>& wins)
 
 /*
   Function:
+   definePromptWin
+
+  Description:
+   Uses the incoming numLines and numCols variable values, which contain
+   the current max number and columns of STDSCR, to determine if the
+   window being tested should be deleted or created.  This is to allow
+   dynamic window creation/deletion for any window resizing operations
+   done in the terminal.
+
+  Input/Output:
+   wins                 - A reference to a const unordered map
+                          <int, CursesWindow*> type that contains pointers
+                          to all currently allocated CursesWindow objects
+                          that can be indexed by key values in the file
+                          _cursesWinConsts.hpp.
+  Input:
+   numLines             - a reference to a constant integer containing the current
+                          maximum number of lines of the main curses window.
+
+   numCols              - a reference to a constant integer containing the current
+                          maximum number of columns of the main curses window.
+
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
+void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
+                     const int& maxLines,
+                     const int& maxCols)
+{
+  const int colOffset = 7;
+  int numLines = _PROMPTWINMAXLINES;
+  int numCols = _PROMPTWINMAXCOLS;
+  int startY = _PROMPTWINSTARTY;
+  int startX = _PROMPTWINSTARTX;
+  bool define = false;
+
+
+  // check if the current total columns will fit desired dimensions
+  if(_PROMPTWINMAXCOLS < maxCols - colOffset ||
+     _PROMPTWINMINCOLS < maxCols - colOffset)
+    {
+      define = true;
+
+      // make sure not to set size bigger than the maximum for that window
+      if(_PROMPTWINMAXCOLS + colOffset < maxCols)
+        {
+          numCols = _PROMPTWINMAXCOLS;
+        }
+      // else, the size is somewhere between the min and max
+      else
+        {
+          numCols = maxCols - colOffset;
+        }
+    }
+  // program was opened in too small of window. update to the minimum size for
+  // when resize is in correct parameters
+  else
+    {
+      numCols = _PROMPTWINMINCOLS;
+    }
+
+  // the window is within desired dimensions. allocate it
+  if(define == true)
+    {
+      // delete the current window if exists before creating a new one
+      if(wins.at(_PROMPTWIN)->getWindow() != nullptr)
+        {
+          wins.at(_PROMPTWIN)->deleteWindow();
+          wins.at(_PROMPTWIN)->setWindow(nullptr);
+        }
+
+      // create the new window
+      wins.at(_PROMPTWIN)->defineWindow(newwin(numLines,
+                                               numCols,
+                                               startY,
+                                               startX),
+                                        "_PROMPTWIN",
+                                        numLines,
+                                        numCols,
+                                        startY,
+                                        startX);
+    }
+  // the window has been resized to a bad dimension. delete it
+  else
+    {
+      if(wins.at(_PROMPTWIN)->getWindow() != nullptr)
+        {
+          wins.at(_PROMPTWIN)->deleteWindow();
+          wins.at(_PROMPTWIN)->setWindow(nullptr);
+        }
+    }
+} // end of "definePromptWin"
+
+
+
+/*
+  Function:
    defineWins
 
   Description:
@@ -127,22 +227,9 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
                                       numCols,
                                       startY,
                                       startX);
-
-  // PROMPTWIN
-  numLines = _PROMPTWINMAXLINES;
-  numCols = _PROMPTWINMAXCOLS;
-  startY = _PROMPTWINSTARTY;
-  startX = _PROMPTWINSTARTX;
-  wins.at(_PROMPTWIN)->defineWindow(newwin(numLines,
-                                               numCols,
-                                               startY,
-                                               startX),
-                                        "_PROMPTWIN",
-                                        numLines,
-                                        numCols,
-                                        startY,
-                                        startX);
-
+  definePromptWin(wins,
+                  numLines,
+                  numCols);
   // // _HELPWIN
   // numLines = (wins.at(_MAINWIN)->getNumLines() / 2) - 3;
   // numCols = _HELPWINSTARTCOLS;
@@ -313,332 +400,6 @@ void clearWins(const std::unordered_map<int, CursesWindow*>& wins)
 
 /*
   Function:
-   updatePromptWinDimensions
-
-  Description:
-   Uses the incoming numLines and numCols variable values, which contain
-   the current max number and columns of STDSCR, to determine if the
-   window being tested should be deleted or created.  This is to allow
-   dynamic window creation/deletion for any window resizing operations
-   done in the terminal.
-
-  Input/Output:
-   wins                 - A reference to a const unordered map
-                          <int, CursesWindow*> type that contains pointers
-                          to all currently allocated CursesWindow objects
-                          that can be indexed by key values in the file
-                          _cursesWinConsts.hpp.
-  Input:
-   numLines             - a reference to a constant integer containing the current
-                          maximum number of lines of the main curses window.
-
-   numCols              - a reference to a constant integer containing the current
-                          maximum number of columns of the main curses window.
-
-  Output:
-   NONE
-
-  Returns:
-   NONE
-*/
-void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
-                               const int& numLines,
-                               const int& numCols)
-{
-  int promptWinCols = wins.at(_PROMPTWIN)->getNumCols();
-  int promptWinLines = wins.at(_PROMPTWIN)->getNumLines();
-  int promptWinStartX = wins.at(_PROMPTWIN)->getStartX();
-  int promptWinStartY = wins.at(_PROMPTWIN)->getStartY();
-  bool print = false;
-
-  if(wins.at(_PROMPTWIN)->getWindow() != nullptr)
-    {
-      wins.at(_PROMPTWIN)->deleteWindow();
-      wins.at(_PROMPTWIN)->setWindow(nullptr);
-    }
-
-  if(_PROMPTWINMAXCOLS < numCols - 10 ||
-    _PROMPTWINMINCOLS < numCols - 10)
-    {
-      print = true;
-      promptWinCols = numCols - 10;
-    }
-
-  if(print)
-    {
-      wins.at(_PROMPTWIN)->defineWindow(newwin(promptWinLines,
-                                               promptWinCols,
-                                               promptWinStartY,
-                                               promptWinStartX),
-                                        wins.at(_PROMPTWIN)->getWindowName(),
-                                        promptWinLines,
-                                        promptWinCols,
-                                        promptWinStartY,
-                                        promptWinStartX);
-
-    }
-} // end of "updatePromptWinDimensions"
-
-
-
-/*
-  Function:
-   updateHelpWinWinDimensions
-
-  Description:
-   Uses the incoming numLines and numCols variable values, which contain
-   the current max number and columns of STDSCR, to determine if the
-   window being tested should be deleted or created.  This is to allow
-   dynamic window creation/deletion for any window resizing operations
-   done in the terminal.
-
-  Input/Output:
-   wins                 - A reference to a const unordered map
-                          <int, CursesWindow*> type that contains pointers
-                          to all currently allocated CursesWindow objects
-                          that can be indexed by key values in the file
-                          _cursesWinConsts.hpp.
-  Input:
-   numLines             - a reference to a constant integer containing the current
-                          maximum number of lines of the main curses window.
-
-   numCols              - a reference to a constant integer containing the current
-                          maximum number of columns of the main curses window.
-
-  Output:
-   NONE
-
-  Returns:
-   NONE
-*/
-void updateHelpWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
-                               const int& numLines,
-                               const int& numCols)
-{
-  const int helpWinCols = wins.at(_HELPWIN)->getNumCols();
-  const int helpWinLines = wins.at(_HELPWIN)->getNumLines();
-  const int helpWinStartX = wins.at(_HELPWIN)->getStartX();
-  const int helpWinStartY = wins.at(_HELPWIN)->getStartY();
-
-  if(helpWinCols + helpWinStartX > numCols ||
-     helpWinStartY + helpWinLines >= numLines)
-    {
-      wins.at(_HELPWIN)->deleteWindow();
-      wins.at(_HELPWIN)->setWindow(nullptr);
-    }
-  else
-    {
-      if(wins.at(_HELPWIN)->getWindow() == nullptr)
-        {
-          wins.at(_HELPWIN)->defineWindow(newwin(helpWinLines,
-                                                 helpWinCols,
-                                                 helpWinStartY,
-                                                 helpWinStartX),
-                                          wins.at(_HELPWIN)->getWindowName(),
-                                          helpWinLines,
-                                          helpWinCols,
-                                          helpWinStartY,
-                                          helpWinStartX);
-        }
-    }
-} // end of "updateHelpWinWinDimensions"
-
-
-
-/*
-  Function:
-   updateProgramsWinDimensions
-
-  Description:
-   Uses the incoming numLines and numCols variable values, which contain
-   the current max number and columns of STDSCR, to determine if the
-   window being tested should be deleted or created.  This is to allow
-   dynamic window creation/deletion for any window resizing operations
-   done in the terminal.
-
-  Input/Output:
-   wins                 - A reference to a const unordered map
-                          <int, CursesWindow*> type that contains pointers
-                          to all currently allocated CursesWindow objects
-                          that can be indexed by key values in the file
-                          _cursesWinConsts.hpp.
-  Input:
-   numLines             - a reference to a constant integer containing the current
-                          maximum number of lines of the main curses window.
-
-   numCols              - a reference to a constant integer containing the current
-                          maximum number of columns of the main curses window.
-
-  Output:
-   NONE
-
-  Returns:
-   NONE
-*/
-void updateProgramsWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
-                                 const int& numLines,
-                                 const int& numCols)
-{
-  const int programsWinCols = wins.at(_PROGRAMSWIN)->getNumCols();
-  const int programsWinLines = wins.at(_PROGRAMSWIN)->getNumLines();
-  const int programsWinStartX = wins.at(_PROGRAMSWIN)->getStartX();
-  const int programsWinStartY = wins.at(_PROGRAMSWIN)->getStartY();
-
-  if(programsWinCols + programsWinStartX > numCols ||
-     programsWinStartY + programsWinLines >= numLines)
-    {
-      wins.at(_PROGRAMSWIN)->deleteWindow();
-      wins.at(_PROGRAMSWIN)->setWindow(nullptr);
-    }
-  else
-    {
-      if(wins.at(_PROGRAMSWIN)->getWindow() == nullptr)
-        {
-          wins.at(_PROGRAMSWIN)->defineWindow(newwin(programsWinLines,
-                                                     programsWinCols,
-                                                     programsWinStartY,
-                                                     programsWinStartX),
-                                              wins.at(_PROGRAMSWIN)->getWindowName(),
-                                              programsWinLines,
-                                              programsWinCols,
-                                              programsWinStartY,
-                                              programsWinStartX);
-        }
-    }
-} // end of "updateProgramsWinDimensions"
-
-
-
-/*
-  Function:
-   updateSavedFilesWinDimensions
-
-  Description:
-   Uses the incoming numLines and numCols variable values, which contain
-   the current max number and columns of STDSCR, to determine if the
-   window being tested should be deleted or created.  This is to allow
-   dynamic window creation/deletion for any window resizing operations
-   done in the terminal.
-
-  Input/Output:
-   wins                 - A reference to a const unordered map
-                          <int, CursesWindow*> type that contains pointers
-                          to all currently allocated CursesWindow objects
-                          that can be indexed by key values in the file
-                          _cursesWinConsts.hpp.
-  Input:
-   numLines             - a reference to a constant integer containing the current
-                          maximum number of lines of the main curses window.
-
-   numCols              - a reference to a constant integer containing the current
-                          maximum number of columns of the main curses window.
-
-  Output:
-   NONE
-
-  Returns:
-   NONE
-*/
-void updateSavedFilesWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
-                                   const int& numLines,
-                                   const int& numCols)
-{
-  const int savedFilesWinCols = wins.at(_SAVEDFILESWIN)->getNumCols();
-  const int savedFilesWinLines = wins.at(_SAVEDFILESWIN)->getNumLines();
-  const int savedFilesWinStartX = wins.at(_SAVEDFILESWIN)->getStartX();
-  const int savedFilesWinStartY = wins.at(_SAVEDFILESWIN)->getStartY();
-
-  if(savedFilesWinCols + savedFilesWinStartX > numCols ||
-     savedFilesWinStartY + savedFilesWinLines >= numLines)
-    {
-      wins.at(_SAVEDFILESWIN)->deleteWindow();
-      wins.at(_SAVEDFILESWIN)->setWindow(nullptr);
-    }
-  else
-    {
-      if(wins.at(_SAVEDFILESWIN)->getWindow() == nullptr)
-        {
-          wins.at(_SAVEDFILESWIN)->defineWindow(newwin(savedFilesWinLines,
-                                                     savedFilesWinCols,
-                                                     savedFilesWinStartY,
-                                                     savedFilesWinStartX),
-                                              wins.at(_SAVEDFILESWIN)->getWindowName(),
-                                              savedFilesWinLines,
-                                              savedFilesWinCols,
-                                              savedFilesWinStartY,
-                                              savedFilesWinStartX);
-        }
-    }
-} // end of "updateSavedFilesWinDimensions"
-
-
-
-/*
-  Function:
-   updateSavedThemesWinDimensions
-
-  Description:
-   Uses the incoming numLines and numCols variable values, which contain
-   the current max number and columns of STDSCR, to determine if the
-   window being tested should be deleted or created.  This is to allow
-   dynamic window creation/deletion for any window resizing operations
-   done in the terminal.
-
-  Input/Output:
-   wins                 - A reference to a const unordered map
-                          <int, CursesWindow*> type that contains pointers
-                          to all currently allocated CursesWindow objects
-                          that can be indexed by key values in the file
-                          _cursesWinConsts.hpp.
-  Input:
-   numLines             - a reference to a constant integer containing the current
-                          maximum number of lines of the main curses window.
-
-   numCols              - a reference to a constant integer containing the current
-                          maximum number of columns of the main curses window.
-
-  Output:
-   NONE
-
-  Returns:
-   NONE
-*/
-void updateSavedThemesWinDimensions(const std::unordered_map<int, CursesWindow*>& wins,
-                                    const int& numLines,
-                                    const int& numCols)
-{
-  const int savedThemesWinCols = wins.at(_SAVEDTHEMESWIN)->getNumCols();
-  const int savedThemesWinLines = wins.at(_SAVEDTHEMESWIN)->getNumLines();
-  const int savedThemesWinStartX = wins.at(_SAVEDTHEMESWIN)->getStartX();
-  const int savedThemesWinStartY = wins.at(_SAVEDTHEMESWIN)->getStartY();
-
-  if(savedThemesWinCols + savedThemesWinStartX > numCols ||
-     savedThemesWinStartY + savedThemesWinLines >= numLines)
-    {
-      wins.at(_SAVEDTHEMESWIN)->deleteWindow();
-      wins.at(_SAVEDTHEMESWIN)->setWindow(nullptr);
-    }
-  else
-    {
-      if(wins.at(_SAVEDTHEMESWIN)->getWindow() == nullptr)
-        {
-          wins.at(_SAVEDTHEMESWIN)->defineWindow(newwin(savedThemesWinLines,
-                                                        savedThemesWinCols,
-                                                        savedThemesWinStartY,
-                                                        savedThemesWinStartX),
-                                                 wins.at(_SAVEDTHEMESWIN)->getWindowName(),
-                                                 savedThemesWinLines,
-                                                 savedThemesWinCols,
-                                                 savedThemesWinStartY,
-                                                 savedThemesWinStartX);
-        }
-    }
-} // end of "updateSavedThemesWinDimensions"
-
-
-
-/*
-  Function:
    updateWinDimensions
 
   Description:
@@ -661,31 +422,37 @@ void updateSavedThemesWinDimensions(const std::unordered_map<int, CursesWindow*>
   Returns:
    NONE
 */
-void updateWinDimensions(const std::unordered_map<int, CursesWindow*>& wins)
+void updateWinDimensions(std::unordered_map<int, CursesWindow*>& wins)
 {
   int numLines = 0;
   int numCols = 0;
 
+  // get current stdscr lines and cols
   getmaxyx(stdscr, numLines, numCols);
   wins.at(_MAINWIN)->setNumLines(numLines);
   wins.at(_MAINWIN)->setNumCols(numCols);
 
-  updatePromptWinDimensions(wins,
-                            numLines,
-                            numCols);
-  // updateHelpWinDimensions(wins,
-  //                         numLines,
-  //                         numCols);
+
+
+  // resize necessary windows
+  //updatePromptWinDimensions(wins,
+//                            numLines,
+//                            numCols);
+  definePromptWin(wins,
+                  numLines,
+                  numCols);
   // updateSavedFilesWinDimensions(wins,
   //                               numLines,
   //                               numCols);
-  // updateProgramsWinDimensions(wins,
-  //                             numLines,
-  //                             numCols);
   // updateSavedThemesWinDimensions(wins,
   //                                numLines,
   //                                numCols);
-  // refreshWins(wins);
+  // updateProgramsWinDimensions(wins,
+  //                             numLines,
+  //                             numCols);
+  // updateHelpWinDimensions(wins,
+  //                         numLines,
+  //                         numCols);
 } // end of "updateWinDimensions"
 
 
