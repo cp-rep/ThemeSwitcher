@@ -127,38 +127,10 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
                                       numCols,
                                       startY,
                                       startX);
-  // _HELPWIN
-  numLines = (wins.at(_MAINWIN)->getNumLines() / 2) - 3;
-  numCols = _HELPWINSTARTCOLS;
-  startY = _HELPWINSTARTY;
-  startX =  wins.at(_MAINWIN)->getNumCols() - numCols - 3;
-  wins.at(_HELPWIN)->defineWindow(newwin(numLines,
-                                             numCols,
-                                             startY,
-                                             startX),
-                                      "_HELPWIN",
-                                      numLines,
-                                      numCols,
-                                      startY,
-                                      startX);
-  // _PROGRAMSWIN
-  numLines = (wins.at(_MAINWIN)->getNumLines() / 2) - 2;
-  numCols = _PROGRAMSWINSTARTCOLS;
-  startY = wins.at(_HELPWIN)->getNumLines() + 3;
-  startX =  wins.at(_MAINWIN)->getNumCols() - numCols - 3;
-  wins.at(_PROGRAMSWIN)->defineWindow(newwin(numLines,
-                                                 numCols,
-                                                 startY,
-                                                 startX),
-                                          "_PROGRAMSWIN",
-                                          numLines,
-                                          numCols,
-                                          startY,
-                                          startX);
-  // _PROMPTWIN
-  numLines = _PROMPTWINMINLINES;
-  numCols = wins.at(_MAINWIN)->getNumCols() -
-    wins.at(_HELPWIN)->getNumCols() - 8;
+
+  // PROMPTWIN
+  numLines = _PROMPTWINMAXLINES;
+  numCols = _PROMPTWINMAXCOLS;
   startY = _PROMPTWINSTARTY;
   startX = _PROMPTWINSTARTX;
   wins.at(_PROMPTWIN)->defineWindow(newwin(numLines,
@@ -170,40 +142,84 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
                                         numCols,
                                         startY,
                                         startX);
-  // _SAVEDFILESWIN
-  numLines = ((wins.at(_MAINWIN)->getNumLines() -
-               wins.at(_PROMPTWIN)->getNumLines()) / 2) - 3;
-  numCols = wins.at(_MAINWIN)->getNumCols() -
-    wins.at(_HELPWIN)->getNumCols() - 8;
-  startY = wins.at(_PROMPTWIN)->getStartY() +
-    wins.at(_PROMPTWIN)->getNumLines() + 1;
-  startX = _SAVEDFILESWINSTARTX;
-  wins.at(_SAVEDFILESWIN)->defineWindow(newwin(numLines,
-                                                   numCols,
-                                                   startY,
-                                                   startX),
-                                            "_SAVEDFILESWIN",
-                                            numLines,
-                                            numCols,
-                                            startY,
-                                            startX);
-  // _SAVEDTHEMESWIN
-  numLines = ((wins.at(_MAINWIN)->getNumLines() -
-               wins.at(_PROMPTWIN)->getNumLines()) / 2) - 3;
-  numCols = wins.at(_MAINWIN)->getNumCols() -
-    wins.at(_HELPWIN)->getNumCols() - 8;
-  startY = wins.at(_SAVEDFILESWIN)->getStartY() +
-    wins.at(_SAVEDFILESWIN)->getNumLines() + 1;
-  startX = _SAVEDTHEMESWINSTARTX;
-  wins.at(_SAVEDTHEMESWIN)->defineWindow(newwin(numLines,
-                                                    numCols,
-                                                    startY,
-                                                    startX),
-                                             "_SAVEDTHEMESWIN",
-                                             numLines,
-                                             numCols,
-                                             startY,
-                                             startX);
+
+  // // _HELPWIN
+  // numLines = (wins.at(_MAINWIN)->getNumLines() / 2) - 3;
+  // numCols = _HELPWINSTARTCOLS;
+  // startY = _HELPWINSTARTY;
+  // startX =  wins.at(_MAINWIN)->getNumCols() - numCols - 3;
+  // wins.at(_HELPWIN)->defineWindow(newwin(numLines,
+  //                                            numCols,
+  //                                            startY,
+  //                                            startX),
+  //                                     "_HELPWIN",
+  //                                     numLines,
+  //                                     numCols,
+  //                                     startY,
+  //                                     startX);
+  // // _PROGRAMSWIN
+  // numLines = (wins.at(_MAINWIN)->getNumLines() / 2) - 2;
+  // numCols = _PROGRAMSWINSTARTCOLS;
+  // startY = wins.at(_HELPWIN)->getNumLines() + 3;
+  // startX =  wins.at(_MAINWIN)->getNumCols() - numCols - 3;
+  // wins.at(_PROGRAMSWIN)->defineWindow(newwin(numLines,
+  //                                                numCols,
+  //                                                startY,
+  //                                                startX),
+  //                                         "_PROGRAMSWIN",
+  //                                         numLines,
+  //                                         numCols,
+  //                                         startY,
+  //                                         startX);
+  // // _PROMPTWIN
+  // numLines = _PROMPTWINMINLINES;
+  // numCols = wins.at(_MAINWIN)->getNumCols() -
+  //   wins.at(_HELPWIN)->getNumCols() - 8;
+  // startY = _PROMPTWINSTARTY;
+  // startX = _PROMPTWINSTARTX;
+  // wins.at(_PROMPTWIN)->defineWindow(newwin(numLines,
+  //                                              numCols,
+  //                                              startY,
+  //                                              startX),
+  //                                       "_PROMPTWIN",
+  //                                       numLines,
+  //                                       numCols,
+  //                                       startY,
+  //                                       startX);
+  // // _SAVEDFILESWIN
+  // numLines = ((wins.at(_MAINWIN)->getNumLines() -
+  //              wins.at(_PROMPTWIN)->getNumLines()) / 2) - 3;
+  // numCols = wins.at(_MAINWIN)->getNumCols() -
+  //   wins.at(_HELPWIN)->getNumCols() - 8;
+  // startY = wins.at(_PROMPTWIN)->getStartY() +
+  //   wins.at(_PROMPTWIN)->getNumLines() + 1;
+  // startX = _SAVEDFILESWINSTARTX;
+  // wins.at(_SAVEDFILESWIN)->defineWindow(newwin(numLines,
+  //                                                  numCols,
+  //                                                  startY,
+  //                                                  startX),
+  //                                           "_SAVEDFILESWIN",
+  //                                           numLines,
+  //                                           numCols,
+  //                                           startY,
+  //                                           startX);
+  // // _SAVEDTHEMESWIN
+  // numLines = ((wins.at(_MAINWIN)->getNumLines() -
+  //              wins.at(_PROMPTWIN)->getNumLines()) / 2) - 3;
+  // numCols = wins.at(_MAINWIN)->getNumCols() -
+  //   wins.at(_HELPWIN)->getNumCols() - 8;
+  // startY = wins.at(_SAVEDFILESWIN)->getStartY() +
+  //   wins.at(_SAVEDFILESWIN)->getNumLines() + 1;
+  // startX = _SAVEDTHEMESWINSTARTX;
+  // wins.at(_SAVEDTHEMESWIN)->defineWindow(newwin(numLines,
+  //                                                   numCols,
+  //                                                   startY,
+  //                                                   startX),
+  //                                            "_SAVEDTHEMESWIN",
+  //                                            numLines,
+  //                                            numCols,
+  //                                            startY,
+  //                                            startX);
 } // end of "defineWins"
 
 
@@ -329,32 +345,37 @@ void updatePromptWinDimensions(const std::unordered_map<int, CursesWindow*>& win
                                const int& numLines,
                                const int& numCols)
 {
-  const int promptWinCols = wins.at(_PROMPTWIN)->getNumCols();
-  const int promptWinLines = wins.at(_PROMPTWIN)->getNumLines();
-  const int promptWinStartX = wins.at(_PROMPTWIN)->getStartX();
-  const int promptWinStartY = wins.at(_PROMPTWIN)->getStartY();
+  int promptWinCols = wins.at(_PROMPTWIN)->getNumCols();
+  int promptWinLines = wins.at(_PROMPTWIN)->getNumLines();
+  int promptWinStartX = wins.at(_PROMPTWIN)->getStartX();
+  int promptWinStartY = wins.at(_PROMPTWIN)->getStartY();
+  bool print = false;
 
-
-  if(promptWinCols + promptWinStartX > numCols ||
-     promptWinStartY + promptWinLines >= numLines)
+  if(wins.at(_PROMPTWIN)->getWindow() != nullptr)
     {
       wins.at(_PROMPTWIN)->deleteWindow();
       wins.at(_PROMPTWIN)->setWindow(nullptr);
     }
-  else
+
+  if(_PROMPTWINMAXCOLS < numCols - 10 ||
+    _PROMPTWINMINCOLS < numCols - 10)
     {
-      if(wins.at(_PROMPTWIN)->getWindow() == nullptr)
-        {
-          wins.at(_PROMPTWIN)->defineWindow(newwin(promptWinLines,
-                                                   promptWinCols,
-                                                   promptWinStartY,
-                                                   promptWinStartX),
-                                            wins.at(_PROMPTWIN)->getWindowName(),
-                                            promptWinLines,
-                                            promptWinCols,
-                                            promptWinStartY,
-                                            promptWinStartX);
-        }
+      print = true;
+      promptWinCols = numCols - 10;
+    }
+
+  if(print)
+    {
+      wins.at(_PROMPTWIN)->defineWindow(newwin(promptWinLines,
+                                               promptWinCols,
+                                               promptWinStartY,
+                                               promptWinStartX),
+                                        wins.at(_PROMPTWIN)->getWindowName(),
+                                        promptWinLines,
+                                        promptWinCols,
+                                        promptWinStartY,
+                                        promptWinStartX);
+
     }
 } // end of "updatePromptWinDimensions"
 
@@ -648,22 +669,23 @@ void updateWinDimensions(const std::unordered_map<int, CursesWindow*>& wins)
   getmaxyx(stdscr, numLines, numCols);
   wins.at(_MAINWIN)->setNumLines(numLines);
   wins.at(_MAINWIN)->setNumCols(numCols);
+
   updatePromptWinDimensions(wins,
                             numLines,
                             numCols);
-  updateHelpWinDimensions(wins,
-                          numLines,
-                          numCols);
-  updateSavedFilesWinDimensions(wins,
-                                numLines,
-                                numCols);
-  updateProgramsWinDimensions(wins,
-                              numLines,
-                              numCols);
-  updateSavedThemesWinDimensions(wins,
-                                 numLines,
-                                 numCols);
-  refreshWins(wins);
+  // updateHelpWinDimensions(wins,
+  //                         numLines,
+  //                         numCols);
+  // updateSavedFilesWinDimensions(wins,
+  //                               numLines,
+  //                               numCols);
+  // updateProgramsWinDimensions(wins,
+  //                             numLines,
+  //                             numCols);
+  // updateSavedThemesWinDimensions(wins,
+  //                                numLines,
+  //                                numCols);
+  // refreshWins(wins);
 } // end of "updateWinDimensions"
 
 
