@@ -120,16 +120,17 @@ void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
                      const int& maxCols)
 {
   const int colOffset = 7;
+  const int lineOffset = 3;
   int numLines = _PROMPTWINMAXLINES;
   int numCols = _PROMPTWINMAXCOLS;
   int startY = _PROMPTWINSTARTY;
   int startX = _PROMPTWINSTARTX;
   bool define = false;
 
-
-  // check if the current total columns will fit desired dimensions
-  if(_PROMPTWINMAXCOLS < maxCols - colOffset ||
-     _PROMPTWINMINCOLS < maxCols - colOffset)
+  // check if the current total columns and lines will fit desired win dimensions
+  if( ((_PROMPTWINMAXCOLS < maxCols - colOffset) ||
+       (_PROMPTWINMINCOLS < maxCols - colOffset)) &&
+      (_PROMPTWINMAXLINES < maxLines - lineOffset))
     {
       define = true;
 
@@ -432,12 +433,7 @@ void updateWinDimensions(std::unordered_map<int, CursesWindow*>& wins)
   wins.at(_MAINWIN)->setNumLines(numLines);
   wins.at(_MAINWIN)->setNumCols(numCols);
 
-
-
   // resize necessary windows
-  //updatePromptWinDimensions(wins,
-//                            numLines,
-//                            numCols);
   definePromptWin(wins,
                   numLines,
                   numCols);
