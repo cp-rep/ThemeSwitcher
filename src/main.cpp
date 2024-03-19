@@ -113,7 +113,7 @@ int main()
           // the window size has changed. update window dimensions
           wins.at(_MAINWIN)->setNumLines(currLines);
           wins.at(_MAINWIN)->setNumCols(currCols);
-          updateWinDimensions(wins);
+          defineWins(wins);
         }
 
       // draw the windows as boxes
