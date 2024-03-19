@@ -92,8 +92,8 @@ int main()
   initializeCurses();
   initializeWins(wins);
   defineWins(wins);
-  int newLines = 0;
-  int newCols = 0;
+  int currLines = 0;
+  int currCols = 0;
 
   //inititalizeSecondaryWins(secondaryWins);
 #endif // _CURSES
@@ -106,13 +106,13 @@ int main()
       clearWins(wins);
 
       // check if the window size has changed
-      getmaxyx(stdscr, newLines, newCols);
-      if( (newLines != wins.at(_MAINWIN)->getNumLines()) ||
-          (newCols != wins.at(_MAINWIN)->getNumCols()) )
+      getmaxyx(stdscr, currLines, currCols);
+      if( (currLines != wins.at(_MAINWIN)->getNumLines()) ||
+          (currCols != wins.at(_MAINWIN)->getNumCols()) )
         {
           // the window size has changed. update window dimensions
-          wins.at(_MAINWIN)->setNumLines(newLines);
-          wins.at(_MAINWIN)->setNumCols(newCols);
+          wins.at(_MAINWIN)->setNumLines(currLines);
+          wins.at(_MAINWIN)->setNumCols(currCols);
           updateWinDimensions(wins);
         }
 
