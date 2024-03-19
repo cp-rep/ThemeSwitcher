@@ -92,6 +92,8 @@ int main()
   initializeCurses();
   initializeWins(wins);
   defineWins(wins);
+  int newLines = 0;
+  int newCols = 0;
 
   //inititalizeSecondaryWins(secondaryWins);
 #endif // _CURSES
@@ -102,7 +104,18 @@ int main()
 #if _CURSES
       // prepare windows for printing
       clearWins(wins);
-      updateWinDimensions(wins);
+
+
+      // check if the window size has changed
+      getmaxyx(stdscr, newLines, newCols);
+      if( (newLines != wins.at(_MAINWIN)->getNumLines()) ||
+          (newCols != wins.at(_MAINWIN)->getNumCols()) )
+        {
+          // the window size has changed. update window dimensions
+          wins.at(_MAINWIN)->setNumLines(newLines);
+          wins.at(_MAINWIN)->setNumCols(newCols);
+          updateWinDimensions(wins);
+        }
 
       // draw the windows as boxes
       drawBoxes(wins);
