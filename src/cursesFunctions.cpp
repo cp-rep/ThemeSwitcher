@@ -294,7 +294,7 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
 
 /*
   Function:
-   defineSavedFilesWin
+   defineSavedThemesWin
 
   Description:
    Uses the incoming numLines and numCols variable values, which contain
@@ -326,7 +326,74 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
                           const int& maxLines,
                           const int& maxCols)
 {
-} // end of "defineSavedFilesWin"
+  const int colOffset = 7;
+  const int lineOffset = 15;
+
+  int maxFileLines = (maxLines - _SAVEDFILESWINSTARTY) / 2;
+  int numLines = (maxLines - _SAVEDFILESWINSTARTY) / 2;
+  int numCols = _SAVEDTHEMESWINMAXCOLS;
+  int startY = _SAVEDTHEMESWINSTARTY;
+  int startX = _SAVEDTHEMESWINSTARTX;
+  bool colsCheck = false;
+  bool linesCheck = false;
+
+  // check if the current total columns and lines will fit desired win dimensions
+  if( ((_SAVEDTHEMESWINMAXCOLS < maxCols - colOffset) ||
+       (_SAVEDTHEMESWINMINCOLS < maxCols - colOffset)) )
+    {
+      colsCheck= true;
+
+      // make sure not to set size bigger than the maximum for that window
+      if(_SAVEDTHEMESWINMAXCOLS + colOffset < maxCols)
+        {
+          numCols = _SAVEDTHEMESWINMAXCOLS;
+        }
+      // else, the size is somewhere between the min and max
+      else
+        {
+          numCols = maxCols - colOffset;
+        }
+    }
+
+  if((_SAVEDTHEMESWINMINLINES < maxFileLines) &&
+     (_SAVEDTHEMESWINMINLINES < maxFileLines))
+
+    {
+      linesCheck= true;
+      numLines = ((maxLines - _SAVEDFILESWINSTARTY) / 2) - 3;
+    }
+
+  // the window is within desired dimensions. allocate it
+  if((colsCheck == true) && (linesCheck == true))
+    {
+      // delete the current window if exists before creating a new one
+      if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
+        {
+          wins.at(_SAVEDTHEMESWIN)->deleteWindow();
+          wins.at(_SAVEDTHEMESWIN)->setWindow(nullptr);
+        }
+
+      // create the new window
+      wins.at(_SAVEDTHEMESWIN)->defineWindow(newwin(numLines,
+                                                   numCols,
+                                                   startY,
+                                                   startX),
+                                            "_SAVEDTHEMESWIN",
+                                            numLines,
+                                            numCols,
+                                            startY,
+                                            startX);
+    }
+  // the window has been resized to a bad dimension. delete it
+  else
+    {
+      if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
+        {
+          wins.at(_SAVEDTHEMESWIN)->deleteWindow();
+          wins.at(_SAVEDTHEMESWIN)->setWindow(nullptr);
+        }
+    }
+} // end of "defineSavedThemesWin"
 
 
 
@@ -378,9 +445,9 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
   defineSavedFilesWin(wins,
                       numLines,
                       numCols);
-  // defineSavedThemesWin(wins,
-  //                      numLines,
-  //                      numCols);
+  defineSavedThemesWin(wins,
+                       numLines,
+                       numCols);
 
 
   // // _HELPWIN
@@ -548,63 +615,6 @@ void clearWins(const std::unordered_map<int, CursesWindow*>& wins)
       werase(it->second->getWindow());
     }
 } // end of "clearWins"
-
-
-
-/*
-  Function:
-   updateWinDimensions
-
-  Description:
-   A major function that gets the current dimensions of the standard screen
-   and determines if any allocated window fits within those dimensions. Minor
-   functions are called to assist with this determination.
-
-  Input/Output:
-   wins                 - A reference to a const unordered map
-                          <int, CursesWindow*> type that contains pointers
-                          to all currently allocated CursesWindow objects
-                          that can be indexed by key values in the file
-                          _cursesWinConsts.hpp.
-  Input:
-   NONE
-
-  Output:
-   NONE
-
-  Returns:
-   NONE
-*/
-void updateWinDimensions(std::unordered_map<int, CursesWindow*>& wins)
-{
-  int numLines = 0;
-  int numCols = 0;
-
-  // get current stdscr lines and cols
-  getmaxyx(stdscr, numLines, numCols);
-  wins.at(_MAINWIN)->setNumLines(numLines);
-  wins.at(_MAINWIN)->setNumCols(numCols);
-
-  // resize necessary windows
-  definePromptWin(wins,
-                  numLines,
-                  numCols);
-  defineSavedFilesWin(wins,
-                      numLines,
-                      numCols);
-  // updateSavedFilesWinDimensions(wins,
-  //                               numLines,
-  //                               numCols);
-  // updateSavedThemesWinDimensions(wins,
-  //                                numLines,
-  //                                numCols);
-  // updateProgramsWinDimensions(wins,
-  //                             numLines,
-  //                             numCols);
-  // updateHelpWinDimensions(wins,
-  //                         numLines,
-  //                         numCols);
-} // end of "updateWinDimensions"
 
 
 
