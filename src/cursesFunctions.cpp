@@ -222,8 +222,7 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
 {
   const int colOffset = 7;
   const int lineOffset = 9;
-
-  int maxFileLines = ((maxLines - _SAVEDFILESWINSTARTY) / 2) - 1;
+  int halfedLines = ((maxLines - _SAVEDFILESWINSTARTY) / 2) - 1;
   int numLines = (maxLines - _PROMPTWINSTARTY) - lineOffset;
   int numCols = _SAVEDFILESWINMAXCOLS;
   int startY = _SAVEDFILESWINSTARTY;
@@ -246,20 +245,16 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
       else
         {
           numCols = maxCols - colOffset;
-
         }
     }
 
   if(_SAVEDFILESWINMINLINES < numLines)
     {
-      linesCheck= true;
-
-      // determines starting window full screen size
-      if(numLines > _SAVEDFILESWINMAXLINES)
+      linesCheck = true;
+      if(halfedLines > _SAVEDFILESWINMINLINES)
         {
-          numLines = maxFileLines;
+          numLines = halfedLines;
         }
-      // else, the numlines value will be used for the resize
     }
 
   // the window is within desired dimensions. allocate it
@@ -331,13 +326,11 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
                           const int& maxCols)
 {
   const int colOffset = 7;
-  const int lineOffset = 7;
-
-  int maxFileLines = (maxLines - _SAVEDFILESWINSTARTY) / 2;
-  int numLines = (maxLines - _SAVEDFILESWINSTARTY) / 2;
+  const int lineOffset = 9;
+  int halfedLines = ((maxLines - _SAVEDFILESWINSTARTY) / 2) - 1;
+  int numLines = ((maxLines - _SAVEDFILESWINSTARTY) / 2) - 1;
   int numCols = _SAVEDTHEMESWINMAXCOLS;
-  //int startY = _SAVEDTHEMESWINSTARTY + numLines + 1;
-  int startY = ((maxLines - _SAVEDFILESWINSTARTY)/2) + lineOffset;// - lineOffset;
+  int startY = ((maxLines - _SAVEDFILESWINSTARTY)/2) + lineOffset;
   int startX = _SAVEDTHEMESWINSTARTX;
   bool colsCheck = false;
   bool linesCheck = false;
@@ -360,12 +353,13 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
         }
     }
 
-  if((_SAVEDTHEMESWINMINLINES < maxFileLines) &&
-     (_SAVEDTHEMESWINMINLINES < maxFileLines))
-
+  if(_SAVEDTHEMESWINMINLINES < numLines + 1)
     {
-      linesCheck= true;
-      numLines = ((maxLines - _SAVEDFILESWINSTARTY) / 2) - 3;
+      if(halfedLines > _SAVEDFILESWINMINLINES)
+        {
+          linesCheck= true;
+          numLines = halfedLines;
+        }
     }
 
   // the window is within desired dimensions. allocate it
@@ -450,9 +444,9 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
   defineSavedFilesWin(wins,
                       numLines,
                       numCols);
-  // defineSavedThemesWin(wins,
-  //                      numLines,
-  //                      numCols);
+  defineSavedThemesWin(wins,
+                       numLines,
+                       numCols);
 } // end of "defineWins"
 
 
