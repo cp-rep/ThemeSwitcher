@@ -52,12 +52,13 @@ const unsigned int _PROMPTWINMAXLINES = 6;
 const unsigned int _PROMPTWINMINCOLS = 60;
 const unsigned int _PROMPTWINMAXCOLS = 120;
 
-
 // _SAVEDFILESWIN DIMENSION CONSTS
-const unsigned int _SAVEDFILESWINSTARTY = 2;
+const unsigned int _SAVEDFILESWINSTARTY = _PROMPTWINSTARTY + _PROMPTWINMAXLINES + 1;
 const unsigned int _SAVEDFILESWINSTARTX = 3;
-const unsigned int _SAVEDFILESWINMINLINES = 10;
+const unsigned int _SAVEDFILESWINMINLINES = 12;
+const unsigned int _SAVEDFILESWINMAXLINES = 30;
 const unsigned int _SAVEDFILESWINMINCOLS = 60;
+const unsigned int _SAVEDFILESWINMAXCOLS = 120;
 
 // _SAVEDTHEMESWIN DIMENSION CONSTS
 const unsigned int _SAVEDTHEMESWINSTARTY = 2;
