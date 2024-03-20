@@ -205,7 +205,7 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
   int numLines = (maxLines - _PROMPTWINSTARTY) - lineOffset;
   int startY = _SAVEDFILESWINSTARTY;
   int startX = _SAVEDFILESWINSTARTX;
-  int numCols = maxCols - _HELPWINMINCOLS - colOffset;;
+  int numCols = maxCols - _HELPWINMINCOLS - colOffset;
   bool colsCheck = false;
   bool linesCheck = false;
 
