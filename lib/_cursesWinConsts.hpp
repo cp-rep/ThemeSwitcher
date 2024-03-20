@@ -37,7 +37,7 @@ const unsigned int _HELPWINSTARTY = 2;
 const unsigned int _HELPWINSTARTX = 0;
 const unsigned int _HELPWINMINCOLS = 50;
 const unsigned int _HELPWINMAXCOLS = 60;
-const unsigned int _HELPWINMINLINES = 18;
+const unsigned int _HELPWINMINLINES = 4;
 const unsigned int _HELPWINMAXLINES = 40;
 
 // _PROGRAMSWIN DIMENSION  S
