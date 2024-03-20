@@ -603,6 +603,39 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                         const int& currCols,
                         std::ofstream& log)
 {
+  int i = 0;
+  std::vector<std::string>::const_iterator it;
+  std::string outString;
+  const int colOffset = 8;
+  const int lineOffset = 2;
+  int linePosition = wins.at(_SAVEDFILESWIN)->getStartY() + 2;
+  int maxFilesWinY;
+  int maxFilesWinX;
+
+  getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),maxFilesWinY, maxFilesWinX);
+
+  for(it = savedFilesStrings.begin(); it != savedFilesStrings.end(); i++, it++)
+    {
+      outString = *it;
+      const int temp = wins.at(_HELPWIN)->getStartX();
+
+      if(outString.length() >= temp - colOffset)
+        {
+          outString.resize(temp - colOffset);
+        }
+
+      if(i + lineOffset >= maxFilesWinY - 4)
+        {
+          break;
+        }
+      else
+        {
+          mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
+                    i + lineOffset,
+                    4,
+                    outString.c_str());
+        }
+    }
 } // end of "printSavedFilesWin"
 
 
