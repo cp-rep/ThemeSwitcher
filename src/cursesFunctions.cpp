@@ -507,7 +507,7 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
 
 /*
   Function:
-   printPrompt
+   printPromptWin
 
   Description:
    Prints the program title to _PROMPTWIN
@@ -536,11 +536,11 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
   Returns:
    NONE
 */
-void printPrompt(const std::unordered_map<int, CursesWindow*>& wins,
-                 const std::vector<std::string>& promptStrings,
-                 const int& currLines,
-                 const int& currCols,
-                 std::ofstream& log)
+void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
+                    const std::vector<std::string>& promptStrings,
+                    const int& currLines,
+                    const int& currCols,
+                    std::ofstream& log)
 {
   int i = 0;
   std::vector<std::string>::const_iterator it;
@@ -562,7 +562,48 @@ void printPrompt(const std::unordered_map<int, CursesWindow*>& wins,
                 0,
                 outString.c_str());
     }
-} // end of "printPrompt"
+} // end of "printPromptWin"
+
+
+
+/*
+  Function:
+   printSavedFilesWin
+
+  Description:
+   Prints the saved files data to the buffer for the _SAVEDFILESWIN
+
+  Input/Output:
+   wins                     - A reference to a const unordered map
+                              <int, CursesWindow*> type that contains pointers
+                              to all currently allocated CursesWindow objects
+                              that can be indexed by key values in the file
+                              _cursesWinConsts.hpp.
+  Input:
+  savedFilesStrings         - a reference to to a constant vector of strings
+                              containing the paths for the files that have/can
+                              be modified by ThemesSwitcher for changing
+                              the color theme.
+
+  currLines                 - a reference to a constant integer that contains
+                              the current max lines of the STDSCR(_MAINWIN).
+
+  currCols                  - a reference to a constant integer that contains
+                              the current max columns of the STDSCR(_MAINWIN).
+
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
+void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
+                        const std::vector<std::string>& savedFilesStrings,
+                        const int& currLines,
+                        const int& currCols,
+                        std::ofstream& log)
+{
+} // end of "printSavedFilesWin"
 
 
 

@@ -22,11 +22,16 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                    const int& maxLines,
                    const int& maxCols);
 void defineWins(std::unordered_map<int, CursesWindow*>& wins);
-void printPrompt(const std::unordered_map<int, CursesWindow*>& wins,
-                 const std::vector<std::string>& promptStrings,
-                 const int& currLines,
-                 const int& currCols,
-                 std::ofstream& log);
+void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
+                    const std::vector<std::string>& promptStrings,
+                    const int& currLines,
+                    const int& currCols,
+                    std::ofstream& log);
+void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
+                        const std::vector<std::string>& savedFilesStrings,
+                        const int& currLines,
+                        const int& currCols,
+                        std::ofstream& log);
 void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
 void clearWins(const std::unordered_map<int, CursesWindow*>& wins);
 void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins);
