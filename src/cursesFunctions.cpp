@@ -389,13 +389,13 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                    const int& maxLines,
                    const int& maxCols)
 {
-  const int colOffset = 7;
+  const int colOffset = 3;
   const int lineOffset = 4;
   int numLines = (maxLines - _HELPWINSTARTY) - lineOffset;
   int numCols = _HELPWINMINCOLS;
   int startY = 2;
   int startX =  maxCols - _HELPWINMINCOLS - 3;
-  bool colsCheck = true;
+  bool colsCheck = false;
   bool linesCheck = false;
 
   if(_HELPWINMINLINES < maxLines - lineOffset)
@@ -404,8 +404,14 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
       linesCheck = true;
     }
 
+
+  if(maxCols > _HELPWINMINCOLS + colOffset)
+    {
+      colsCheck = true;
+    }
+
   // the window is within desired dimensions. allocate it
-  if(linesCheck == true)
+  if((linesCheck == true) && (colsCheck == true))
     {
       // delete the current window if exists before creating a new one
       if(wins.at(_HELPWIN)->getWindow() != nullptr)
