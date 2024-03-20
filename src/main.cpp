@@ -33,7 +33,7 @@
 #define _LOG 1
 #define _CURSES 1
 
-void defineProgramName(std::vector<std::string>& title);
+void definePrompt(std::vector<std::string>& title);
 
 
 
@@ -92,7 +92,7 @@ int main()
   int currLines = 0;
   int currCols = 0;
   std::vector<std::string> prompt;
-  defineProgramName(prompt);
+  definePrompt(prompt);
 
   // ## initialize curses and starting windows ##
 #if _CURSES
@@ -153,7 +153,7 @@ int main()
 
 
 
-void defineProgramName(std::vector<std::string>& prompt)
+void definePrompt(std::vector<std::string>& prompt)
 {
   std::string line0;
   std::string line1;
