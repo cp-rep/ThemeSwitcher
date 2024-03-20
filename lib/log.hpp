@@ -10,6 +10,7 @@
 #ifndef LOG_HPP
 #define LOG_HPP
 #include <string>
+#include <fstream>
 
 
 
