@@ -470,11 +470,11 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
 
   getmaxyx(stdscr, numLines, numCols);
   wins.at(_MAINWIN)->defineWindow(stdscr,
-                                      "_MAINWIN",
-                                      numLines,
-                                      numCols,
-                                      startY,
-                                      startX);
+                                  "_MAINWIN",
+                                  numLines,
+                                  numCols,
+                                  startY,
+                                  startX);
   definePromptWin(wins,
                   numLines,
                   numCols);
@@ -488,6 +488,56 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
                 numLines,
                 numCols);
 } // end of "defineWins"
+
+
+
+/*
+  Function:
+   printTitle
+
+  Description:
+   Prints the program title to _PROMPTWIN
+
+  Input/Output:
+   wins                     - A reference to a const unordered map
+                              <int, CursesWindow*> type that contains pointers
+                              to all currently allocated CursesWindow objects
+                              that can be indexed by key values in the file
+                              _cursesWinConsts.hpp.
+  Input:
+   title                    - a reference to to a constant vector of strings
+                              containing characters that make up a graphical
+                              depiction of the title of the program when
+                              printed in correct order.
+
+  currLines                 - a reference to a constant integer that contains
+                              the current max lines of the STDSCR(_MAINWIN).
+
+  currCols                  - a reference to a constant integer that contains
+                              the current max columns of the STDSCR(_MAINWIN).
+
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
+void printPrompt(const std::unordered_map<int, CursesWindow*>& wins,
+                 const std::vector<std::string>& prompt,
+                 const int& currLines,
+                 const int& currCols)
+{
+  int i = 0;
+  std::vector<std::string>::const_iterator it;
+
+  for(it = prompt.begin(); it != prompt.end(); i++, it++)
+    {
+      mvwaddstr(wins.at(_PROMPTWIN)->getWindow(),
+                i,
+                0,
+                (*it).c_str());
+    }
+} // end of "printTitle"
 
 
 
@@ -604,9 +654,15 @@ void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins)
 {
   char val = 'A';
   std::unordered_map<int, CursesWindow*>::const_iterator it;
-
-  for(it = wins.begin(); it != wins.end(); it++)
+  int i = 0;
+  for(it = wins.begin(); it != wins.end(); it++, i++)
     {
+      if(i == 3)
+        {
+
+          continue;
+        }
+
       if(val == '[')
         {
           val = 'A';
