@@ -35,10 +35,10 @@
 
 void definePrompt(std::vector<std::string>& title);
 void initTestStringVector(std::unordered_map<int, CursesWindow*>& wins,
-                          std::vector<std::string>& savedFiles,
+                          std::vector<std::string>& savedFilesStrings,
                           const unsigned int win,
                           std::ofstream& log);
-void printTestStringVector(const std::vector<std::string>& savedFiles,
+void printTestStringVector(const std::vector<std::string>& strings,
                            std::ofstream& log);
 
 
@@ -96,11 +96,11 @@ int main()
   // local variables
   int currLines = 0;
   int currCols = 0;
-  std::vector<std::string> prompt;
-  std::vector<std::string> savedFiles;
+  std::vector<std::string> promptStrings;
+  std::vector<std::string> savedFilesStrings;
 
   // init the text display string vector with THEME SWITCHER for _PROMPTWIN
-  definePrompt(prompt);
+  definePrompt(promptStrings);
 
   // ## initialize curses and starting windows ##
 #if _CURSES
@@ -131,20 +131,24 @@ int main()
         }
 
       initTestStringVector(wins,
-                           savedFiles,
+                           savedFilesStrings,
                            _SAVEDFILESWIN,
                            log);
-      printTestStringVector(savedFiles,
+      printTestStringVector(savedFilesStrings,
                             log);
 
       // update window buffer data
       drawBoxes(wins);
       printPromptWin(wins,
-                     prompt,
+                     promptStrings,
                      currLines,
                      currCols,
                      log);
-
+      printSavedFilesWin(wins,
+                         savedFilesStrings,
+                         currLines,
+                         currCols,
+                         log);
       // print windows and update the screen
       refreshWins(wins);
       doupdate();
@@ -169,7 +173,7 @@ int main()
 
 
 
-void definePrompt(std::vector<std::string>& prompt)
+void definePrompt(std::vector<std::string>& promptStrings)
 {
   std::string line0;
   std::string line1;
@@ -221,16 +225,16 @@ void definePrompt(std::vector<std::string>& prompt)
             '_', '_', '|', '_', '_', '/', '\\', '_', '_', '_', '_', '\\', '|',
             '_', '_', '|' };
 
-  prompt.push_back(line0);
-  prompt.push_back(line1);
-  prompt.push_back(line2);
-  prompt.push_back(line3);
-  prompt.push_back(line4);
+  promptStrings.push_back(line0);
+  promptStrings.push_back(line1);
+  promptStrings.push_back(line2);
+  promptStrings.push_back(line3);
+  promptStrings.push_back(line4);
 } // end of "definePrompt"
 
 
 void initTestStringVector(std::unordered_map<int, CursesWindow*>& wins,
-                          std::vector<std::string>& savedFiles,
+                          std::vector<std::string>& savedFilesStrings,
                           const unsigned int win,
                           std::ofstream& log)
 {
@@ -253,21 +257,21 @@ void initTestStringVector(std::unordered_map<int, CursesWindow*>& wins,
             temp = 'a';
           }
       }
-    savedFiles.push_back(tempString);
+    savedFilesStrings.push_back(tempString);
     tempString.clear();
   }
 }
 
 
-void printTestStringVector(const std::vector<std::string>& savedFiles,
+void printTestStringVector(const std::vector<std::string>& strings,
                            std::ofstream& log)
 {
   std::vector<std::string>::const_iterator it;
   int i = 0;
 
-  for(it = savedFiles.begin(); it != savedFiles.end(); it++)
+  for(it = strings.begin(); it != strings.end(); it++)
     {
-          log << i << ": " << *it << std::endl;
-          i++;
+      log << i << ": " << *it << std::endl;
+      i++;
     }
 }
