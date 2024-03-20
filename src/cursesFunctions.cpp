@@ -493,7 +493,7 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
 
 /*
   Function:
-   printTitle
+   printPrompt
 
   Description:
    Prints the program title to _PROMPTWIN
@@ -523,21 +523,32 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
    NONE
 */
 void printPrompt(const std::unordered_map<int, CursesWindow*>& wins,
-                 const std::vector<std::string>& prompt,
+                 const std::vector<std::string>& promptStrings,
                  const int& currLines,
-                 const int& currCols)
+                 const int& currCols,
+                 std::ofstream& log)
 {
   int i = 0;
   std::vector<std::string>::const_iterator it;
+  std::string outString;
+  const int offset = 6;
 
-  for(it = prompt.begin(); it != prompt.end(); i++, it++)
+  for(it = promptStrings.begin(); it != promptStrings.end(); i++, it++)
     {
+      outString = *it;
+      const int temp = wins.at(_HELPWIN)->getStartX();
+
+      if(outString.length() >= temp - offset)
+        {
+          outString.resize(temp - offset);
+        }
+
       mvwaddstr(wins.at(_PROMPTWIN)->getWindow(),
                 i,
                 0,
-                (*it).c_str());
+                outString.c_str());
     }
-} // end of "printTitle"
+} // end of "printPrompt"
 
 
 
