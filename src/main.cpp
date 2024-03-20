@@ -34,7 +34,11 @@
 #define _CURSES 1
 
 void definePrompt(std::vector<std::string>& title);
-
+void initTestStringVector(std::unordered_map<int, CursesWindow*>& wins,
+                          std::vector<std::string>& savedFiles,
+                          std::ofstream& log);
+void printTestStringVector(const std::vector<std::string>& savedFiles,
+                           std::ofstream& log);
 
 
 // ==== main ==================================================================
@@ -87,11 +91,13 @@ int main()
     }
 #endif // _LOG
 
-
   // local variables
   int currLines = 0;
   int currCols = 0;
   std::vector<std::string> prompt;
+  std::vector<std::string> savedFiles;
+
+  // init the text display string vector with THEME SWITCHER for _PROMPTWIN
   definePrompt(prompt);
 
   // ## initialize curses and starting windows ##
@@ -121,6 +127,12 @@ int main()
           wins.at(_MAINWIN)->setNumCols(currCols);
           defineWins(wins);
         }
+
+      initTestStringVector(wins,
+                           savedFiles,
+                           log);
+      printTestStringVector(savedFiles,
+                            log);
 
       // update window buffer data
       drawBoxes(wins);
@@ -212,3 +224,46 @@ void definePrompt(std::vector<std::string>& prompt)
   prompt.push_back(line3);
   prompt.push_back(line4);
 } // end of "definePrompt"
+
+
+void initTestStringVector(std::unordered_map<int, CursesWindow*>& wins,
+                          std::vector<std::string>& savedFiles,
+                          std::ofstream& log)
+{
+  int numChars = wins.at(_SAVEDFILESWIN)->getNumCols() - 6;
+  int numLines = wins.at(_SAVEDFILESWIN)->getNumLines() - 4;
+  std::string tempString;
+  log << "numchars: " << numChars << std::endl;
+  log << "numLines: " << numLines << std::endl;
+
+  for(int i = 0; i < numLines; i++)
+  {
+    char temp = 'a';
+
+    for(int j = 0; j < numChars; j++)
+      {
+        tempString.push_back(temp);
+        temp++;
+        if(temp == 'z')
+          {
+            temp = 'a';
+          }
+      }
+    savedFiles.push_back(tempString);
+    tempString.clear();
+  }
+}
+
+
+void printTestStringVector(const std::vector<std::string>& savedFiles,
+                           std::ofstream& log)
+{
+  std::vector<std::string>::const_iterator it;
+  int i = 0;
+
+  for(it = savedFiles.begin(); it != savedFiles.end(); it++)
+    {
+          log << i << ": " << *it << std::endl;
+          i++;
+    }
+}
