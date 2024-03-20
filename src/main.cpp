@@ -23,6 +23,7 @@
 #include <ncurses.h>
 #include <unistd.h>
 #include <unordered_map>
+#include <vector>
 #include "_cursesWinConsts.hpp"
 #include "cursesFunctions.hpp"
 #include "cursesWindow.hpp"
@@ -31,6 +32,8 @@
 #define _DEBUG 0
 #define _LOG 1
 #define _CURSES 1
+
+void defineProgramName(std::vector<std::string>& title);
 
 
 
@@ -84,21 +87,24 @@ int main()
     }
 #endif // _LOG
 
+
   // local variables
-  std::unordered_map<int, CursesWindow*> wins;
+  int currLines = 0;
+  int currCols = 0;
+  std::vector<std::string> prompt;
+  defineProgramName(prompt);
 
   // ## initialize curses and starting windows ##
 #if _CURSES
+  std::unordered_map<int, CursesWindow*> wins;
   initializeCurses();
   initializeWins(wins);
   defineWins(wins);
-  int currLines = 0;
-  int currCols = 0;
 
   //inititalizeSecondaryWins(secondaryWins);
 #endif // _CURSES
 
-  // add small delay
+
   while(true)
     {
 #if _CURSES
@@ -118,6 +124,10 @@ int main()
 
       // draw the windows as boxes
       drawBoxes(wins);
+      printPrompt(wins,
+                  prompt,
+                  currLines,
+                  currCols);
 
       // print windows and update the screen
       refreshWins(wins);
@@ -140,3 +150,64 @@ int main()
 
   return 0;
 } // end of "main"
+
+
+
+void defineProgramName(std::vector<std::string>& prompt)
+{
+  std::string line0;
+  std::string line1;
+  std::string line2;
+  std::string line3;
+  std::string line4;
+
+  line0 = { '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', ' ', '_',
+                  '_', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                  ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                  ' ', ' ', ' ', ' ', ' ', '_', '_', '_', '_', '_', '_', '_', '_',
+                  '_', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '_', '_', ' ', ' ',
+                  '_', '_', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '_',
+                  '_' };
+
+  line1 = { '\\', '_', '_', ' ', ' ', ' ', ' ', '_', '_', '_', '/', '|', ' ',
+                  ' ', '|', '_', '_', ' ', ' ', ' ', '_', '_', '_', '_', ' ', ' ',
+                  ' ', '_', '_', '_', '_', '_', ' ', ' ', ' ', '_', '_', '_', '_',
+                  ' ', ' ', ' ', ' ', '/', ' ', ' ', ' ', '_', '_', '_', '_', '_',
+                  '/', '_', ' ', ' ', '_', ' ', ' ', '_', '|', '_', '_', '|', '/',
+                  ' ', ' ', '|', '_', ' ', ' ', '_', '_', '_', '_', ' ', '|', ' ',
+                  ' ', '|', '_', '_', ' ', ' ', ' ', '_', '_', '_', '_', '_', '_',
+                  '_', '_', '_', '_', '_' };
+
+  line2 = { ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', '|', ' ',
+                  ' ', '|', ' ', ' ', '\\', '_', '/', ' ', '_', '_', ' ', '\\', ' ',
+                  '/', ' ', ' ', ' ', ' ', ' ', '\\', '_', '/', ' ', '_', '_', ' ',
+                  '\\', ' ', ' ', ' ', '\\', '_', '_', '_', '_', '_', ' ', ' ', '\\',
+                  '\\', ' ', '\\', '/', ' ', '\\', '/', ' ', '/', ' ', ' ', '\\', ' ',
+                  ' ', ' ', '_', '_', '\\', '/', ' ', '_', '_', '_', '\\', '|', ' ',
+                  ' ', '|', ' ', ' ', '\\', '_', '/', ' ', '_', '_', ' ', '\\', '_',
+                  ' ', ' ', '_', '_', ' ', '\\' };
+
+  line3 = { ' ', ' ', '|', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', '|', ' ',
+                  ' ', ' ', 'Y', ' ', ' ', '\\', ' ', ' ', '_', '_', '_', '/', '|',
+                  ' ', ' ', 'Y', ' ', 'Y', ' ', ' ', '\\', ' ', ' ', '_', '_', '_',
+                  '/', ' ', ' ', ' ', '/', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                  '\\', '\\', ' ', ' ', ' ', ' ', ' ', '/', '|', ' ', ' ', '|', '|',
+                  ' ', ' ', '|', ' ', '\\', ' ', ' ', '\\', '_', '_', '_', '|', ' ',
+                  ' ', ' ', 'Y', ' ', ' ', '\\', ' ', ' ', '_', '_', '_', '/', '|',
+                  ' ', ' ', '|', '_', '\\', '/'};
+
+  line4 = { ' ', ' ', '|', '_', '_', '_', '_', '|', ' ', ' ', ' ', '|', '_',
+                  '_', '_', '|', ' ', ' ', '/', '\\', '_', '_', '_', '_', '\\', '|',
+                  '_', '_', '|', '_', '|', '_', '_', '/', '\\', '_', '_', '_', '_',
+                  '\\', ' ', ' ', '/', '_', '_', '_', '_', '_', '_', '_', '_', '_',
+                  '/', ' ', '\\', '/', '\\', '_', '/', ' ', '|', '_', '_', '|', '|',
+                  '_', '_', '|', ' ', ' ', '\\', '_', '_', '_', '_', '_', '|', '_',
+                  '_', '_', '|', '_', '_', '/', '\\', '_', '_', '_', '_', '\\', '|',
+                  '_', '_', '|' };
+
+  prompt.push_back(line0);
+  prompt.push_back(line1);
+  prompt.push_back(line2);
+  prompt.push_back(line3);
+  prompt.push_back(line4);
+}
