@@ -122,12 +122,13 @@ int main()
           defineWins(wins);
         }
 
-      // draw the windows as boxes
+      // update window buffer data
       drawBoxes(wins);
       printPrompt(wins,
-                  prompt,
-                  currLines,
-                  currCols);
+                   prompt,
+                   currLines,
+                   currCols,
+                   log);
 
       // print windows and update the screen
       refreshWins(wins);
@@ -210,4 +211,4 @@ void definePrompt(std::vector<std::string>& prompt)
   prompt.push_back(line2);
   prompt.push_back(line3);
   prompt.push_back(line4);
-}
+} // end of "definePrompt"
