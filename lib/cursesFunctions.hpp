@@ -8,13 +8,17 @@
 void initializeCurses();
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins);
 void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
-                     const int& maxLines, const int& maxCols);
+                     const int& maxLines,
+                     const int& maxCols);
 void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                          const int& maxLines,
                          const int& maxCols);
 void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
                           const int& maxLines,
                           const int& maxCols);
+void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
+                   const int& maxLines,
+                   const int& maxCols);
 void defineWins(std::unordered_map<int, CursesWindow*>& wins);
 void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
 void clearWins(const std::unordered_map<int, CursesWindow*>& wins);

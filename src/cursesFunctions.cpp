@@ -76,7 +76,7 @@ void initializeCurses()
 */
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins)
 {
-  for(int i = _MAINWIN; i <= _SAVEDTHEMESWIN; i++)
+  for(int i = _MAINWIN; i <= _HELPWIN; i++)
     {
       CursesWindow* newWindow = new CursesWindow();
       wins.insert(std::make_pair(i, newWindow));
@@ -119,37 +119,19 @@ void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
                      const int& maxLines,
                      const int& maxCols)
 {
-  const int colOffset = 7;
+  const int colOffset = 9;
   const int lineOffset = 3;
   int numLines = _PROMPTWINMAXLINES;
-  int numCols = _PROMPTWINMAXCOLS;
+  //int numCols = _PROMPTWINMAXCOLs;
   int startY = _PROMPTWINSTARTY;
   int startX = _PROMPTWINSTARTX;
+  int numCols = maxCols - _HELPWINMINCOLS - colOffset;;
   bool define = false;
 
-  // check if the current total columns and lines will fit desired win dimensions
-  if( ((_PROMPTWINMAXCOLS < maxCols - colOffset) ||
-       (_PROMPTWINMINCOLS < maxCols - colOffset)) &&
-      (_PROMPTWINMAXLINES < maxLines - lineOffset))
+  if((numCols > _PROMPTWINMINCOLS) &&
+    (_PROMPTWINMAXLINES < maxLines - lineOffset + 1))
     {
       define = true;
-
-      // make sure not to set size bigger than the maximum for that window
-      if(_PROMPTWINMAXCOLS + colOffset < maxCols)
-        {
-          numCols = _PROMPTWINMAXCOLS;
-        }
-      // else, the size is somewhere between the min and max
-      else
-        {
-          numCols = maxCols - colOffset;
-        }
-    }
-  // program was opened in too small of window. update to the minimum size for
-  // when resize is in correct parameters
-  else
-    {
-      numCols = _PROMPTWINMINCOLS;
     }
 
   // the window is within desired dimensions. allocate it
@@ -220,32 +202,19 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                          const int& maxLines,
                          const int& maxCols)
 {
-  const int colOffset = 7;
+  const int colOffset = 9;
   const int lineOffset = 9;
   int halfedLines = ((maxLines - _SAVEDFILESWINSTARTY) / 2) - 1;
   int numLines = (maxLines - _PROMPTWINSTARTY) - lineOffset;
-  int numCols = _SAVEDFILESWINMAXCOLS;
   int startY = _SAVEDFILESWINSTARTY;
   int startX = _SAVEDFILESWINSTARTX;
+  int numCols = maxCols - _HELPWINMINCOLS - colOffset;;
   bool colsCheck = false;
   bool linesCheck = false;
 
-  // check if the current total columns and lines will fit desired win dimensions
-  if(((_SAVEDFILESWINMAXCOLS < maxCols - colOffset) ||
-      (_SAVEDFILESWINMINCOLS < maxCols - colOffset)))
+  if(numCols > _PROMPTWINMINCOLS)
     {
       colsCheck= true;
-
-      // make sure not to set size bigger than the maximum for that window
-      if(_SAVEDFILESWINMAXCOLS + colOffset < maxCols)
-        {
-          numCols = _SAVEDFILESWINMAXCOLS;
-        }
-      // else, the size is somewhere between the min and max
-      else
-        {
-          numCols = maxCols - colOffset;
-        }
     }
 
   if(_SAVEDFILESWINMINLINES < numLines)
@@ -325,39 +294,31 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
                           const int& maxLines,
                           const int& maxCols)
 {
-  const int colOffset = 7;
+
+
+
+
+
+  const int colOffset = 9;
   const int lineOffset = 9;
   int halfedLines = ((maxLines - _SAVEDFILESWINSTARTY) / 2) - 1;
   int numLines = ((maxLines - _SAVEDFILESWINSTARTY) / 2) - 1;
-  int numCols = _SAVEDTHEMESWINMAXCOLS;
   int startY = ((maxLines - _SAVEDFILESWINSTARTY)/2) + lineOffset;
-  int startX = _SAVEDTHEMESWINSTARTX;
+  int startX = _SAVEDFILESWINSTARTX;
+  int numCols = maxCols - _HELPWINMINCOLS - colOffset;;
   bool colsCheck = false;
   bool linesCheck = false;
 
-  // check if the current total columns and lines will fit desired win dimensions
-  if(((_SAVEDTHEMESWINMAXCOLS < maxCols - colOffset) ||
-      (_SAVEDTHEMESWINMINCOLS < maxCols - colOffset)))
+  if(numCols > _PROMPTWINMINCOLS)
     {
       colsCheck= true;
-
-      // make sure not to set size bigger than the maximum for that window
-      if(_SAVEDTHEMESWINMAXCOLS + colOffset < maxCols)
-        {
-          numCols = _SAVEDTHEMESWINMAXCOLS;
-        }
-      // else, the size is somewhere between the min and max
-      else
-        {
-          numCols = maxCols - colOffset;
-        }
     }
 
   if(_SAVEDTHEMESWINMINLINES < numLines + 1)
     {
       if(halfedLines > _SAVEDFILESWINMINLINES)
         {
-          linesCheck= true;
+          linesCheck = true;
           numLines = halfedLines;
         }
     }
@@ -374,14 +335,14 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
 
       // create the new window
       wins.at(_SAVEDTHEMESWIN)->defineWindow(newwin(numLines,
-                                                   numCols,
-                                                   startY,
-                                                   startX),
-                                            "_SAVEDTHEMESWIN",
-                                            numLines,
-                                            numCols,
-                                            startY,
-                                            startX);
+                                               numCols,
+                                               startY,
+                                               startX),
+                                        "_SAVEDTHEMESWIN",
+                                        numLines,
+                                        numCols,
+                                        startY,
+                                        startX);
     }
   // the window has been resized to a bad dimension. delete it
   else
@@ -393,6 +354,96 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
         }
     }
 } // end of "defineSavedThemesWin"
+
+
+
+/*
+  Function:
+   defineHelpWin
+
+  Description:
+   Uses the incoming numLines and numCols variable values, which contain
+   the current max number and columns of STDSCR, to determine if the
+   window being tested should be deleted or created.  This is to allow
+   dynamic window creation/deletion for any window resizing operations
+   done in the terminal.
+
+  Input/Output:
+   wins                 - A reference to a const unordered map
+                          <int, CursesWindow*> type that contains pointers
+                          to all currently allocated CursesWindow objects
+                          that can be indexed by key values in the file
+                          _cursesWinConsts.hpp.
+  Input:
+   numLines             - a reference to a constant integer containing the current
+                          maximum number of lines of the main curses window.
+
+   numCols              - a reference to a constant integer containing the current
+                          maximum number of columns of the main curses window.
+
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
+void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
+                   const int& maxLines,
+                   const int& maxCols)
+{
+  const int colOffset = 7;
+  const int lineOffset = 9;
+  int halfedLines = (maxLines/2);
+  int numLines = _HELPWINMAXLINES;
+  int numCols = _HELPWINMINCOLS;
+  int startY = 2;
+  int startX =  maxCols - _HELPWINMINCOLS - 3;
+  bool colsCheck = false;
+  bool linesCheck = false;
+
+  // check if the current total columns and lines will fit desired win dimensions
+  // if(_HELPWINMAXCOLS < (maxLines - _PROMPTWINMAXCOLS))
+  //   {
+  //     colsCheck= true;
+  //   }
+
+  // if(halfedLines > (_HELPWINMINLINES * 2))
+  //   {
+  //     linesCheck= true;
+  //     numLines = halfedLines;
+  //   }
+
+  // the window is within desired dimensions. allocate it
+  if((colsCheck == false) && (linesCheck == false))
+    {
+      // delete the current window if exists before creating a new one
+      if(wins.at(_HELPWIN)->getWindow() != nullptr)
+        {
+          wins.at(_HELPWIN)->deleteWindow();
+          wins.at(_HELPWIN)->setWindow(nullptr);
+        }
+
+      // create the new window
+      wins.at(_HELPWIN)->defineWindow(newwin(numLines,
+                                                   numCols,
+                                                   startY,
+                                                   startX),
+                                      "_HELPWIN",
+                                      numLines,
+                                      numCols,
+                                      startY,
+                                      startX);
+    }
+  // the window has been resized to a bad dimension. delete it
+  else
+    {
+      if(wins.at(_HELPWIN)->getWindow() != nullptr)
+        {
+          wins.at(_HELPWIN)->deleteWindow();
+          wins.at(_HELPWIN)->setWindow(nullptr);
+        }
+    }
+} // end of "defineHelpWin"
 
 
 
@@ -447,6 +498,9 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
   defineSavedThemesWin(wins,
                        numLines,
                        numCols);
+  defineHelpWin(wins,
+                numLines,
+                numCols);
 } // end of "defineWins"
 
 
