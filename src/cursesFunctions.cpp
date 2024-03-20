@@ -120,20 +120,18 @@ void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
                      const int& maxCols)
 {
   const int colOffset = 9;
-  const int lineOffset = 3;
+  const int lineOffset = 2;
   int numLines = _PROMPTWINMAXLINES;
   int numCols = maxCols - _HELPWINMINCOLS - colOffset;;
   int startY = _PROMPTWINSTARTY;
   int startX = _PROMPTWINSTARTX;
-  bool define = false;
+  bool define = true;
 
-  if((numCols > _PROMPTWINMINCOLS) &&
-    (_PROMPTWINMAXLINES < maxLines - lineOffset + 1))
+  if(maxLines - lineOffset <= _PROMPTWINMAXLINES)
     {
-      define = true;
+      define = false;
     }
 
-  // the window is within desired dimensions. allocate it
   if(define == true)
     {
       // delete the current window if exists before creating a new one
@@ -249,6 +247,8 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
   // the window has been resized to a bad dimension. delete it
   else
     {
+      wins.at(_SAVEDFILESWIN)->setStartX(startX);
+      wins.at(_SAVEDFILESWIN)->setStartY(startY);
       if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
         {
           wins.at(_SAVEDFILESWIN)->deleteWindow();
@@ -341,6 +341,10 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
   // the window has been resized to a bad dimension. delete it
   else
     {
+      // update the new start positions anyway so other functions can utilize them
+      wins.at(_SAVEDTHEMESWIN)->setStartX(startX);
+      wins.at(_SAVEDTHEMESWIN)->setStartY(startY);
+
       if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
         {
           wins.at(_SAVEDTHEMESWIN)->deleteWindow();
@@ -424,6 +428,10 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
   // the window has been resized to a bad dimension. delete it
   else
     {
+      // update the new start positions anyway so other functions can utilize them
+      wins.at(_HELPWIN)->setStartX(startX);
+      wins.at(_HELPWIN)->setStartY(startY);
+
       if(wins.at(_HELPWIN)->getWindow() != nullptr)
         {
           wins.at(_HELPWIN)->deleteWindow();
