@@ -122,10 +122,9 @@ void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
   const int colOffset = 9;
   const int lineOffset = 3;
   int numLines = _PROMPTWINMAXLINES;
-  //int numCols = _PROMPTWINMAXCOLs;
+  int numCols = maxCols - _HELPWINMINCOLS - colOffset;;
   int startY = _PROMPTWINSTARTY;
   int startX = _PROMPTWINSTARTX;
-  int numCols = maxCols - _HELPWINMINCOLS - colOffset;;
   bool define = false;
 
   if((numCols > _PROMPTWINMINCOLS) &&
@@ -294,11 +293,6 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
                           const int& maxLines,
                           const int& maxCols)
 {
-
-
-
-
-
   const int colOffset = 9;
   const int lineOffset = 9;
   int halfedLines = ((maxLines - _SAVEDFILESWINSTARTY) / 2) - 1;
@@ -401,18 +395,6 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
   bool colsCheck = false;
   bool linesCheck = false;
 
-  // check if the current total columns and lines will fit desired win dimensions
-  // if(_HELPWINMAXCOLS < (maxLines - _PROMPTWINMAXCOLS))
-  //   {
-  //     colsCheck= true;
-  //   }
-
-  // if(halfedLines > (_HELPWINMINLINES * 2))
-  //   {
-  //     linesCheck= true;
-  //     numLines = halfedLines;
-  //   }
-
   // the window is within desired dimensions. allocate it
   if((colsCheck == false) && (linesCheck == false))
     {
@@ -481,7 +463,6 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
   int startY = 0;
   int startX = 0;
 
-  // _MAINWIN
   getmaxyx(stdscr, numLines, numCols);
   wins.at(_MAINWIN)->defineWindow(stdscr,
                                       "_MAINWIN",
