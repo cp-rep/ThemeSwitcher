@@ -738,7 +738,7 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
    printSavedFilesWin
 
   Description:
-   Prints the saved files data to the buffer for the _SAVEDFILESWIN
+   Prints the saved files data to the buffer for the _SAVEDFILESWIN window.
 
   Input/Output:
    wins                     - A reference to a const unordered map
@@ -751,13 +751,6 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                               containing the paths for the files that have/can
                               be modified by ThemesSwitcher for changing
                               the color theme.
-
-  currLines                 - a reference to a constant integer that contains
-                              the current max lines of the STDSCR(_MAINWIN).
-
-  currCols                  - a reference to a constant integer that contains
-                              the current max columns of the STDSCR(_MAINWIN).
-
   Output:
    NONE
 
@@ -809,6 +802,30 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 
+/*
+  Function:
+   printSavedThemesWin
+
+  Description:
+   Prints the saved themes data to the buffer for the _SAVEDTHEMESWIN window.
+
+  Input/Output:
+   wins                     - A reference to a const unordered map
+                              <int, CursesWindow*> type that contains pointers
+                              to all currently allocated CursesWindow objects
+                              that can be indexed by key values in the file
+                              _cursesWinConsts.hpp.
+  Input:
+  savedFilesStrings         - a reference to to a constant vector of strings
+                              containing the 'saved' themes that can be used
+                              to pick the color scheme to switch to.
+  Output:
+   NONE
+
+  Returns:
+   NONE
+   NONE
+*/
 void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          const std::vector<std::string>& savedThemesStrings,
                          std::ofstream& log)
