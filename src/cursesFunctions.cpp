@@ -774,9 +774,9 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
            maxWinLines,
            maxWinCols);
 
-  const int lineMaxOffset = 5;
+  const int lineMaxOffset = 4;
   const int colMaxOffset = 5;
-  const int lineMinOffset = 3;
+  const int lineMinOffset = 2;
   const int colMinOffset = 5;
 
   int linePosition = wins.at(_SAVEDFILESWIN)->getStartY() + 2;
@@ -804,6 +804,35 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                        colMinOffset,
                        log);
 } // end of "printSavedFilesWin"
+
+
+
+void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
+                         const std::vector<std::string>& savedThemesStrings,
+                         std::ofstream& log)
+{
+  int maxWinLines;
+  int maxWinCols;
+  getmaxyx(wins.at(_SAVEDTHEMESWIN)->getWindow(),
+           maxWinLines,
+           maxWinCols);
+
+  const int lineMaxOffset = 4;
+  const int colMaxOffset = 5;
+  const int lineMinOffset = 2;
+  const int colMinOffset = 5;
+  int linePosition = wins.at(_SAVEDTHEMESWIN)->getStartY() + 2;
+
+  std::vector<std::string>::const_iterator it;
+  std::string outString;
+  int i = 0;
+
+  outString = stTitle;
+  mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
+            i + lineMinOffset,
+            colMinOffset,
+            outString.c_str());
+} // end of "printSavedThemesWin"
 
 
 
