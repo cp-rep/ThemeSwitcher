@@ -10,6 +10,9 @@ void initTestStringVector(std::vector<std::string>& testStrings,
 void initTestFilesStringVector(std::vector<std::string>& testStrings,
                                const int numStrings,
                                std::ofstream& log);
+void initTestCurrThemesStringVector(std::vector<std::string>& testStrings,
+                               const int numStrings,
+                               std::ofstream& log);
 void printTestStringVectorToLog(const std::vector<std::string>& strings,
                                 std::ofstream& log);
 

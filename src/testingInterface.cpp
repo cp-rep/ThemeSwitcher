@@ -79,6 +79,52 @@ void initTestFilesStringVector(std::vector<std::string>& testStrings,
 } // end of "initTestStringVector"
 
 
+
+void initTestCurrThemesStringVector(std::vector<std::string>& testStrings,
+                               const int numStrings,
+                               std::ofstream& log)
+{
+  std::string tempString;
+  std::string theme1 = "dracula_theme.el";
+  std::string theme2 = "doom_one_theme.el";
+  std::string theme3 = "low_contrast.toml";
+  std::string theme4 = "high_contrsat.py";
+  std::string theme5 = "this_is_very_high_contrast.yml";
+  std::string theme6 = "this_is_very_low_constrats.yml";
+
+  for(int i = 0; i < numStrings; i++)
+  {
+    char temp = 'a';
+    int switchVal = random() % 6;
+
+    switch(switchVal)
+      {
+      case 0:
+        testStrings.push_back(theme1);
+        break;
+      case 1:
+        testStrings.push_back(theme2);
+        break;
+      case 2:
+        testStrings.push_back(theme3);
+        break;
+      case 3:
+        testStrings.push_back(theme4);
+        break;
+      case 4:
+        testStrings.push_back(theme5);
+        break;
+      case 5:
+        testStrings.push_back(theme6);
+        break;
+      default:
+        break;
+      }
+  }
+} // end of "initTestStringVector"
+
+
+
 void printTestStringVectorToLog(const std::vector<std::string>& strings,
                                 std::ofstream& log)
 {
