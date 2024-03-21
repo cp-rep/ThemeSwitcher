@@ -48,6 +48,13 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
 void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                         const std::vector<std::string>& savedFilesStrings,
                         std::ofstream& log);
+void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
+                             const std::vector<std::string>& strings,
+                             const int& lineMaxOffset,
+                             const int& colMaxOffset,
+                             const int& lineMinOffset,
+                             const int& colMinOffset,
+                             std::ofstream& log);
 void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          const std::vector<std::string>& savedThemesStrings,
                          std::ofstream& log);
