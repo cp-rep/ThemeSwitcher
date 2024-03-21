@@ -123,7 +123,7 @@ int main()
           defineWins(wins);
         }
 
-      // string printing testing
+      // string printing testing for _SAVEDFILESWIN
       savedFilesStrings.clear();
       int lineMinOffset = 3;
       int lineMaxOffset = 3;
@@ -135,6 +135,20 @@ int main()
       initTestStringVector(savedFilesStrings,
                            wins.at(_SAVEDFILESWIN)->getNumLines() - totalLineOffset,
                            wins.at(_SAVEDFILESWIN)->getNumCols() - totalColOffset,
+                           log);
+
+      // string printing testing for _SAVEDTHEMESWIN
+      savedFilesStrings.clear();
+      lineMinOffset = 3;
+      lineMaxOffset = 3;
+      totalLineOffset = lineMinOffset + lineMaxOffset;
+      minColOffset = 3;
+      maxColOffset = 3;
+      extensionLen = 4;
+      totalColOffset = minColOffset + maxColOffset  + extensionLen;
+      initTestStringVector(savedFilesStrings,
+                           wins.at(_SAVEDTHEMESWIN)->getNumLines() - totalLineOffset,
+                           wins.at(_SAVEDTHEMESWIN)->getNumCols() - totalColOffset,
                            log);
 
       // update window buffer data
