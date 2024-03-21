@@ -566,7 +566,49 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 
+/*
+  Function:
+   printNumberedStrings
 
+  Description:
+   Prints the incoming vector of strings as a numbered list to the window buffer
+   based on the provided incoming offset values.
+
+  Input/Output:
+   wins                     - A reference to a const unordered map
+                              <int, CursesWindow*> type that contains pointers
+                              to all currently allocated CursesWindow objects
+                              that can be indexed by key values in the file
+                              _cursesWinConsts.hpp.
+  Input:
+  strings                   - a reference to to a constant vector of strings
+                              to be printed to the window buffer in numbered
+                              ascending order.
+
+  lineMaxOffest             - a reference to a constant int type that contains
+                              a value used as a offset to subtract from the
+                              current windows maximum number of lines
+                              available.
+
+  colMaxOffest              - a reference to a constant int type that contains
+                              a value used as a offset to subtract from the
+                              current windows maximum number of columns
+                              available.
+
+  lineMinOffest             - a reference to a constant int type that contains
+                              a value used as an offset to the starting line
+                              of the window (which should be zero).
+
+  colMinOffset              - a reference to a constant int type that contains
+                              a value used as an offset to the starting column
+                              of the window (which should be zero).
+
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
 void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const std::vector<std::string>& strings,
                           const int& lineMaxOffset,
@@ -608,7 +650,7 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                     outString.c_str());
         }
     }
-}
+} // end of "printNumberedStrings"
 
 
 /*
