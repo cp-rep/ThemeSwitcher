@@ -712,16 +712,19 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                maxWinCols);
 
       std::string outString;
+      std::string filesCount;
 
       for(int i = 0; i < numToPrint; i++)
         {
-          outString = intToStr(i + 1);
-          outString.append(". ");
-          outString.append(strings.at(i));
+          filesCount = intToStr(i);
+          filesCount = intToStr(i + 1);
+          filesCount.append(". ");
+          outString = strings.at(i);
 
-          if(outString.length() >= maxWinCols - colMaxOffset)
+          // handle prepending "..." here since the file name wont fit
+          if(outString.length() + filesCount.length() >= maxWinCols - colMaxOffset)
             {
-              outString.resize(maxWinCols - colMaxOffset);
+              outString.resize(maxWinCols - colMaxOffset - filesCount.length());
             }
 
           if(i + lineMinOffset >= maxWinLines - lineMaxOffset)
@@ -733,6 +736,11 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
               mvwaddstr(wins.at(win)->getWindow(),
                         i + lineMinOffset + 2,
                         colMinOffset,
+                        filesCount.c_str());
+
+              mvwaddstr(wins.at(win)->getWindow(),
+                        i + lineMinOffset + 2,
+                        colMinOffset + filesCount.length(),
                         outString.c_str());
             }
         }
@@ -781,6 +789,7 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
       const int colMinOffset = 3;
       const int lineMaxOffset = 4;
       const int colMaxOffset = colMinOffset + 3;
+      std::string filesCount;
 
       int linePosition = wins.at(_SAVEDFILESWIN)->getStartY() + 2;
 
