@@ -329,6 +329,7 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
     {
       wins.at(_SAVEDFILESWIN)->setStartX(startX);
       wins.at(_SAVEDFILESWIN)->setStartY(startY);
+
       if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
         {
           wins.at(_SAVEDFILESWIN)->deleteWindow();
@@ -622,25 +623,28 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
                     const int& currCols,
                     std::ofstream& log)
 {
-  int i = 0;
-  std::vector<std::string>::const_iterator it;
-  std::string outString;
-  const int offset = 6;
-
-  for(it = promptStrings.begin(); it != promptStrings.end(); i++, it++)
+  if(wins.at(_PROMPTWIN)->getWindow() != nullptr)
     {
-      outString = *it;
-      const int temp = wins.at(_HELPWIN)->getStartX();
+      int i = 0;
+      std::vector<std::string>::const_iterator it;
+      std::string outString;
+      const int offset = 6;
 
-      if(outString.length() >= temp - offset)
+      for(it = promptStrings.begin(); it != promptStrings.end(); i++, it++)
         {
-          outString.resize(temp - offset);
-        }
+          outString = *it;
+          const int temp = wins.at(_HELPWIN)->getStartX();
 
-      mvwaddstr(wins.at(_PROMPTWIN)->getWindow(),
-                i,
-                0,
-                outString.c_str());
+          if(outString.length() >= temp - offset)
+            {
+              outString.resize(temp - offset);
+            }
+
+          mvwaddstr(wins.at(_PROMPTWIN)->getWindow(),
+                    i,
+                    0,
+                    outString.c_str());
+        }
     }
 } // end of "printPromptWin"
 
@@ -699,35 +703,38 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const int& numToPrint,
                           std::ofstream& log)
 {
-  int maxWinLines;
-  int maxWinCols;
-  getmaxyx(wins.at(win)->getWindow(),
-           maxWinLines,
-           maxWinCols);
-
-  std::string outString;
-
-  for(int i = 0; i < numToPrint; i++)
+  if(wins.at(win)->getWindow() != nullptr)
     {
-      outString = intToStr(i + 1);
-      outString.append(". ");
-      outString.append(strings.at(i));
+      int maxWinLines;
+      int maxWinCols;
+      getmaxyx(wins.at(win)->getWindow(),
+               maxWinLines,
+               maxWinCols);
 
-      if(outString.length() >= maxWinCols - colMaxOffset)
-        {
-          outString.resize(maxWinCols - colMaxOffset);
-        }
+      std::string outString;
 
-      if(i + lineMinOffset >= maxWinLines - lineMaxOffset)
+      for(int i = 0; i < numToPrint; i++)
         {
-          break;
-        }
-      else
-        {
-          mvwaddstr(wins.at(win)->getWindow(),
-                    i + lineMinOffset + 2,
-                    colMinOffset,
-                    outString.c_str());
+          outString = intToStr(i + 1);
+          outString.append(". ");
+          outString.append(strings.at(i));
+
+          if(outString.length() >= maxWinCols - colMaxOffset)
+            {
+              outString.resize(maxWinCols - colMaxOffset);
+            }
+
+          if(i + lineMinOffset >= maxWinLines - lineMaxOffset)
+            {
+              break;
+            }
+          else
+            {
+              mvwaddstr(wins.at(win)->getWindow(),
+                        i + lineMinOffset + 2,
+                        colMinOffset,
+                        outString.c_str());
+            }
         }
     }
 } // end of "printNumberedStrings"
@@ -761,43 +768,46 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                         const std::vector<std::string>& savedFilesStrings,
                         std::ofstream& log)
 {
-  int maxWinLines;
-  int maxWinCols;
-  getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),
-           maxWinLines,
-           maxWinCols);
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+    {
+      int maxWinLines;
+      int maxWinCols;
+      getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),
+               maxWinLines,
+               maxWinCols);
 
-  const int lineMinOffset = 2;
-  const int colMinOffset = 3;
-  const int lineMaxOffset = 4;
-  const int colMaxOffset = colMinOffset + 3;
+      const int lineMinOffset = 2;
+      const int colMinOffset = 3;
+      const int lineMaxOffset = 4;
+      const int colMaxOffset = colMinOffset + 3;
 
-  int linePosition = wins.at(_SAVEDFILESWIN)->getStartY() + 2;
+      int linePosition = wins.at(_SAVEDFILESWIN)->getStartY() + 2;
 
-  std::vector<std::string>::const_iterator it;
-  std::string outString;
-  int i = 0;
+      std::vector<std::string>::const_iterator it;
+      std::string outString;
+      int i = 0;
 
-  outString = sfTitle;
-  mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
-            i + lineMinOffset,
-            colMinOffset,
-            outString.c_str());
-  outString = sfThemeTitle;
-  mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
-            i + lineMinOffset,
-            maxWinCols - outString.length() - colMinOffset,
-            outString.c_str());
+      outString = sfTitle;
+      mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
+                i + lineMinOffset,
+                colMinOffset,
+                outString.c_str());
+      outString = sfThemeTitle;
+      mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
+                i + lineMinOffset,
+                maxWinCols - outString.length() - colMinOffset,
+                outString.c_str());
 
-  printNumberedStrings(wins,
-                       _SAVEDFILESWIN,
-                       savedFilesStrings,
-                       lineMaxOffset,
-                       colMaxOffset,
-                       lineMinOffset,
-                       colMinOffset,
-                       savedFilesStrings.size(),
-                       log);
+      printNumberedStrings(wins,
+                           _SAVEDFILESWIN,
+                           savedFilesStrings,
+                           lineMaxOffset,
+                           colMaxOffset,
+                           lineMinOffset,
+                           colMinOffset,
+                           savedFilesStrings.size(),
+                           log);
+    }
 } // end of "printSavedFilesWin"
 
 
@@ -830,39 +840,41 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          const std::vector<std::string>& savedThemesStrings,
                          std::ofstream& log)
 {
-  int maxWinLines;
-  int maxWinCols;
-  getmaxyx(wins.at(_SAVEDTHEMESWIN)->getWindow(),
-           maxWinLines,
-           maxWinCols);
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+    {
+      int maxWinLines;
+      int maxWinCols;
+      getmaxyx(wins.at(_SAVEDTHEMESWIN)->getWindow(),
+               maxWinLines,
+               maxWinCols);
 
-  const int lineMinOffset = 2;
-  const int colMinOffset = 3;
-  const int lineMaxOffset = 4;
-  const int colMaxOffset = colMinOffset + 3;
+      const int lineMinOffset = 2;
+      const int colMinOffset = 3;
+      const int lineMaxOffset = 4;
+      const int colMaxOffset = colMinOffset + 3;
 
-  int linePosition = wins.at(_SAVEDTHEMESWIN)->getStartY() + 2;
+      int linePosition = wins.at(_SAVEDTHEMESWIN)->getStartY() + 2;
 
-  std::vector<std::string>::const_iterator it;
-  std::string outString;
-  int i = 0;
+      std::vector<std::string>::const_iterator it;
+      std::string outString;
+      int i = 0;
 
-  outString = stTitle;
-  mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
-            i + lineMinOffset,
-            colMinOffset,
-            outString.c_str());
+      outString = stTitle;
+      mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
+                i + lineMinOffset,
+                colMinOffset,
+                outString.c_str());
 
-  printNumberedStrings(wins,
-                       _SAVEDTHEMESWIN,
-                       savedThemesStrings,
-                       lineMaxOffset,
-                       colMaxOffset,
-                       lineMinOffset,
-                       colMinOffset,
-                       savedThemesStrings.size(),
-                       log);
-
+      printNumberedStrings(wins,
+                           _SAVEDTHEMESWIN,
+                           savedThemesStrings,
+                           lineMaxOffset,
+                           colMaxOffset,
+                           lineMinOffset,
+                           colMinOffset,
+                           savedThemesStrings.size(),
+                           log);
+    }
 } // end of "printSavedThemesWin"
 
 
