@@ -8,8 +8,12 @@
 #include "log.hpp"
 #include "typeConversions.hpp"
 
+// _SAVEDFILESWIN
 const std::string sfTitle = "SAVED FILES:";
 const std::string sfThemeTitle = "CURRENT THEME:";
+
+// _SAVEDTHEMESWIN
+const std::string stTitle = "SAVED THEMES:";
 
 void initializeCurses();
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins);
@@ -42,6 +46,9 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
 void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                         const std::vector<std::string>& savedFilesStrings,
                         std::ofstream& log);
+void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
+                         const std::vector<std::string>& savedThemesStrings,
+                         std::ofstream& log);
 void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
 void clearWins(const std::unordered_map<int, CursesWindow*>& wins);
 void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins);
