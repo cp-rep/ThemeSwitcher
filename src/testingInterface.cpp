@@ -7,7 +7,6 @@ void initTestStringVector(std::vector<std::string>& testStrings,
                           std::ofstream& log)
 {
   std::string tempString;
-  bool adjusted = false;
   std::string extension = ".ext";
 
   for(int i = 0; i < numStrings; i++)
