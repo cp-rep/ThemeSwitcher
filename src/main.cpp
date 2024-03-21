@@ -134,8 +134,6 @@ int main()
                            savedFilesStrings,
                            _SAVEDFILESWIN,
                            log);
-      printTestStringVector(savedFilesStrings,
-                            log);
 
       // update window buffer data
       drawBoxes(wins);
@@ -241,8 +239,6 @@ void initTestStringVector(std::unordered_map<int, CursesWindow*>& wins,
   int numChars = wins.at(win)->getNumCols() - 6;
   int numLines = wins.at(win)->getNumLines() - 4;
   std::string tempString;
-  log << "numchars: " << numChars << std::endl;
-  log << "numLines: " << numLines << std::endl;
 
   for(int i = 0; i < numLines; i++)
   {
