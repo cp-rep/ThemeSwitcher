@@ -1,0 +1,14 @@
+#ifndef TESTINGINTERFACE_HPP
+#define TESTINGINTERFACE_HPP
+#include <vector>
+#include "log.hpp"
+
+void initTestStringVector(std::vector<std::string>& testStrings,
+                          const int numStrings,
+                          const int numChars,
+                          std::ofstream& log);
+void printTestStringVectorToLog(const std::vector<std::string>& strings,
+                                std::ofstream& log);
+
+
+#endif // TESTINGINTERFACE_H_
