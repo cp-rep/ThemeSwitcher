@@ -146,7 +146,7 @@ int main()
                                wins.at(_SAVEDFILESWIN)->getNumLines() - totalLineOffset,
                                wins.at(_SAVEDFILESWIN)->getNumCols() - totalColOffset,
                                log);
-         }
+        }
 
       printSavedFilesWin(wins,
                          savedFilesStrings,
@@ -155,7 +155,7 @@ int main()
       //string printing testing for _SAVEDTHEMESWIN
       if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
         {
-          const int numStrings = 50;
+          const int numStrings = 100;
           const int stringLength = 30;
           savedFilesStrings.clear();
           initTestStringVector(savedFilesStrings,
