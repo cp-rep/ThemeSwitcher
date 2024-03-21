@@ -13,6 +13,7 @@ const std::string sfThemeTitle = "CURRENT THEME:";
 
 void initializeCurses();
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins);
+void definePromptTitle(std::vector<std::string>& promptStrings);
 void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
                      const int& maxLines,
                      const int& maxCols);
