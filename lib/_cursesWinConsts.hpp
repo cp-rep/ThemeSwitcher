@@ -40,12 +40,12 @@ const unsigned int _HELPWINMAXCOLS = 60;
 const unsigned int _HELPWINMINLINES = 4;
 const unsigned int _HELPWINMAXLINES = 40;
 
-// _PROGRAMSWIN DIMENSION  S
+// _PROGRAMSWIN DIMENSIONS
 const unsigned int _PROGRAMSWINSTARTCOLS = 60;//
 const unsigned int _PROGRAMSWINMINLINES = 10;//
 const unsigned int _PROGRAMSWINMINCOLS = 40;
 
-// _PROMPTWIN DIMENSION  S
+// _PROMPTWIN DIMENSIONS
 const unsigned int _PROMPTWINSTARTY = 2;
 const unsigned int _PROMPTWINSTARTX = 3;
 const unsigned int _PROMPTWINMINLINES = 6;
@@ -53,7 +53,7 @@ const unsigned int _PROMPTWINMAXLINES = 6;
 const unsigned int _PROMPTWINMINCOLS = 60;
 const unsigned int _PROMPTWINMAXCOLS = 140;
 
-// _SAVEDFILESWIN DIMENSION  S
+// _SAVEDFILESWIN DIMENSIONS
 const unsigned int _SAVEDFILESWINSTARTY = _PROMPTWINSTARTY + _PROMPTWINMAXLINES + 1;
 const unsigned int _SAVEDFILESWINSTARTX = 3;
 const unsigned int _SAVEDFILESWINMINLINES = 10;
@@ -69,7 +69,7 @@ const unsigned int _SAVEDTHEMESWINMAXLINES = 24;
 const unsigned int _SAVEDTHEMESWINMINCOLS = 60;
 const unsigned int _SAVEDTHEMESWINMAXCOLS = 140;
 
-// _TEXTWIN DIMENSION  S
+// _TEXTWIN DIMENSIONS
 const unsigned int _TEXTWINSTARTY = 0;
 const unsigned int _TEXTWINSTARTX = 0;
 const unsigned int _TEXTWINLINES = 1;
