@@ -740,6 +740,7 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
 } // end of "printNumberedStrings"
 
 
+
 /*
   Function:
    printSavedFilesWin
@@ -812,6 +813,74 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 
+void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
+                             const std::vector<std::string>& strings,
+                             const int& lineMaxOffset,
+                             const int& colMaxOffset,
+                             const int& lineMinOffset,
+                             const int& colMinOffset,
+                             std::ofstream& log)
+{
+  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
+    {
+      int maxWinLines;
+      int maxWinCols;
+      getmaxyx(wins.at(_SAVEDTHEMESWIN)->getWindow(),
+               maxWinLines,
+               maxWinCols);
+
+      int currLine = 0;
+      std::string themeCount;
+      std::string outString;
+      int maxPrintableLines = maxWinLines - lineMinOffset - lineMaxOffset - 1;
+      int printColOffset = 0;
+
+      // loop and print to _SAVEDTHEMESWIN
+      for(int i = 1; i < strings.size(); i++, currLine++)
+        {
+          if((i % (maxPrintableLines + 1)) == 0)
+            {
+              printColOffset += 36;
+              currLine = 0;
+            }
+
+          themeCount = intToStr(i);
+          outString = strings.at(i);
+
+          // compensate for how many digits are in the count up to 99
+          if(i < 10)
+            {
+              themeCount.append(".  ");
+            }
+          else
+            {
+              themeCount.append(". ");
+            }
+
+          // make sure it stops printing before the columns print outside the window
+          if((themeCount.length() + 3 + printColOffset + outString.length()) >
+             (maxWinCols - colMaxOffset))
+            {
+              break;
+            }
+
+          // print the count
+          mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
+                    currLine + 4,
+                    3 + printColOffset,
+                    themeCount.c_str());
+
+          // print the saved theme
+          mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
+                    currLine + 4,
+                    themeCount.length() + 3 + printColOffset,
+                    outString.c_str());
+        }
+    }
+} // end of "printSavedThemesStrings"
+
+
+
 /*
   Function:
    printSavedThemesWin
@@ -840,6 +909,7 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          const std::vector<std::string>& savedThemesStrings,
                          std::ofstream& log)
 {
+  const int maxStringSize = 31;
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
     {
       int maxWinLines;
@@ -857,23 +927,28 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
 
       std::vector<std::string>::const_iterator it;
       std::string outString;
-      int i = 0;
 
       outString = stTitle;
       mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
-                i + lineMinOffset,
+                lineMinOffset,
                 colMinOffset,
                 outString.c_str());
 
-      printNumberedStrings(wins,
-                           _SAVEDTHEMESWIN,
-                           savedThemesStrings,
-                           lineMaxOffset,
-                           colMaxOffset,
-                           lineMinOffset,
-                           colMinOffset,
-                           savedThemesStrings.size(),
-                           log);
+      for(int i = 0; i < savedThemesStrings.size(); i++)
+        {
+          if(i == colMaxOffset - maxStringSize)
+            {
+              break;
+            }
+
+          printSavedThemesStrings(wins,
+                                  savedThemesStrings,
+                                  lineMaxOffset,
+                                  colMaxOffset,
+                                  lineMinOffset,
+                                  colMinOffset,
+                                  log);
+        }
     }
 } // end of "printSavedThemesWin"
 
