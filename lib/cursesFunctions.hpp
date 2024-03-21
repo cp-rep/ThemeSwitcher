@@ -8,6 +8,9 @@
 #include "log.hpp"
 #include "typeConversions.hpp"
 
+const std::string sfTitle = "SAVED FILES:";
+const std::string sfThemeTitle = "CURRENT THEME:";
+
 void initializeCurses();
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins);
 void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
