@@ -124,6 +124,12 @@ int main()
         }
       drawBoxes(wins);
 
+      printPromptWin(wins,
+                     promptStrings,
+                     currCols,
+                     currCols,
+                     log);
+
       // string printing testing for _SAVEDFILESWIN
       if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
         {
@@ -135,43 +141,32 @@ int main()
           int maxColOffset = 3;
           int extensionLen = 4;
           int totalColOffset = minColOffset + maxColOffset  + extensionLen;
+
           initTestStringVector(savedFilesStrings,
                                wins.at(_SAVEDFILESWIN)->getNumLines() - totalLineOffset,
                                wins.at(_SAVEDFILESWIN)->getNumCols() - totalColOffset,
                                log);
          }
 
-      //string printing testing for _SAVEDTHEMESWIN
-      if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
-        {
-          savedFilesStrings.clear();
-          int lineMinOffset = 3;
-          int lineMaxOffset = 3;
-          int totalLineOffset = lineMinOffset + lineMaxOffset;
-          int minColOffset = 3;
-          int maxColOffset = 3;
-          int extensionLen = 4;
-          int totalColOffset = minColOffset + maxColOffset  + extensionLen;
-          initTestStringVector(savedFilesStrings,
-                               wins.at(_SAVEDTHEMESWIN)->getNumLines() - totalLineOffset,
-                               wins.at(_SAVEDTHEMESWIN)->getNumCols() - totalColOffset,
-                               log);
-        }
-
-      // // update window buffer data
-      printPromptWin(wins,
-                     promptStrings,
-                     currCols,
-                     currCols,
-                     log);
-
       printSavedFilesWin(wins,
                          savedFilesStrings,
                          log);
+
+      //string printing testing for _SAVEDTHEMESWIN
+      if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
+        {
+          const int numStrings = 50;
+          const int stringLength = 30;
+          savedFilesStrings.clear();
+          initTestStringVector(savedFilesStrings,
+                               numStrings,
+                               stringLength,
+                               log);
+        }
+
       printSavedThemesWin(wins,
                           savedFilesStrings,
                           log);
-
 
       // print windows and update the screen
       refreshWins(wins);
