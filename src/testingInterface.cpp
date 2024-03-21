@@ -8,31 +8,24 @@ void initTestStringVector(std::vector<std::string>& testStrings,
 {
   std::string tempString;
   std::string extension = ".ext";
+  bool appendedExt = false;
 
   for(int i = 0; i < numStrings; i++)
   {
     char temp = 'a';
-    if(i < 9)
+
+    for(int j = 0; j < numChars - extension.length(); j++)
       {
-        tempString.append(" ");
-      }
-    for(int j = 0; j < numChars; j++)
-      {
-        if(j >= numChars - extension.length())
+        tempString.push_back(temp);
+        temp++;
+
+        if(temp == 'z')
           {
-            tempString.append(extension);
-          }
-        else
-          {
-            tempString.push_back(temp);
-            temp++;
-            if(temp == 'z')
-              {
-                temp = 'a';
-              }
+            temp = 'a';
           }
       }
 
+    tempString.append(extension);
     testStrings.push_back(tempString);
     tempString.clear();
   }
