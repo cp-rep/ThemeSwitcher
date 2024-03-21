@@ -31,10 +31,15 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
                     const int& currLines,
                     const int& currCols,
                     std::ofstream& log);
+void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
+                          const std::vector<std::string>& strings,
+                          const int& lineMaxOffset,
+                          const int& colMaxOffset,
+                          const int& lineMinOffset,
+                          const int& colMinOffset,
+                          std::ofstream& log);
 void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                         const std::vector<std::string>& savedFilesStrings,
-                        const int& currLines,
-                        const int& currCols,
                         std::ofstream& log);
 void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
 void clearWins(const std::unordered_map<int, CursesWindow*>& wins);
