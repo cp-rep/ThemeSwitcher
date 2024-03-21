@@ -10,8 +10,8 @@ CC=g++
 CPPFLAGS=-I$(IDIR)
 LIBS=-lm
 BINNAME=themeswitcher
-_DEPS = log.hpp cursesFunctions.hpp cursesWindow.hpp _cursesWinConsts.hpp
-_OBJ = main.o log.o cursesFunctions.o cursesWindow.o
+_DEPS = log.hpp cursesFunctions.hpp cursesWindow.hpp _cursesWinConsts.hpp typeConversions.hpp
+_OBJ = main.o log.o cursesFunctions.o cursesWindow.o typeConversions.o
 
 DEPS = $(patsubst %,$(LDIR)/%,$(_DEPS))
 
