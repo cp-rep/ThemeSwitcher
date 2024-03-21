@@ -122,48 +122,56 @@ int main()
           wins.at(_MAINWIN)->setNumCols(currCols);
           defineWins(wins);
         }
+      drawBoxes(wins);
 
       // string printing testing for _SAVEDFILESWIN
-      savedFilesStrings.clear();
-      int lineMinOffset = 3;
-      int lineMaxOffset = 3;
-      int totalLineOffset = lineMinOffset + lineMaxOffset;
-      int minColOffset = 3;
-      int maxColOffset = 3;
-      int extensionLen = 4;
-      int totalColOffset = minColOffset + maxColOffset  + extensionLen;
-      initTestStringVector(savedFilesStrings,
-                           wins.at(_SAVEDFILESWIN)->getNumLines() - totalLineOffset,
-                           wins.at(_SAVEDFILESWIN)->getNumCols() - totalColOffset,
-                           log);
+      if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+        {
+          savedFilesStrings.clear();
+          int lineMinOffset = 3;
+          int lineMaxOffset = 3;
+          int totalLineOffset = lineMinOffset + lineMaxOffset;
+          int minColOffset = 3;
+          int maxColOffset = 3;
+          int extensionLen = 4;
+          int totalColOffset = minColOffset + maxColOffset  + extensionLen;
+          initTestStringVector(savedFilesStrings,
+                               wins.at(_SAVEDFILESWIN)->getNumLines() - totalLineOffset,
+                               wins.at(_SAVEDFILESWIN)->getNumCols() - totalColOffset,
+                               log);
+         }
 
-      // string printing testing for _SAVEDTHEMESWIN
-      savedFilesStrings.clear();
-      lineMinOffset = 3;
-      lineMaxOffset = 3;
-      totalLineOffset = lineMinOffset + lineMaxOffset;
-      minColOffset = 3;
-      maxColOffset = 3;
-      extensionLen = 4;
-      totalColOffset = minColOffset + maxColOffset  + extensionLen;
-      initTestStringVector(savedFilesStrings,
-                           wins.at(_SAVEDTHEMESWIN)->getNumLines() - totalLineOffset,
-                           wins.at(_SAVEDTHEMESWIN)->getNumCols() - totalColOffset,
-                           log);
+      //string printing testing for _SAVEDTHEMESWIN
+      if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
+        {
+          savedFilesStrings.clear();
+          int lineMinOffset = 3;
+          int lineMaxOffset = 3;
+          int totalLineOffset = lineMinOffset + lineMaxOffset;
+          int minColOffset = 3;
+          int maxColOffset = 3;
+          int extensionLen = 4;
+          int totalColOffset = minColOffset + maxColOffset  + extensionLen;
+          initTestStringVector(savedFilesStrings,
+                               wins.at(_SAVEDTHEMESWIN)->getNumLines() - totalLineOffset,
+                               wins.at(_SAVEDTHEMESWIN)->getNumCols() - totalColOffset,
+                               log);
+        }
 
-      // update window buffer data
-      drawBoxes(wins);
+      // // update window buffer data
       printPromptWin(wins,
                      promptStrings,
                      currCols,
                      currCols,
                      log);
+
       printSavedFilesWin(wins,
                          savedFilesStrings,
                          log);
       printSavedThemesWin(wins,
                           savedFilesStrings,
                           log);
+
 
       // print windows and update the screen
       refreshWins(wins);
