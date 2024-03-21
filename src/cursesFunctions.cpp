@@ -607,17 +607,21 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
   int maxFilesWinX;
   getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),maxFilesWinY, maxFilesWinX);
 
-  std::vector<std::string>::const_iterator it;
-  std::string outString;
   const int maxWinCols = maxFilesWinX;
   const int lineOffset = 2;
   const int colMaxOffset = 10;
   int linePosition = wins.at(_SAVEDFILESWIN)->getStartY() + 2;
 
+  std::vector<std::string>::const_iterator it;
+  std::string outString;
   int i = 0;
   for(it = savedFilesStrings.begin(); it != savedFilesStrings.end(); i++, it++)
     {
-      outString = *it;
+
+
+      outString = intToStr(i + 1);
+      outString.append(". ");
+      outString.append(*it);
       const int temp = wins.at(_HELPWIN)->getStartX();
 
       if(outString.length() >= maxWinCols - colMaxOffset)

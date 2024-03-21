@@ -6,6 +6,7 @@
 #include "_cursesWinConsts.hpp"
 #include "cursesWindow.hpp"
 #include "log.hpp"
+#include "typeConversions.hpp"
 
 void initializeCurses();
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins);
