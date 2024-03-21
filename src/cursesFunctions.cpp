@@ -774,10 +774,10 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
            maxWinLines,
            maxWinCols);
 
-  const int lineMaxOffset = 4;
-  const int colMaxOffset = 5;
   const int lineMinOffset = 2;
-  const int colMinOffset = 5;
+  const int colMinOffset = 3;
+  const int lineMaxOffset = 4;
+  const int colMaxOffset = colMinOffset + 3;
 
   int linePosition = wins.at(_SAVEDFILESWIN)->getStartY() + 2;
 
@@ -793,13 +793,13 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
   outString = sfThemeTitle;
   mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
             i + lineMinOffset,
-            maxWinCols - outString.length() - colMaxOffset,
+            maxWinCols - outString.length() - colMinOffset,
             outString.c_str());
 
   printNumberedStrings(wins,
                        savedFilesStrings,
                        lineMaxOffset,
-                       colMaxOffset + 5,
+                       colMaxOffset,
                        lineMinOffset,
                        colMinOffset,
                        log);
