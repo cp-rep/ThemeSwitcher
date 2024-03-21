@@ -695,7 +695,8 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
 */
 void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const int win,
-                          const std::vector<std::string>& strings,
+                          const std::vector<std::string>& fileStrings,
+                          const std::vector<std::string>& themeStrings,
                           const int& lineMaxOffset,
                           const int& colMaxOffset,
                           const int& lineMinOffset,
@@ -719,12 +720,19 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
           filesCount = intToStr(i);
           filesCount = intToStr(i + 1);
           filesCount.append(". ");
-          outString = strings.at(i);
+          outString = fileStrings.at(i);
 
           // handle prepending "..." here since the file name wont fit
+          //if(outString.length() + filesCount.length() >= maxWinCols - colMaxOffset)
           if(outString.length() + filesCount.length() >= maxWinCols - colMaxOffset)
             {
+              std::string tempString;
+              for(int j = 0; j < outString.length(); j++)
+                {
+
+                }
               outString.resize(maxWinCols - colMaxOffset - filesCount.length());
+              //
             }
 
           if(i + lineMinOffset >= maxWinLines - lineMaxOffset)
@@ -775,6 +783,7 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
 */
 void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                         const std::vector<std::string>& savedFilesStrings,
+                        const std::vector<std::string>& currThemesStrings,
                         std::ofstream& log)
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
@@ -811,6 +820,7 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
       printNumberedStrings(wins,
                            _SAVEDFILESWIN,
                            savedFilesStrings,
+                           currThemesStrings,
                            lineMaxOffset,
                            colMaxOffset,
                            lineMinOffset,
