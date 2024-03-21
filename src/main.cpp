@@ -33,14 +33,14 @@
 #define _LOG 1
 #define _CURSES 1
 
-void definePrompt(std::vector<std::string>& title);
 void initTestStringVector(std::unordered_map<int, CursesWindow*>& wins,
-                          std::vector<std::string>& savedFilesStrings,
+                          std::vector<std::string>& testStrings,
                           const unsigned int win,
+                          const int numStrings,
+                          const int numChars,
                           std::ofstream& log);
 void printTestStringVector(const std::vector<std::string>& strings,
                            std::ofstream& log);
-
 
 
 // ==== main ==================================================================
@@ -133,6 +133,8 @@ int main()
       initTestStringVector(wins,
                            savedFilesStrings,
                            _SAVEDFILESWIN,
+                           wins.at(_SAVEDFILESWIN)->getNumLines() - 4,
+                           wins.at(_SAVEDFILESWIN)->getNumCols() - 6,
                            log);
 
       // update window buffer data
@@ -145,6 +147,9 @@ int main()
       printSavedFilesWin(wins,
                          savedFilesStrings,
                          log);
+      printSavedThemesWin(wins,
+                          savedFilesStrings,
+                          log);
       // print windows and update the screen
       refreshWins(wins);
       doupdate();
@@ -170,15 +175,15 @@ int main()
 
 
 void initTestStringVector(std::unordered_map<int, CursesWindow*>& wins,
-                          std::vector<std::string>& savedFilesStrings,
+                          std::vector<std::string>& testStrings,
                           const unsigned int win,
+                          const int numStrings,
+                          const int numChars,
                           std::ofstream& log)
 {
-  int numChars = wins.at(win)->getNumCols() - 6;
-  int numLines = wins.at(win)->getNumLines() - 4;
   std::string tempString;
 
-  for(int i = 0; i < numLines; i++)
+  for(int i = 0; i < numStrings; i++)
   {
     char temp = 'a';
 
@@ -191,10 +196,13 @@ void initTestStringVector(std::unordered_map<int, CursesWindow*>& wins,
             temp = 'a';
           }
       }
-    savedFilesStrings.push_back(tempString);
+
+    testStrings.push_back(tempString);
     tempString.clear();
   }
-}
+} // end of "initTestStringVector"
+
+
 
 
 void printTestStringVector(const std::vector<std::string>& strings,
@@ -208,4 +216,4 @@ void printTestStringVector(const std::vector<std::string>& strings,
       log << i << ": " << *it << std::endl;
       i++;
     }
-}
+} // end of "printTestStringVector"
