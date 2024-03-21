@@ -43,6 +43,7 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const int& colMaxOffset,
                           const int& lineMinOffset,
                           const int& colMinOffset,
+                          const int& numToPrint,
                           std::ofstream& log);
 void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                         const std::vector<std::string>& savedFilesStrings,

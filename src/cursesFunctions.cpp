@@ -696,6 +696,7 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const int& colMaxOffset,
                           const int& lineMinOffset,
                           const int& colMinOffset,
+                          const int& numToPrint,
                           std::ofstream& log)
 {
   int maxWinLines;
@@ -706,13 +707,11 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
 
   std::string outString;
 
-  std::vector<std::string>::const_iterator it;
-  int i = 0;
-  for(it = strings.begin(); it != strings.end(); i++, it++)
+  for(int i = 0; i < numToPrint; i++)
     {
       outString = intToStr(i + 1);
       outString.append(". ");
-      outString.append(*it);
+      outString.append(strings.at(i));
 
       if(outString.length() >= maxWinCols - colMaxOffset)
         {
@@ -804,6 +803,7 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                        colMaxOffset,
                        lineMinOffset,
                        colMinOffset,
+                       savedFilesStrings.size(),
                        log);
 } // end of "printSavedFilesWin"
 
@@ -843,6 +843,7 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                        colMaxOffset,
                        lineMinOffset,
                        colMinOffset,
+                       savedThemesStrings.size(),
                        log);
 
 } // end of "printSavedThemesWin"
