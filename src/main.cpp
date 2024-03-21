@@ -134,18 +134,9 @@ int main()
       if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
         {
           savedFilesStrings.clear();
-          int lineMinOffset = 3;
-          int lineMaxOffset = 3;
-          int totalLineOffset = lineMinOffset + lineMaxOffset;
-          int minColOffset = 3;
-          int maxColOffset = 3;
-          int extensionLen = 4;
-          int totalColOffset = minColOffset + maxColOffset  + extensionLen;
-
-          initTestStringVector(savedFilesStrings,
-                               wins.at(_SAVEDFILESWIN)->getNumLines() - totalLineOffset,
-                               wins.at(_SAVEDFILESWIN)->getNumCols() - totalColOffset,
-                               log);
+          initTestFilesStringVector(savedFilesStrings,
+                                    50,
+                                    log);
         }
 
       printSavedFilesWin(wins,
@@ -155,7 +146,7 @@ int main()
       //string printing testing for _SAVEDTHEMESWIN
       if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
         {
-          const int numStrings = 100;
+          const int numStrings = 1000;
           const int stringLength = 30;
           savedFilesStrings.clear();
           initTestStringVector(savedFilesStrings,
@@ -163,7 +154,6 @@ int main()
                                stringLength,
                                log);
         }
-
       printSavedThemesWin(wins,
                           savedFilesStrings,
                           log);
