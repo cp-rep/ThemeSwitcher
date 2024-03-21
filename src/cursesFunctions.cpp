@@ -690,6 +690,7 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
    NONE
 */
 void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
+                          const int win,
                           const std::vector<std::string>& strings,
                           const int& lineMaxOffset,
                           const int& colMaxOffset,
@@ -699,7 +700,7 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
 {
   int maxWinLines;
   int maxWinCols;
-  getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),
+  getmaxyx(wins.at(win)->getWindow(),
            maxWinLines,
            maxWinCols);
 
@@ -724,7 +725,7 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
         }
       else
         {
-          mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
+          mvwaddstr(wins.at(win)->getWindow(),
                     i + lineMinOffset + 2,
                     colMinOffset,
                     outString.c_str());
@@ -797,6 +798,7 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
             outString.c_str());
 
   printNumberedStrings(wins,
+                       _SAVEDFILESWIN,
                        savedFilesStrings,
                        lineMaxOffset,
                        colMaxOffset,
@@ -817,10 +819,11 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
            maxWinLines,
            maxWinCols);
 
-  const int lineMaxOffset = 4;
-  const int colMaxOffset = 5;
   const int lineMinOffset = 2;
-  const int colMinOffset = 5;
+  const int colMinOffset = 3;
+  const int lineMaxOffset = 4;
+  const int colMaxOffset = colMinOffset + 3;
+
   int linePosition = wins.at(_SAVEDTHEMESWIN)->getStartY() + 2;
 
   std::vector<std::string>::const_iterator it;
@@ -832,6 +835,16 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
             i + lineMinOffset,
             colMinOffset,
             outString.c_str());
+
+  printNumberedStrings(wins,
+                       _SAVEDTHEMESWIN,
+                       savedThemesStrings,
+                       lineMaxOffset,
+                       colMaxOffset,
+                       lineMinOffset,
+                       colMinOffset,
+                       log);
+
 } // end of "printSavedThemesWin"
 
 
