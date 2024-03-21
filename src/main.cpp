@@ -91,6 +91,7 @@ int main()
   int currCols = 0;
   std::vector<std::string> promptStrings;
   std::vector<std::string> savedFilesStrings;
+  std::vector<std::string> currThemesStrings;
 
   // init the text display string vector with THEME SWITCHER for _PROMPTWIN
   definePromptTitle(promptStrings);
@@ -137,10 +138,14 @@ int main()
           initTestFilesStringVector(savedFilesStrings,
                                     50,
                                     log);
+          initTestCurrThemesStringVector(currThemesStrings,
+                                         50,
+                                         log);
         }
 
       printSavedFilesWin(wins,
                          savedFilesStrings,
+                         currThemesStrings,
                          log);
 
       //string printing testing for _SAVEDTHEMESWIN
@@ -154,6 +159,7 @@ int main()
                                stringLength,
                                log);
         }
+
       printSavedThemesWin(wins,
                           savedFilesStrings,
                           log);
