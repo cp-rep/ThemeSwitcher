@@ -129,16 +129,25 @@ int main()
           defineWins(wins);
         }
 
+      // string printing testing
+      savedFilesStrings.clear();
+      int lineMinOffset = 3;
+      int lineMaxOffset = 3;
+      int totalLineOffset = lineMinOffset + lineMaxOffset;
+      int minColOffset = 3;
+      int maxColOffset = 3;
+      int extensionLen = 4;
+      int totalColOffset = minColOffset + maxColOffset  + extensionLen;
       initTestStringVector(savedFilesStrings,
-                           wins.at(_SAVEDFILESWIN)->getNumLines() - 4,
-                           wins.at(_SAVEDFILESWIN)->getNumCols() - 6,
+                           wins.at(_SAVEDFILESWIN)->getNumLines() - totalLineOffset,
+                           wins.at(_SAVEDFILESWIN)->getNumCols() - totalColOffset,
                            log);
 
       // update window buffer data
       drawBoxes(wins);
       printPromptWin(wins,
                      promptStrings,
-                     currLines,
+                     currCols,
                      currCols,
                      log);
       printSavedFilesWin(wins,
@@ -147,6 +156,7 @@ int main()
       printSavedThemesWin(wins,
                           savedFilesStrings,
                           log);
+
       // print windows and update the screen
       refreshWins(wins);
       doupdate();
@@ -177,18 +187,30 @@ void initTestStringVector(std::vector<std::string>& testStrings,
                           std::ofstream& log)
 {
   std::string tempString;
+  bool adjusted = false;
+  std::string extension = ".ext";
 
   for(int i = 0; i < numStrings; i++)
   {
     char temp = 'a';
-
+    if(i < 9)
+      {
+        tempString.append(" ");
+      }
     for(int j = 0; j < numChars; j++)
       {
-        tempString.push_back(temp);
-        temp++;
-        if(temp == 'z')
+        if(j >= numChars - extension.length())
           {
-            temp = 'a';
+            tempString.append(extension);
+          }
+        else
+          {
+            tempString.push_back(temp);
+            temp++;
+            if(temp == 'z')
+              {
+                temp = 'a';
+              }
           }
       }
 
