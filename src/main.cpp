@@ -144,8 +144,6 @@ int main()
                      log);
       printSavedFilesWin(wins,
                          savedFilesStrings,
-                         currLines,
-                         currCols,
                          log);
       // print windows and update the screen
       refreshWins(wins);
