@@ -565,6 +565,85 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
 } // end of "printPromptWin"
 
 
+void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
+                          const std::vector<std::string>& strings,
+                          const int& lineMaxOffset,
+                          const int& colMaxOffset,
+                          const int& lineMinOffset,
+                          const int& colMinOffset,
+                          std::ofstream& log)
+{
+  int maxWinLines;
+  int maxWinCols;
+  getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),
+           maxWinLines,
+           maxWinCols);
+
+  std::string outString;
+
+  std::vector<std::string>::const_iterator it;
+  int i = 0;
+  for(it = strings.begin(); it != strings.end(); i++, it++)
+    {
+      outString = intToStr(i + 1);
+      outString.append(". ");
+      outString.append(*it);
+
+      if(outString.length() >= maxWinCols - colMaxOffset)
+        {
+          outString.resize(maxWinCols - colMaxOffset);
+        }
+
+      if(i + lineMinOffset >= maxWinLines - lineMaxOffset)
+        {
+          break;
+        }
+      else
+        {
+          mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
+                    i + lineMinOffset + 2,
+                    colMinOffset,
+                    outString.c_str());
+        }
+    }
+
+    // int maxWinLines;
+    // int maxFilesWinCols;
+    // getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),
+    //          maxWinLines,
+    //          maxWinCols);
+
+    // std::string outString;
+
+    // std::vector<std::string>::const_iterator it;
+    // int i = 0;
+    // for(it = strings.begin(); it != strings.end(); i++, it++)
+    //   {
+    //     outString = intToStr(i + 1);
+    //     outString.append(". ");
+    //     outString.append(*it);
+
+    //     const int temp = wins.at(_HELPWIN)->getStartX();
+
+    //     if(outString.length() >= maxWinCols - colMaxOffset)
+    //       {
+    //         outString.resize(maxWinCols - colMaxOffset);
+    //       }
+
+    //     if(i + lineOffset >= maxFilesWinY - 4)
+    //       {
+    //         break;
+    //       }
+    //     else
+    //       {
+    //         mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
+    //                   i + lineOffset,
+    //                   4,
+    //                   outString.c_str());
+    //       }
+    //   }
+ }
+
 
 /*
   Function:
@@ -599,17 +678,19 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
 */
 void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                         const std::vector<std::string>& savedFilesStrings,
-                        const int& currLines,
-                        const int& currCols,
                         std::ofstream& log)
 {
-  int maxFilesWinY;
-  int maxFilesWinX;
-  getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),maxFilesWinY, maxFilesWinX);
+  int maxWinLines;
+  int maxWinCols;
+  getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),
+           maxWinLines,
+           maxWinCols);
 
-  const int maxWinCols = maxFilesWinX;
-  const int lineOffset = 5;
-  const int colMaxOffset = 10;
+  const int lineMaxOffset = 5;
+  const int colMaxOffset = 5;
+  const int lineMinOffset = 3;
+  const int colMinOffset = 5;
+
   int linePosition = wins.at(_SAVEDFILESWIN)->getStartY() + 2;
 
   std::vector<std::string>::const_iterator it;
@@ -618,42 +699,22 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
 
   outString = sfTitle;
   mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
-            i + lineOffset - 2,
-            4,
+            i + lineMinOffset,
+            colMinOffset,
             outString.c_str());
-
   outString = sfThemeTitle;
-
   mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
-            i + lineOffset - 2,
-            maxFilesWinX - outString.length() - 6,
+            i + lineMinOffset,
+            maxWinCols - outString.length() - colMaxOffset,
             outString.c_str());
 
-  for(it = savedFilesStrings.begin(); it != savedFilesStrings.end(); i++, it++)
-    {
-      outString = intToStr(i + 1);
-      outString.append(". ");
-      outString.append(*it);
-
-      const int temp = wins.at(_HELPWIN)->getStartX();
-
-      if(outString.length() >= maxWinCols - colMaxOffset)
-        {
-          outString.resize(maxWinCols - colMaxOffset);
-        }
-
-      if(i + lineOffset >= maxFilesWinY - 4)
-        {
-          break;
-        }
-      else
-        {
-          mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
-                    i + lineOffset,
-                    4,
-                    outString.c_str());
-        }
-    }
+  printNumberedStrings(wins,
+                       savedFilesStrings,
+                       lineMaxOffset,
+                       colMaxOffset + 5,
+                       lineMinOffset,
+                       colMinOffset,
+                       log);
 } // end of "printSavedFilesWin"
 
 
