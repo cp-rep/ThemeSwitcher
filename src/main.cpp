@@ -39,8 +39,8 @@ void initTestStringVector(std::unordered_map<int, CursesWindow*>& wins,
                           const int numStrings,
                           const int numChars,
                           std::ofstream& log);
-void printTestStringVector(const std::vector<std::string>& strings,
-                           std::ofstream& log);
+void printTestStringVectorToLog(const std::vector<std::string>& strings,
+                                std::ofstream& log);
 
 
 // ==== main ==================================================================
@@ -204,9 +204,8 @@ void initTestStringVector(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-
-void printTestStringVector(const std::vector<std::string>& strings,
-                           std::ofstream& log)
+void printTestStringVectorToLog(const std::vector<std::string>& strings,
+                                std::ofstream& log)
 {
   std::vector<std::string>::const_iterator it;
   int i = 0;
