@@ -33,9 +33,8 @@
 #define _LOG 1
 #define _CURSES 1
 
-void initTestStringVector(std::unordered_map<int, CursesWindow*>& wins,
-                          std::vector<std::string>& testStrings,
-                          const unsigned int win,
+
+void initTestStringVector(std::vector<std::string>& testStrings,
                           const int numStrings,
                           const int numChars,
                           std::ofstream& log);
@@ -130,9 +129,7 @@ int main()
           defineWins(wins);
         }
 
-      initTestStringVector(wins,
-                           savedFilesStrings,
-                           _SAVEDFILESWIN,
+      initTestStringVector(savedFilesStrings,
                            wins.at(_SAVEDFILESWIN)->getNumLines() - 4,
                            wins.at(_SAVEDFILESWIN)->getNumCols() - 6,
                            log);
@@ -174,9 +171,7 @@ int main()
 
 
 
-void initTestStringVector(std::unordered_map<int, CursesWindow*>& wins,
-                          std::vector<std::string>& testStrings,
-                          const unsigned int win,
+void initTestStringVector(std::vector<std::string>& testStrings,
                           const int numStrings,
                           const int numChars,
                           std::ofstream& log)
