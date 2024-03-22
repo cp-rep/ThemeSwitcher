@@ -91,14 +91,13 @@ int main()
   MEVENT mouse;
   int currLines = 0;
   int currCols = 0;
-  int mouseLine = 0;
-  int mouseCol = 0;
+  int mouseLine = -1;
+  int mouseCol = -1;
   std::vector<std::string> promptStrings;
   std::vector<std::string> savedFiles;
   std::vector<std::string> currThemes;
   std::vector<std::string> savedThemesStrings;
   std::vector<std::pair<std::string, std::string>> savedFilesStrings;
-  //printf("\003[?1003h\n");
 
   // ## initialize curses and starting windows ##
 #if _CURSES
@@ -111,7 +110,8 @@ int main()
   {
     // init the text display string vector with THEME SWITCHER for _PROMPTWIN
     definePromptTitle(promptStrings);
-    defineWins(wins);
+    defineWins(wins,
+               log);
     drawBoxes(wins);
     printPromptWin(wins,
                    promptStrings,
@@ -138,6 +138,8 @@ int main()
     printSavedFilesWin(wins,
                        savedFiles,
                        currThemes,
+                       mouseLine,
+                       mouseCol,
                        log);
 
     //string printing testing for _SAVEDTHEMESWIN
@@ -154,6 +156,8 @@ int main()
 
     printSavedThemesWin(wins,
                         savedThemesStrings,
+                        mouseLine,
+                        mouseCol,
                         log);
   }
 
@@ -167,26 +171,32 @@ int main()
           break;
         }
 
-      if(mouse.bstate & REPORT_MOUSE_POSITION)
+      mouseLine = -1;
+      mouseCol = -1;
+      if(getmouse(&mouse) == OK)
         {
-          mouseLine = mouse.y;
-          mouseCol = mouse.x;
-          log << "MouseLine: " << mouseLine << std::endl;
-          log << "MouseCol: "  << mouseCol << std::endl;
+          if(mouse.bstate & BUTTON1_PRESSED)
+            {
+              mouseLine = mouse.y;
+              mouseCol = mouse.x;
+              log << "Main mouseline: " << mouseLine << std::endl;
+            }
         }
 
 #if _CURSES
       // check if the window size has changed
       getmaxyx(stdscr, currLines, currCols);
       if( (currLines != wins.at(_MAINWIN)->getNumLines()) ||
-          (currCols != wins.at(_MAINWIN)->getNumCols()) )
+          (currCols != wins.at(_MAINWIN)->getNumCols()) ||
+          mouseLine != -1 || mouseCol != -1)
         {
           clearWins(wins);
 
           // the window size has changed. update window dimensions
           wins.at(_MAINWIN)->setNumLines(currLines);
           wins.at(_MAINWIN)->setNumCols(currCols);
-          defineWins(wins);
+          defineWins(wins,
+                     log);
 
           // begin printing windows to buffer
           drawBoxes(wins);
@@ -215,6 +225,8 @@ int main()
           printSavedFilesWin(wins,
                              savedFiles,
                              currThemes,
+                             mouseLine,
+                             mouseCol,
                              log);
 
           //string printing testing for _SAVEDTHEMESWIN
@@ -231,6 +243,8 @@ int main()
 
           printSavedThemesWin(wins,
                               savedThemesStrings,
+                              mouseLine,
+                              mouseCol,
                               log);
         }
 
