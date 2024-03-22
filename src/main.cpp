@@ -103,9 +103,6 @@ int main()
   std::unordered_map<int, CursesWindow*> wins;
   initializeCurses();
   initializeWins(wins);
-  defineWins(wins);
-
-  //inititalizeSecondaryWins(secondaryWins);
 #endif // _CURSES
 
 
@@ -153,12 +150,9 @@ int main()
                       savedThemesStrings,
                       log);
 
-
   while(true)
     {
 #if _CURSES
-
-
       // check if the window size has changed
       getmaxyx(stdscr, currLines, currCols);
       if( (currLines != wins.at(_MAINWIN)->getNumLines()) ||
@@ -171,9 +165,8 @@ int main()
           wins.at(_MAINWIN)->setNumCols(currCols);
           defineWins(wins);
 
-
+          // begin printing windows to buffer
           drawBoxes(wins);
-
           printPromptWin(wins,
                          promptStrings,
                          currLines,
@@ -210,7 +203,7 @@ int main()
                                    stringLength,
                                    log);
             }
-
+p
           printSavedThemesWin(wins,
                               savedThemesStrings,
                               log);
