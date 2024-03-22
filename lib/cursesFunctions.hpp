@@ -35,6 +35,8 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
                     const std::vector<std::string>& promptStrings,
                     const int& currLines,
                     const int& currCols,
+                    const int& mouseLine,
+                    const int& mouseCol,
                     std::ofstream& log);
 void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const int win,

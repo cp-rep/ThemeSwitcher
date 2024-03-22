@@ -44,8 +44,9 @@ void initializeCurses()
   cbreak();
   keypad(stdscr, true);
   nodelay(stdscr, true);
-  mousemask(BUTTON1_PRESSED, NULL);
+  mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
   mouseinterval(0);
+
 } // end of "initializeCurses"
 
 
@@ -623,6 +624,8 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
                     const std::vector<std::string>& promptStrings,
                     const int& currLines,
                     const int& currCols,
+                    const int& mouseLine,
+                    const int& mouseCol,
                     std::ofstream& log)
 {
   if(wins.at(_PROMPTWIN)->getWindow() != nullptr)
