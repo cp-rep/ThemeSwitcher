@@ -87,16 +87,17 @@ int main()
 #endif // _LOG
 
   // local variables
+  int input = 0;
+  MEVENT mouse;
   int currLines = 0;
   int currCols = 0;
+  int mouseY = 0;
+  int mouseX = 0;
   std::vector<std::string> promptStrings;
   std::vector<std::string> savedFiles;
   std::vector<std::string> currThemes;
   std::vector<std::string> savedThemesStrings;
   std::vector<std::pair<std::string, std::string>> savedFilesStrings;
-
-  // init the text display string vector with THEME SWITCHER for _PROMPTWIN
-  definePromptTitle(promptStrings);
 
   // ## initialize curses and starting windows ##
 #if _CURSES
@@ -105,53 +106,70 @@ int main()
   initializeWins(wins);
 #endif // _CURSES
 
-
   // run once
-  defineWins(wins);
-  drawBoxes(wins);
-  printPromptWin(wins,
-                 promptStrings,
-                 currLines,
-                 currCols,
-                 log);
+  {
+    // init the text display string vector with THEME SWITCHER for _PROMPTWIN
+    definePromptTitle(promptStrings);
+    defineWins(wins);
+    drawBoxes(wins);
+    printPromptWin(wins,
+                   promptStrings,
+                   currLines,
+                   currCols,
+                   log);
 
-  // string printing testing for _SAVEDFILESWIN
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
-    {
-      savedFiles.clear();
-      currThemes.clear();
-      initTestFilesStringVector(savedFiles,
-                                50,
-                                log);
+    // string printing testing for _SAVEDFILESWIN
+    if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+      {
+        savedFiles.clear();
+        currThemes.clear();
+        initTestFilesStringVector(savedFiles,
+                                  50,
+                                  log);
 
-      initTestCurrThemesStringVector(currThemes,
-                                     50,
-                                     log);
-    }
+        initTestCurrThemesStringVector(currThemes,
+                                       50,
+                                       log);
+      }
 
-  printSavedFilesWin(wins,
-                     savedFiles,
-                     currThemes,
-                     log);
+    printSavedFilesWin(wins,
+                       savedFiles,
+                       currThemes,
+                       log);
 
-  //string printing testing for _SAVEDTHEMESWIN
-  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
-    {
-      const int numStrings = 1000;
-      const int stringLength = 30;
-      savedThemesStrings.clear();
-      initTestStringVector(savedThemesStrings,
-                           numStrings,
-                           stringLength,
-                           log);
-    }
+    //string printing testing for _SAVEDTHEMESWIN
+    if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
+      {
+        const int numStrings = 1000;
+        const int stringLength = 30;
+        savedThemesStrings.clear();
+        initTestStringVector(savedThemesStrings,
+                             numStrings,
+                             stringLength,
+                             log);
+      }
 
-  printSavedThemesWin(wins,
-                      savedThemesStrings,
-                      log);
+    printSavedThemesWin(wins,
+                        savedThemesStrings,
+                        log);
+  }
 
   while(true)
     {
+      // get user input from mouse or keyboard
+      input = wgetch(wins.at(_MAINWIN)->getWindow());
+
+      // check if a mouse click was detected
+      if(getmouse(&mouse) == OK)
+        {
+          if(mouse.bstate && BUTTON1_PRESSED)
+            {
+              // store the coordinates the click
+              mouseY = mouse.y;
+              mouseX = mouse.x;
+            }
+        }
+
 #if _CURSES
       // check if the window size has changed
       getmaxyx(stdscr, currLines, currCols);
@@ -203,7 +221,7 @@ int main()
                                    stringLength,
                                    log);
             }
-p
+
           printSavedThemesWin(wins,
                               savedThemesStrings,
                               log);
