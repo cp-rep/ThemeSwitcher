@@ -712,27 +712,42 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                maxWinLines,
                maxWinCols);
 
-      std::string outString;
-      std::string filesCount;
+      std::string fileString;
+      std::string themeString;
+      std::string fileCount;
+      std::string tempString;
+
+      int maxPossible = maxWinCols - colMaxOffset - 3;
 
       for(int i = 0; i < numToPrint; i++)
         {
-          filesCount = intToStr(i);
-          filesCount = intToStr(i + 1);
-          filesCount.append(". ");
-          outString = fileStrings.at(i);
+          tempString.clear();
+          fileCount = intToStr(i + 1);
+          fileCount.append(". ");
+          fileString = fileStrings.at(i);
+          themeString = themeStrings.at(i);
+          maxPossible = maxWinCols - colMaxOffset - 6; // extension
 
-          // handle prepending "..." here since the file name wont fit
-          //if(outString.length() + filesCount.length() >= maxWinCols - colMaxOffset)
-          if(outString.length() + filesCount.length() >= maxWinCols - colMaxOffset)
+          if( (fileString.length() + fileCount.length() + themeString.length())
+              >= maxPossible)
             {
-              std::string tempString;
-              for(int j = 0; j < outString.length(); j++)
-                {
+              int difference = (fileString.length() + fileCount.length() +
+                                themeString.length()) - maxPossible;
+              tempString = "...";
 
+              log << "fileString.length(): " << fileString.length() << std::endl;
+              log << "difference: " << difference << std::endl;
+
+              for(int j = difference; j < fileString.length(); j++)
+                {
+                  char c = fileString.at(j);
+                  tempString.push_back(c);
                 }
-              outString.resize(maxWinCols - colMaxOffset - filesCount.length());
-              //
+
+              tempString.append("...");
+              tempString.append(themeString);
+              log << "TempString: " << tempString << std::endl;
+              fileString = tempString;
             }
 
           if(i + lineMinOffset >= maxWinLines - lineMaxOffset)
@@ -744,12 +759,12 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
               mvwaddstr(wins.at(win)->getWindow(),
                         i + lineMinOffset + 2,
                         colMinOffset,
-                        filesCount.c_str());
+                        fileCount.c_str());
 
               mvwaddstr(wins.at(win)->getWindow(),
                         i + lineMinOffset + 2,
-                        colMinOffset + filesCount.length(),
-                        outString.c_str());
+                        colMinOffset + fileCount.length(),
+                        fileString.c_str());
             }
         }
     }
@@ -798,6 +813,7 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
       const int colMinOffset = 3;
       const int lineMaxOffset = 4;
       const int colMaxOffset = colMinOffset + 3;
+      int printColPosition;
       std::string filesCount;
 
       int linePosition = wins.at(_SAVEDFILESWIN)->getStartY() + 2;
@@ -812,11 +828,11 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                 colMinOffset,
                 outString.c_str());
       outString = sfThemeTitle;
+      printColPosition = maxWinCols - outString.length() - colMinOffset;
       mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
                 i + lineMinOffset,
                 maxWinCols - outString.length() - colMinOffset,
                 outString.c_str());
-
       printNumberedStrings(wins,
                            _SAVEDFILESWIN,
                            savedFilesStrings,
