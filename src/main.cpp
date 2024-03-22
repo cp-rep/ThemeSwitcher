@@ -179,7 +179,6 @@ int main()
             {
               mouseLine = mouse.y;
               mouseCol = mouse.x;
-              log << "Main mouseline: " << mouseLine << std::endl;
             }
         }
 
