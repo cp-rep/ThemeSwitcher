@@ -44,6 +44,8 @@ void initializeCurses()
   cbreak();
   keypad(stdscr, true);
   nodelay(stdscr, true);
+  mousemask(BUTTON1_PRESSED, NULL);
+  mouseinterval(0);
 } // end of "initializeCurses"
 
 
@@ -744,7 +746,6 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
 
               tempString.append("...");
               tempString.append(themeString);
-              log << "TempString: " << tempString << std::endl;
               fileString = tempString;
             }
           // there was room for the strings. print dots between them
