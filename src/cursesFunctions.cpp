@@ -716,9 +716,9 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
       std::string themeString;
       std::string fileCount;
       std::string tempString;
-
       int maxPossible = maxWinCols - colMaxOffset - 3;
 
+      // print list of the saved files
       for(int i = 0; i < numToPrint; i++)
         {
           tempString.clear();
@@ -728,15 +728,13 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
           themeString = themeStrings.at(i);
           maxPossible = maxWinCols - colMaxOffset - 6; // extension
 
+          // enter if the filestring + the theme string wont fit in the window
           if( (fileString.length() + fileCount.length() + themeString.length())
               >= maxPossible)
             {
               int difference = (fileString.length() + fileCount.length() +
                                 themeString.length()) - maxPossible;
               tempString = "...";
-
-              log << "fileString.length(): " << fileString.length() << std::endl;
-              log << "difference: " << difference << std::endl;
 
               for(int j = difference; j < fileString.length(); j++)
                 {
@@ -749,7 +747,21 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
               log << "TempString: " << tempString << std::endl;
               fileString = tempString;
             }
+          // there was room for the strings. print dots between them
+          else
+            {
+              int dots = fileCount.length() + fileString.length();
 
+              while(dots < maxWinCols - colMaxOffset - themeString.length())
+                {
+                  fileString.push_back('.');
+                  dots++;
+                }
+
+              fileString.append(themeString);
+            }
+
+          // do not print if the string count exceeds the acceptable printing range
           if(i + lineMinOffset >= maxWinLines - lineMaxOffset)
             {
               break;
