@@ -44,7 +44,7 @@ void initializeCurses()
   cbreak();
   keypad(stdscr, true);
   nodelay(stdscr, true);
-  mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
+  mousemask(ALL_MOUSE_EVENTS, NULL);
   mouseinterval(0);
 
 } // end of "initializeCurses"
@@ -280,7 +280,8 @@ void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
 */
 void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                          const int& maxLines,
-                         const int& maxCols)
+                         const int& maxCols,
+                         std::ofstream& log)
 {
   const int colOffset = 9;
   const int lineOffset = 9;
@@ -288,6 +289,9 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
   int numLines = (maxLines - _PROMPTWINSTARTY) - lineOffset;
   int startY = _SAVEDFILESWINSTARTY;
   int startX = _SAVEDFILESWINSTARTX;
+  log << "startY: " << startY << std::endl;
+//  int startY = wins.at(_SAVEDFILESWIN)->getStartY();
+//  int startX = wins.at(_SAVEDFILESWIN)->getStartY();
   int numCols = maxCols - _HELPWINMINCOLS - colOffset;
   bool colsCheck = false;
   bool linesCheck = false;
@@ -559,7 +563,8 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-void defineWins(std::unordered_map<int, CursesWindow*>& wins)
+void defineWins(std::unordered_map<int, CursesWindow*>& wins,
+                std::ofstream& log)
 {
   int numLines = 0;
   int numCols = 0;
@@ -578,7 +583,8 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins)
                   numCols);
   defineSavedFilesWin(wins,
                       numLines,
-                      numCols);
+                      numCols,
+                      log);
   defineSavedThemesWin(wins,
                        numLines,
                        numCols);
@@ -706,6 +712,8 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const int& colMaxOffset,
                           const int& lineMinOffset,
                           const int& colMinOffset,
+                          const int& mouseLine,
+                          const int& mouseCol,
                           const int& numToPrint,
                           std::ofstream& log)
 {
@@ -777,10 +785,18 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                         colMinOffset,
                         fileCount.c_str());
 
+              // check if incoming mouse coordinates are on a file line
+              if((mouseLine - wins.at(win)->getStartY()) ==
+                 (i + lineMinOffset + 2))
+                {
+                  wattron(wins.at(win)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+                }
+
               mvwaddstr(wins.at(win)->getWindow(),
                         i + lineMinOffset + 2,
                         colMinOffset + fileCount.length(),
                         fileString.c_str());
+              wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
             }
         }
     }
@@ -815,6 +831,8 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
 void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                         const std::vector<std::string>& savedFilesStrings,
                         const std::vector<std::string>& currThemesStrings,
+                        const int& mouseLine,
+                        const int& mouseCol,
                         std::ofstream& log)
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
@@ -857,6 +875,8 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                            colMaxOffset,
                            lineMinOffset,
                            colMinOffset,
+                           mouseLine,
+                           mouseCol,
                            savedFilesStrings.size(),
                            log);
     }
@@ -915,6 +935,8 @@ void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
                              const int& colMaxOffset,
                              const int& lineMinOffset,
                              const int& colMinOffset,
+                             const int& mouseLine,
+                             const int& mouseCol,
                              std::ofstream& log)
 {
   if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
@@ -1003,6 +1025,8 @@ void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
 */
 void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          const std::vector<std::string>& savedThemesStrings,
+                         const int& mouseLine,
+                         const int& mouseCol,
                          std::ofstream& log)
 {
   const int maxStringSize = 31;
@@ -1043,6 +1067,8 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                                   colMaxOffset,
                                   lineMinOffset,
                                   colMinOffset,
+                                  mouseLine,
+                                  mouseCol,
                                   log);
         }
     }
