@@ -90,8 +90,10 @@ int main()
   int currLines = 0;
   int currCols = 0;
   std::vector<std::string> promptStrings;
-  std::vector<std::string> savedFilesStrings;
-  std::vector<std::string> currThemesStrings;
+  std::vector<std::string> savedFiles;
+  std::vector<std::string> currThemes;
+  std::vector<std::string> savedThemesStrings;
+  std::vector<std::pair<std::string, std::string>> savedFilesStrings;
 
   // init the text display string vector with THEME SWITCHER for _PROMPTWIN
   definePromptTitle(promptStrings);
@@ -134,18 +136,20 @@ int main()
       // string printing testing for _SAVEDFILESWIN
       if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
         {
-          savedFilesStrings.clear();
-          initTestFilesStringVector(savedFilesStrings,
+          savedFiles.clear();
+          currThemes.clear();
+          initTestFilesStringVector(savedFiles,
                                     50,
                                     log);
-          initTestCurrThemesStringVector(currThemesStrings,
+
+          initTestCurrThemesStringVector(currThemes,
                                          50,
                                          log);
         }
 
       printSavedFilesWin(wins,
-                         savedFilesStrings,
-                         currThemesStrings,
+                         savedFiles,
+                         currThemes,
                          log);
 
       //string printing testing for _SAVEDTHEMESWIN
@@ -153,15 +157,15 @@ int main()
         {
           const int numStrings = 1000;
           const int stringLength = 30;
-          savedFilesStrings.clear();
-          initTestStringVector(savedFilesStrings,
+          savedThemesStrings.clear();
+          initTestStringVector(savedThemesStrings,
                                numStrings,
                                stringLength,
                                log);
         }
 
       printSavedThemesWin(wins,
-                          savedFilesStrings,
+                          savedThemesStrings,
                           log);
 
       // print windows and update the screen
