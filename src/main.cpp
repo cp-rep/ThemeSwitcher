@@ -109,68 +109,118 @@ int main()
 #endif // _CURSES
 
 
+  // run once
+  defineWins(wins);
+  drawBoxes(wins);
+  printPromptWin(wins,
+                 promptStrings,
+                 currLines,
+                 currCols,
+                 log);
+
+  // string printing testing for _SAVEDFILESWIN
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+    {
+      savedFiles.clear();
+      currThemes.clear();
+      initTestFilesStringVector(savedFiles,
+                                50,
+                                log);
+
+      initTestCurrThemesStringVector(currThemes,
+                                     50,
+                                     log);
+    }
+
+  printSavedFilesWin(wins,
+                     savedFiles,
+                     currThemes,
+                     log);
+
+  //string printing testing for _SAVEDTHEMESWIN
+  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
+    {
+      const int numStrings = 1000;
+      const int stringLength = 30;
+      savedThemesStrings.clear();
+      initTestStringVector(savedThemesStrings,
+                           numStrings,
+                           stringLength,
+                           log);
+    }
+
+  printSavedThemesWin(wins,
+                      savedThemesStrings,
+                      log);
+
+
   while(true)
     {
 #if _CURSES
-      // prepare windows for printing
-      clearWins(wins);
+
 
       // check if the window size has changed
       getmaxyx(stdscr, currLines, currCols);
       if( (currLines != wins.at(_MAINWIN)->getNumLines()) ||
           (currCols != wins.at(_MAINWIN)->getNumCols()) )
         {
+          clearWins(wins);
+
           // the window size has changed. update window dimensions
           wins.at(_MAINWIN)->setNumLines(currLines);
           wins.at(_MAINWIN)->setNumCols(currCols);
           defineWins(wins);
-        }
-      drawBoxes(wins);
 
-      printPromptWin(wins,
-                     promptStrings,
-                     currCols,
-                     currCols,
-                     log);
 
-      // string printing testing for _SAVEDFILESWIN
-      if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
-        {
-          savedFiles.clear();
-          currThemes.clear();
-          initTestFilesStringVector(savedFiles,
-                                    50,
-                                    log);
+          drawBoxes(wins);
 
-          initTestCurrThemesStringVector(currThemes,
-                                         50,
-                                         log);
-        }
-
-      printSavedFilesWin(wins,
-                         savedFiles,
-                         currThemes,
+          printPromptWin(wins,
+                         promptStrings,
+                         currLines,
+                         currCols,
                          log);
 
-      //string printing testing for _SAVEDTHEMESWIN
-      if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
-        {
-          const int numStrings = 1000;
-          const int stringLength = 30;
-          savedThemesStrings.clear();
-          initTestStringVector(savedThemesStrings,
-                               numStrings,
-                               stringLength,
-                               log);
-        }
+          // string printing testing for _SAVEDFILESWIN
+          if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+            {
+              savedFiles.clear();
+              currThemes.clear();
+              initTestFilesStringVector(savedFiles,
+                                        50,
+                                        log);
 
-      printSavedThemesWin(wins,
-                          savedThemesStrings,
-                          log);
+              initTestCurrThemesStringVector(currThemes,
+                                             50,
+                                             log);
+            }
+
+          printSavedFilesWin(wins,
+                             savedFiles,
+                             currThemes,
+                             log);
+
+          //string printing testing for _SAVEDTHEMESWIN
+          if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
+            {
+              const int numStrings = 1000;
+              const int stringLength = 30;
+              savedThemesStrings.clear();
+              initTestStringVector(savedThemesStrings,
+                                   numStrings,
+                                   stringLength,
+                                   log);
+            }
+
+          printSavedThemesWin(wins,
+                              savedThemesStrings,
+                              log);
+        }
 
       // print windows and update the screen
       refreshWins(wins);
       doupdate();
+
+
 #endif // _CURSES
 
       usleep(15000);
