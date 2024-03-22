@@ -289,9 +289,6 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
   int numLines = (maxLines - _PROMPTWINSTARTY) - lineOffset;
   int startY = _SAVEDFILESWINSTARTY;
   int startX = _SAVEDFILESWINSTARTX;
-  log << "startY: " << startY << std::endl;
-//  int startY = wins.at(_SAVEDFILESWIN)->getStartY();
-//  int startX = wins.at(_SAVEDFILESWIN)->getStartY();
   int numCols = maxCols - _HELPWINMINCOLS - colOffset;
   bool colsCheck = false;
   bool linesCheck = false;
@@ -786,8 +783,11 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                         fileCount.c_str());
 
               // check if incoming mouse coordinates are on a file line
-              if((mouseLine - wins.at(win)->getStartY()) ==
-                 (i + lineMinOffset + 2))
+              if(((mouseLine - wins.at(win)->getStartY()) == (i + lineMinOffset + 2)) &&
+                ((mouseCol - wins.at(win)->getStartX() >=
+                  colMinOffset + fileCount.length()) &&
+                 (mouseCol - wins.at(win)->getStartX()) <=
+                  wins.at(win)->getStartX() + maxWinCols - colMaxOffset))
                 {
                   wattron(wins.at(win)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
                 }
