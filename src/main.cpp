@@ -91,13 +91,14 @@ int main()
   MEVENT mouse;
   int currLines = 0;
   int currCols = 0;
-  int mouseY = 0;
-  int mouseX = 0;
+  int mouseLine = 0;
+  int mouseCol = 0;
   std::vector<std::string> promptStrings;
   std::vector<std::string> savedFiles;
   std::vector<std::string> currThemes;
   std::vector<std::string> savedThemesStrings;
   std::vector<std::pair<std::string, std::string>> savedFilesStrings;
+  //printf("\003[?1003h\n");
 
   // ## initialize curses and starting windows ##
 #if _CURSES
@@ -116,6 +117,8 @@ int main()
                    promptStrings,
                    currLines,
                    currCols,
+                   mouseLine,
+                   mouseCol,
                    log);
 
     // string printing testing for _SAVEDFILESWIN
@@ -159,15 +162,17 @@ int main()
       // get user input from mouse or keyboard
       input = wgetch(wins.at(_MAINWIN)->getWindow());
 
-      // check if a mouse click was detected
-      if(getmouse(&mouse) == OK)
+      if(input == 'q')
         {
-          if(mouse.bstate && BUTTON1_PRESSED)
-            {
-              // store the coordinates the click
-              mouseY = mouse.y;
-              mouseX = mouse.x;
-            }
+          break;
+        }
+
+      if(mouse.bstate & REPORT_MOUSE_POSITION)
+        {
+          mouseLine = mouse.y;
+          mouseCol = mouse.x;
+          log << "MouseLine: " << mouseLine << std::endl;
+          log << "MouseCol: "  << mouseCol << std::endl;
         }
 
 #if _CURSES
@@ -189,6 +194,8 @@ int main()
                          promptStrings,
                          currLines,
                          currCols,
+                         mouseLine,
+                         mouseCol,
                          log);
 
           // string printing testing for _SAVEDFILESWIN
