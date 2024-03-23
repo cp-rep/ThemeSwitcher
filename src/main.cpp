@@ -102,7 +102,6 @@ int main()
   std::vector<std::string> savedFileStrings;
   std::vector<std::string> currThemes;
   std::vector<std::string> savedThemesStrings;
-  bool firstRun = true;
 
   initTestFilesStringVector(savedFileStrings,
                             50,
@@ -153,13 +152,9 @@ int main()
                    mouseCol,
                    log);
     printSavedFilesWin(wins,
-                       sfStringWins,
-                       savedFileStrings,
-                       currThemes,
                        mouseLine,
                        mouseCol,
-                       log,
-                       firstRun);
+                       log);
     printSavedThemesWin(wins,
                         savedThemesStrings,
                         mouseLine,
@@ -194,8 +189,7 @@ int main()
       if( (currLines != wins.at(_MAINWIN)->getNumLines()) ||
           (currCols != wins.at(_MAINWIN)->getNumCols()))
         {
-          clearWins(wins,
-                    sfStringWins);
+          clearWins(wins);
 
           // the window size has changed. update window dimensions
           wins.at(_MAINWIN)->setNumLines(currLines);
@@ -214,13 +208,9 @@ int main()
                          mouseCol,
                          log);
           printSavedFilesWin(wins,
-                             sfStringWins,
-                             savedFileStrings,
-                             currThemes,
                              mouseLine,
                              mouseCol,
-                             log,
-                             firstRun);
+                             log);
           printSavedThemesWin(wins,
                               savedThemesStrings,
                               mouseLine,
@@ -251,8 +241,7 @@ int main()
       //       }
       //   }
 
-      refreshWins(wins,
-                  sfStringWins);
+      refreshWins(wins);
       doupdate();
       // print windows and update the screen
 
