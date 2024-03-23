@@ -23,7 +23,9 @@ const int sfRArrowClicked = 2;
 const std::string stTitle = "SAVED THEMES:";
 
 void initializeCurses();
-void initializeWins(std::unordered_map<int, CursesWindow*>& wins);
+void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
+                    const int& numSavedFileWins,
+                    std::ofstream& log);
 void definePromptTitle(std::vector<std::string>& promptStrings);
 void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
                      const int& maxLines,
@@ -40,6 +42,9 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                          const int& maxLines,
                          const int& maxCols,
                          std::ofstream& log);
+void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
+                        const std::vector<std::string>& savedFileStrings,
+                        std::ofstream& log);
 void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
                           const int& maxLines,
                           const int& maxCols);
@@ -47,6 +52,7 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                    const int& maxLines,
                    const int& maxCols);
 void defineWins(std::unordered_map<int, CursesWindow*>& wins,
+                const std::vector<std::string>& savedFileStrings,
                 std::ofstream& log);
 void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
                     const std::vector<std::string>& promptStrings,
@@ -61,7 +67,8 @@ int printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
                   const int& mouseCol,
                   std::string outString,
                   std::ofstream& log);
-void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
+void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
+                          std::unordered_map<int, CursesWindow*>& sfStringWins,
                           const int win,
                           const std::vector<std::string>& fileStrings,
                           const std::vector<std::string>& themeStrings,
@@ -73,13 +80,16 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const int& mouseCol,
                           const int& numToPrint,
                           const int& arrowVal,
-                          std::ofstream& log);
-void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
+                          std::ofstream& log,
+                          bool& firstRun);
+void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
+                        std::unordered_map<int, CursesWindow*>& sfStringWins,
                         const std::vector<std::string>& savedFilesStrings,
                         const std::vector<std::string>& currThemesStrings,
                         const int& mouseLine,
                         const int& mouseCol,
-                        std::ofstream& log);
+                        std::ofstream& log,
+                        bool& firstRun);
 void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
                              const std::vector<std::string>& strings,
                              const int& lineMaxOffset,
@@ -94,8 +104,10 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          const int& mouseLine,
                          const int& mouseCol,
                          std::ofstream& log);
-void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
-void clearWins(const std::unordered_map<int, CursesWindow*>& wins);
+void refreshWins(const std::unordered_map<int, CursesWindow*>& wins,
+                 const std::unordered_map<int, CursesWindow*>& sfStringWins);
+void clearWins(const std::unordered_map<int, CursesWindow*>& wins,
+               const std::unordered_map<int, CursesWindow*>& sfStringWins);
 void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins);
 
 #endif // CURSESFUNCTIONS_HPP

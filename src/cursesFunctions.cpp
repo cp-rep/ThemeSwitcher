@@ -78,13 +78,23 @@ void initializeCurses()
   Returns:
    NONE
 */
-void initializeWins(std::unordered_map<int, CursesWindow*>& wins)
+void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
+                    const int& numSavedFileWins,
+                    std::ofstream& log)
 {
   for(int i = _MAINWIN; i <= _RARROWSAVEDFILESWIN; i++)
     {
       CursesWindow* newWindow = new CursesWindow();
       wins.insert(std::make_pair(i, newWindow));
     }
+
+  log << "numSavedFiles: " << numSavedFileWins << std::endl;
+  for(int i = 100; i < numSavedFileWins + 100; i++)
+    {
+      CursesWindow* newWindow = new CursesWindow();
+      wins.insert(std::make_pair(i, newWindow));
+    }
+
 } // end of "initializeWins"
 
 
@@ -399,6 +409,7 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                                         numCols,
                                         startY,
                                         startX);
+
       // create the new _LARROWSAVEDFILESWIN
       defineArrowWin(wins,
                      _LARROWSAVEDFILESWIN,
@@ -445,6 +456,52 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
     }
 } // end of "defineSavedFilesWin"
 
+
+
+
+void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
+                        const std::vector<std::string>& savedFileStrings,
+                        std::ofstream& log)
+{
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+    {
+      int sfWinLines = 0;
+      int sfWinCols = 0;
+      getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(), sfWinLines, sfWinCols);
+
+      const int lineMinOffset = 2;
+      const int colMinOffset = 3;
+      const int lineMaxOffset = 4;
+      const int colMaxOffset = colMinOffset + 3;
+
+      for(int i = 100; i < sfWinLines - colMaxOffset + 100; i++)
+        {
+          int numLines = 1;
+          int numCols = sfWinCols - colMinOffset - colMaxOffset - 4; // file count
+          int startY = (i - 100) + wins.at(_SAVEDFILESWIN)->getStartY() + lineMinOffset + 2;
+          int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset + 4;
+
+          // delete the current window if exists before creating a new one
+          if(wins.at(i)->getWindow() != nullptr)
+            {
+              wins.at(i)->deleteWindow();
+              wins.at(i)->setWindow(nullptr);
+            }
+
+          // create the new window
+          wins.at(i)->defineWindow(newwin(numLines,
+                                          numCols,
+                                          startY,
+                                          startX),
+                                   "SAVEDFILE",
+                                   numLines,
+                                   numCols,
+                                   startY,
+                                   startX);
+        }
+
+    }
+}
 
 
 /*
@@ -664,6 +721,7 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
    NONE
 */
 void defineWins(std::unordered_map<int, CursesWindow*>& wins,
+                const std::vector<std::string>& savedFileStrings,
                 std::ofstream& log)
 {
   int numLines = 0;
@@ -685,6 +743,10 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins,
                       numLines,
                       numCols,
                       log);
+  defineSFStringWins(wins,
+                     savedFileStrings,
+                     log);
+
   defineSavedThemesWin(wins,
                        numLines,
                        numCols);
@@ -885,7 +947,8 @@ int printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
+void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
+                          std::unordered_map<int, CursesWindow*>& sfStringWins,
                           const int win,
                           const std::vector<std::string>& fileStrings,
                           const std::vector<std::string>& themeStrings,
@@ -897,7 +960,8 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const int& mouseCol,
                           const int& numToPrint,
                           const int& arrowVal,
-                          std::ofstream& log)
+                          std::ofstream& log,
+                          bool& firstRun)
 {
   if(wins.at(win)->getWindow() != nullptr)
     {
@@ -962,6 +1026,25 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
             }
           else
             {
+              int winPos = i + 100;
+              int startY = wins.at(win)->getStartY() + i + lineMinOffset + 2;
+              int startX = wins.at(win)->getStartX() + colMinOffset + fileCount.length();
+
+              if(firstRun == true)
+                {
+                  CursesWindow* newWindow = new CursesWindow();
+                  wins.insert(std::make_pair(winPos, newWindow));
+                  wins.at(winPos)->defineWindow(newwin(1,   // num lines
+                                                       fileString.length(), // num cols
+                                                       startY,
+                                                       startX),
+                                                "FILESTRING",
+                                                1,
+                                                fileString.length(),
+                                                startY,
+                                                startX);
+                }
+
               mvwaddstr(wins.at(win)->getWindow(),
                         i + lineMinOffset + 2,
                         colMinOffset,
@@ -974,17 +1057,99 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                  (mouseCol - wins.at(win)->getStartX()) <=
                   wins.at(win)->getStartX() + maxWinCols - colMaxOffset))
                 {
-                  wattron(wins.at(win)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+                  wattron(wins.at(winPos)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+                  refreshWins(wins,
+                              sfStringWins);
+//                  wnoutrefresh(wins.at(winPos)->getWindow());
+//                  doupdate();
                 }
 
-              mvwaddstr(wins.at(win)->getWindow(),
-                        i + lineMinOffset + 2,
-                        colMinOffset + fileCount.length(),
+              mvwaddstr(wins.at(winPos)->getWindow(),
+                        0,
+                        0,
                         fileString.c_str());
-              wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+              wattron(wins.at(winPos)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+
             }
         }
+      firstRun = false;
     }
+
+
+
+
+
+    //   for(int i = 0; i < numToPrint; i++)
+    //     {
+    //       tempString.clear();
+    //       fileCount = intToStr(i + 1);
+    //       fileCount.append(". ");
+    //       fileString = fileStrings.at(i);
+    //       themeString = themeStrings.at(i);
+    //       maxPossible = maxWinCols - colMaxOffset - 6; // extension
+
+    //       // enter if the filestring + the theme string wont fit in the window
+    //       if( (fileString.length() + fileCount.length() + themeString.length())
+    //           >= maxPossible)
+    //         {
+    //           int difference = (fileString.length() + fileCount.length() +
+    //                             themeString.length()) - maxPossible;
+    //           tempString = "...";
+
+    //           for(int j = difference; j < fileString.length(); j++)
+    //             {
+    //               char c = fileString.at(j);
+    //               tempString.push_back(c);
+    //             }
+
+    //           tempString.append("...");
+    //           tempString.append(themeString);
+    //           fileString = tempString;
+    //         }
+    //       // there was room for the strings. print dots between them
+    //       else
+    //         {
+    //           int dots = fileCount.length() + fileString.length();
+
+    //           while(dots < maxWinCols - colMaxOffset - themeString.length())
+    //             {
+    //               fileString.push_back('.');
+    //               dots++;
+    //             }
+
+    //           fileString.append(themeString);
+    //         }
+
+    //       // do not print if the string count exceeds the acceptable printing range
+    //       if(i + lineMinOffset >= maxWinLines - lineMaxOffset)
+    //         {
+    //           break;
+    //         }
+    //       else
+    //         {
+    //           mvwaddstr(wins.at(win)->getWindow(),
+    //                     i + lineMinOffset + 2,
+    //                     colMinOffset,
+    //                     fileCount.c_str());
+
+    //           // check if incoming mouse coordinates are on a file line
+    //           if(((mouseLine - wins.at(win)->getStartY()) == (i + lineMinOffset + 2)) &&
+    //             ((mouseCol - wins.at(win)->getStartX() >=
+    //               colMinOffset + fileCount.length()) &&
+    //              (mouseCol - wins.at(win)->getStartX()) <=
+    //               wins.at(win)->getStartX() + maxWinCols - colMaxOffset))
+    //             {
+    //               wattron(wins.at(win)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+    //             }
+
+    //           mvwaddstr(wins.at(win)->getWindow(),
+    //                     i + lineMinOffset + 2,
+    //                     colMinOffset + fileCount.length(),
+    //                     fileString.c_str());
+    //           wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+    //         }
+    //     }
+    // }
 } // end of "printNumberedStrings"
 
 
@@ -1013,12 +1178,14 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
+void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
+                        std::unordered_map<int, CursesWindow*>& sfStringWins,
                         const std::vector<std::string>& savedFilesStrings,
                         const std::vector<std::string>& currThemesStrings,
                         const int& mouseLine,
                         const int& mouseCol,
-                        std::ofstream& log)
+                        std::ofstream& log,
+                        bool& firstRun)
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
     {
@@ -1059,6 +1226,23 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
 
       // print the arrow windows for _SAVEDFILESWIN
       int arrowVal = 0;
+
+      // print the file paths and current theme
+      // printNumberedStrings(wins,
+      //                      sfStringWins,
+      //                      _SAVEDFILESWIN,
+      //                      savedFilesStrings,
+      //                      currThemesStrings,
+      //                      lineMaxOffset,
+      //                      colMaxOffset,
+      //                      lineMinOffset,
+      //                      colMinOffset,
+      //                      mouseLine,
+      //                      mouseCol,
+      //                      savedFilesStrings.size(),
+      //                      arrowVal,
+      //                      log,
+      //                      firstRun);
       arrowVal = printArrowWin(wins,
                                _LARROWSAVEDFILESWIN,
                                mouseLine,
@@ -1071,21 +1255,10 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                                mouseCol,
                                rightArrow,
                                log);
+//      refreshWins(wins,
+//                  sfStringWins);
+//      doupdate();
 
-      // print the file paths and current theme
-      printNumberedStrings(wins,
-                           _SAVEDFILESWIN,
-                           savedFilesStrings,
-                           currThemesStrings,
-                           lineMaxOffset,
-                           colMaxOffset,
-                           lineMinOffset,
-                           colMinOffset,
-                           mouseLine,
-                           mouseCol,
-                           savedFilesStrings.size(),
-                           arrowVal,
-                           log);
     }
 } // end of "printSavedFilesWin"
 
@@ -1307,9 +1480,12 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-void refreshWins(const std::unordered_map<int, CursesWindow*>& wins)
+void refreshWins(const std::unordered_map<int, CursesWindow*>& wins,
+                 const std::unordered_map<int, CursesWindow*>& sfStringWins)
 {
-  std::unordered_map<int, CursesWindow*>::const_iterator it = wins.begin();
+
+  // ##
+  std::unordered_map<int, CursesWindow*>::const_iterator it;
   std::vector<int> tempMainWins;
 
   // store all currently initialized window indexes
@@ -1332,6 +1508,9 @@ void refreshWins(const std::unordered_map<int, CursesWindow*>& wins)
       wnoutrefresh(wins.at(*vecIt)->getWindow());
     }
 
+
+
+  // ##
   // for(int i = _MAINWIN; i <= _RARROWSAVEDFILESWIN; i++)
   //   {
   //     if(wins.at(i)->getWindow() != nullptr)
@@ -1340,6 +1519,16 @@ void refreshWins(const std::unordered_map<int, CursesWindow*>& wins)
   //         doupdate();
   //       }
   //   }
+
+  //  for(int i = 100; i <= 110; i++)
+  //    {
+  //      if(wins.at(i)->getWindow() != nullptr)
+  //        {
+  //          wnoutrefresh(wins.at(i)->getWindow());
+  //          doupdate();
+  //        }
+  //    }
+
 } // end of "refreshWins"
 
 
@@ -1368,13 +1557,20 @@ void refreshWins(const std::unordered_map<int, CursesWindow*>& wins)
   Returns:
    NONE
 */
-void clearWins(const std::unordered_map<int, CursesWindow*>& wins)
+void clearWins(const std::unordered_map<int, CursesWindow*>& wins,
+               const std::unordered_map<int, CursesWindow*>& sfStringWins)
 {
   std::unordered_map<int, CursesWindow*>::const_iterator it;
   for(it = wins.begin(); it != wins.end(); it++)
     {
       werase(it->second->getWindow());
     }
+
+  // for(it = sfStringWins.begin(); it != sfStringWins.end(); it++)
+  //   {
+  //     werase(it->second->getWindow());
+  //   }
+
 } // end of "clearWins"
 
 
@@ -1403,18 +1599,44 @@ void clearWins(const std::unordered_map<int, CursesWindow*>& wins)
 */
 void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins)
 {
+  // 1
+  // std::unordered_map<int, CursesWindow*>::const_iterator it = wins.begin();
+  // std::vector<int> tempMainWins;
+
+  // // store all currently initialized window indexes
+  // for(it = wins.begin(); it != wins.end(); it++)
+  //   {
+  //     if(it->second->getWindow() != nullptr)
+  //       {
+  //         tempMainWins.push_back(it->first);
+  //       }
+  //   }
+
+  // // sort them in ascending order
+  // std::sort(tempMainWins.begin(), tempMainWins.end());
+
+  // // refresh the initialized windows
+  // for(std::vector<int>::iterator vecIt = tempMainWins.begin();
+  //     vecIt != tempMainWins.end();
+  //     vecIt++)
+  //   {
+  //     box(wins.at(*vecIt)->getWindow(), '0', '0');
+  //   }
+
+
+  // 2
   char val = 'A';
   std::unordered_map<int, CursesWindow*>::const_iterator it;
-  int i = 0;
-  for(it = wins.begin(); it != wins.end(); it++, i++)
-    {
-      if(i == 2 ||
-         i == 0 ||
-         i == 6)
 
-        {
-           continue;
-        }
+  for(it = wins.begin(); it != wins.end(); it++)
+    {
+      // if(i == 2 ||
+      //    i == 0 ||
+      //    i == 6)
+
+      //   {
+      //      continue;
+      //   }
 
       if(val == '[')
         {
@@ -1428,4 +1650,13 @@ void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins)
           box(it->second->getWindow(), val, val);
         }
     }
+
+    // for(int i = _MAINWIN; i <= _RARROWSAVEDFILESWIN; i++)
+    // {
+    //   if(wins.at(i)->getWindow() != nullptr)
+    //     {
+
+    //       box(wins.at(i)->getWindow(), 'a', 'a');
+    //     }
+    // }
 } // end of "drawBoxes"

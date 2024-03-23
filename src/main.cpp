@@ -35,6 +35,11 @@
 #define _CURSES 1
 
 
+void printFileStrings(std::unordered_map<int, CursesWindow*>& wins,
+                 const std::vector<std::string>& savedFileStrings,
+                 const int& mouseLine,
+                 const int& mouseCol,
+                 std::ofstream& log);
 
 // ==== main ==================================================================
 //
@@ -94,20 +99,30 @@ int main()
   int mouseLine = -1;
   int mouseCol = -1;
   std::vector<std::string> promptStrings;
-  std::vector<std::string> savedFiles;
+  std::vector<std::string> savedFileStrings;
   std::vector<std::string> currThemes;
   std::vector<std::string> savedThemesStrings;
-  std::vector<std::pair<std::string, std::string>> savedFilesStrings;
+  bool firstRun = true;
+
+  initTestFilesStringVector(savedFileStrings,
+                            50,
+                            log);
+  initTestCurrThemesStringVector(currThemes,
+                                 50,
+                                 log);
 
   // ## initialize curses and starting windows ##
 #if _CURSES
   std::unordered_map<int, CursesWindow*> wins;
+  std::unordered_map<int, CursesWindow*> sfStringWins;
   initializeCurses();
-  initializeWins(wins);
+  initializeWins(wins,
+                 savedFileStrings.size(),
+                 log);
 #endif // _CURSES
 
   // create testing vectors
-  initTestFilesStringVector(savedFiles,
+  initTestFilesStringVector(savedFileStrings,
                             50,
                             log);
   initTestCurrThemesStringVector(currThemes,
@@ -115,17 +130,19 @@ int main()
                                  log);
   const int numStrings = 1000;
   const int stringLength = 30;
-  savedThemesStrings.clear();
   initTestStringVector(savedThemesStrings,
                        numStrings,
                        stringLength,
                        log);
+
+
 
   // run once
   {
     // init the text display string vector with THEME SWITCHER for _PROMPTWIN
     definePromptTitle(promptStrings);
     defineWins(wins,
+               savedFileStrings,
                log);
     drawBoxes(wins);
     printPromptWin(wins,
@@ -136,11 +153,13 @@ int main()
                    mouseCol,
                    log);
     printSavedFilesWin(wins,
-                       savedFiles,
+                       sfStringWins,
+                       savedFileStrings,
                        currThemes,
                        mouseLine,
                        mouseCol,
-                       log);
+                       log,
+                       firstRun);
     printSavedThemesWin(wins,
                         savedThemesStrings,
                         mouseLine,
@@ -173,15 +192,16 @@ int main()
       // check if the window size has changed
       getmaxyx(stdscr, currLines, currCols);
       if( (currLines != wins.at(_MAINWIN)->getNumLines()) ||
-          (currCols != wins.at(_MAINWIN)->getNumCols()) ||
-          mouseLine != -1 || mouseCol != -1)
+          (currCols != wins.at(_MAINWIN)->getNumCols()))
         {
-          clearWins(wins);
+          clearWins(wins,
+                    sfStringWins);
 
           // the window size has changed. update window dimensions
           wins.at(_MAINWIN)->setNumLines(currLines);
           wins.at(_MAINWIN)->setNumCols(currCols);
           defineWins(wins,
+                     savedFileStrings,
                      log);
           drawBoxes(wins);
 
@@ -194,11 +214,13 @@ int main()
                          mouseCol,
                          log);
           printSavedFilesWin(wins,
-                             savedFiles,
+                             sfStringWins,
+                             savedFileStrings,
                              currThemes,
                              mouseLine,
                              mouseCol,
-                             log);
+                             log,
+                             firstRun);
           printSavedThemesWin(wins,
                               savedThemesStrings,
                               mouseLine,
@@ -206,14 +228,38 @@ int main()
                               log);
         }
 
-      refreshWins(wins);
+      printFileStrings(wins,
+                       savedFileStrings,
+                       mouseLine,
+                       mouseCol,
+                       log);
+
+      // if(mouseLine != -1 || mouseCol != -1)
+      //   {
+      //     // log << "mouseLine: " << mouseLine << std::endl;
+      //     // log << "startY: " << wins.at(100)->getStartY() << std::endl;
+      //     // log << "added mouse: " << mouseLine + 100 - 13 << std::endl;
+      //     std::string fileString = savedFileStrings.at(0);
+
+      //     if(mouseLine == wins.at(mouseLine + 100 - 13)->getStartY())
+      //       {
+      //         wattron(wins.at(mouseLine + 100 - 13)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+      //         mvwaddstr(wins.at(mouseLine + 100 - 13)->getWindow(),
+      //                   0,
+      //                   0,
+      //                   fileString.c_str());
+      //       }
+      //   }
+
+      refreshWins(wins,
+                  sfStringWins);
       doupdate();
       // print windows and update the screen
 
 
 #endif // _CURSES
 
-      usleep(15000);
+    //  usleep(15000);
     }
 
   // clean up
@@ -229,3 +275,17 @@ int main()
 
   return 0;
 } // end of "main"
+
+
+
+
+
+void printFileStrings(std::unordered_map<int, CursesWindow*>& wins,
+                 const std::vector<std::string>& savedFileStrings,
+                 const int& mouseLine,
+                 const int& mouseCol,
+                 std::ofstream& log)
+
+{
+
+}
