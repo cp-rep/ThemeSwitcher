@@ -110,6 +110,13 @@ int main()
                                  50,
                                  log);
 
+  const int numStrings = 1000;
+  const int stringLength = 30;
+  initTestStringVector(savedThemesStrings,
+                       numStrings,
+                       stringLength,
+                       log);
+
   // ## initialize curses and starting windows ##
 #if _CURSES
   std::unordered_map<int, CursesWindow*> wins;
@@ -119,21 +126,6 @@ int main()
                  savedFileStrings.size(),
                  log);
 #endif // _CURSES
-
-  // create testing vectors
-  initTestFilesStringVector(savedFileStrings,
-                            50,
-                            log);
-  initTestCurrThemesStringVector(currThemes,
-                                 50,
-                                 log);
-  const int numStrings = 1000;
-  const int stringLength = 30;
-  initTestStringVector(savedThemesStrings,
-                       numStrings,
-                       stringLength,
-                       log);
-
 
 
   // run once
