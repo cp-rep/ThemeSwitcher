@@ -2,6 +2,7 @@
 #define TESTINGINTERFACE_HPP
 #include <vector>
 #include "log.hpp"
+#include "typeConversions.hpp"
 
 void initTestStringVector(std::vector<std::string>& testStrings,
                           const int numStrings,
