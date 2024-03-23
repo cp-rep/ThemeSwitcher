@@ -11,6 +11,8 @@
 // _SAVEDFILESWIN
 const std::string sfTitle = "SAVED FILES:";
 const std::string sfThemeTitle = "CURRENT THEME:";
+const std::string leftArrow = " < ";
+const std::string rightArrow = " > ";
 
 // _SAVEDTHEMESWIN
 const std::string stTitle = "SAVED THEMES:";
@@ -21,6 +23,13 @@ void definePromptTitle(std::vector<std::string>& promptStrings);
 void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
                      const int& maxLines,
                      const int& maxCols);
+void defineArrowWin(std::unordered_map<int, CursesWindow*>& wins,
+                      const int win,
+                      const int startY,
+                      const int startX,
+                      const int numLines,
+                      const int numCols,
+                      std::ofstream& log);
 void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                          const int& maxLines,
                          const int& maxCols,
@@ -50,6 +59,8 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const int& colMinOffset,
                           const int& mouseLine,
                           const int& mouseCol,
+                          const int& leftArrowStart,
+                          const int& rightArrowStart,
                           const int& numToPrint,
                           std::ofstream& log);
 void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
