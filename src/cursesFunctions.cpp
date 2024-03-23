@@ -1403,64 +1403,24 @@ void clearWins(const std::unordered_map<int, CursesWindow*>& wins)
 */
 void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins)
 {
-  // 1
-  // std::unordered_map<int, CursesWindow*>::const_iterator it = wins.begin();
-  // std::vector<int> tempMainWins;
-
-  // // store all currently initialized window indexes
-  // for(it = wins.begin(); it != wins.end(); it++)
-  //   {
-  //     if(it->second->getWindow() != nullptr)
-  //       {
-  //         tempMainWins.push_back(it->first);
-  //       }
-  //   }
-
-  // // sort them in ascending order
-  // std::sort(tempMainWins.begin(), tempMainWins.end());
-
-  // // refresh the initialized windows
-  // for(std::vector<int>::iterator vecIt = tempMainWins.begin();
-  //     vecIt != tempMainWins.end();
-  //     vecIt++)
-  //   {
-  //     box(wins.at(*vecIt)->getWindow(), '0', '0');
-  //   }
-
-
-  // 2
   char val = 'A';
   std::unordered_map<int, CursesWindow*>::const_iterator it;
 
   for(it = wins.begin(); it != wins.end(); it++)
     {
-      // if(i == 2 ||
-      //    i == 0 ||
-      //    i == 6)
-
-      //   {
-      //      continue;
-      //   }
-
-      if(val == '[')
+      if(it->second->getWindowName() != "SAVEDFILE")
         {
-          val = 'A';
-        }
+          if(val == '[')
+            {
+              val = 'A';
+            }
 
-      val++;
+          val++;
 
-      if(it->second->getWindow() != nullptr)
-        {
-          box(it->second->getWindow(), val, val);
-        }
+          if(it->second->getWindow() != nullptr)
+            {
+              box(it->second->getWindow(), val, val);
+            }
+      }
     }
-
-    // for(int i = _MAINWIN; i <= _RARROWSAVEDFILESWIN; i++)
-    // {
-    //   if(wins.at(i)->getWindow() != nullptr)
-    //     {
-
-    //       box(wins.at(i)->getWindow(), 'a', 'a');
-    //     }
-    // }
 } // end of "drawBoxes"
