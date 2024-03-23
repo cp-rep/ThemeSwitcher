@@ -11,7 +11,6 @@
 #include <unistd.h>
 
 
-
 /*
   Function:
    initializeCurses
@@ -89,7 +88,7 @@ void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
     }
 
   log << "numSavedFiles: " << numSavedFileWins << std::endl;
-  for(int i = 100; i < numSavedFileWins + 100; i++)
+  for(int i = _SFWINSINDEX; i < numSavedFileWins + _SFWINSINDEX; i++)
     {
       CursesWindow* newWindow = new CursesWindow();
       wins.insert(std::make_pair(i, newWindow));
@@ -474,11 +473,11 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
       const int lineMaxOffset = 4;
       const int colMaxOffset = colMinOffset + 3;
 
-      for(int i = 100; i < sfWinLines - colMaxOffset + 100; i++)
+      for(int i = _SFWINSINDEX; i < sfWinLines - colMaxOffset + _SFWINSINDEX; i++)
         {
           int numLines = 1;
           int numCols = sfWinCols - colMinOffset - colMaxOffset - 4; // file count
-          int startY = (i - 100) + wins.at(_SAVEDFILESWIN)->getStartY() + lineMinOffset + 2;
+          int startY = (i - _SFWINSINDEX) + wins.at(_SAVEDFILESWIN)->getStartY() + lineMinOffset + 2;
           int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset + 4;
 
           // delete the current window if exists before creating a new one
@@ -1327,15 +1326,6 @@ void refreshWins(const std::unordered_map<int, CursesWindow*>& wins)
   //         doupdate();
   //       }
   //   }
-
-  //  for(int i = 100; i <= 110; i++)
-  //    {
-  //      if(wins.at(i)->getWindow() != nullptr)
-  //        {
-  //          wnoutrefresh(wins.at(i)->getWindow());
-  //          doupdate();
-  //        }
-  //    }
 
 } // end of "refreshWins"
 
