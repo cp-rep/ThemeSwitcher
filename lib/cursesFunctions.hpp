@@ -15,6 +15,9 @@ const std::string leftArrow = " < ";
 const std::string rightArrow = " > ";
 const std::string sfLeftArrow = "_LARROWSAVEDFILESWIN";
 const std::string sfRightArrow = "_RARROWSAVEDFILESWIN";
+const int sfLArrowClicked = 1;
+const int sfRArrowClicked = 2;
+
 
 // _SAVEDTHEMESWIN
 const std::string stTitle = "SAVED THEMES:";
@@ -52,12 +55,12 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
                     const int& mouseLine,
                     const int& mouseCol,
                     std::ofstream& log);
-void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
-                   const int win,
-                   const int& mouseLine,
-                   const int& mouseCol,
-                   std::string outString,
-                   std::ofstream& log);
+int printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
+                  const int win,
+                  const int& mouseLine,
+                  const int& mouseCol,
+                  std::string outString,
+                  std::ofstream& log);
 void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const int win,
                           const std::vector<std::string>& fileStrings,
@@ -69,6 +72,7 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const int& mouseLine,
                           const int& mouseCol,
                           const int& numToPrint,
+                          const int& arrowVal,
                           std::ofstream& log);
 void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                         const std::vector<std::string>& savedFilesStrings,
