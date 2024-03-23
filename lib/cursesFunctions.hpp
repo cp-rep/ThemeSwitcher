@@ -13,6 +13,8 @@ const std::string sfTitle = "SAVED FILES:";
 const std::string sfThemeTitle = "CURRENT THEME:";
 const std::string leftArrow = " < ";
 const std::string rightArrow = " > ";
+const std::string sfLeftArrow = "_LARROWSAVEDFILESWIN";
+const std::string sfRightArrow = "_RARROWSAVEDFILESWIN";
 
 // _SAVEDTHEMESWIN
 const std::string stTitle = "SAVED THEMES:";
@@ -24,12 +26,13 @@ void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
                      const int& maxLines,
                      const int& maxCols);
 void defineArrowWin(std::unordered_map<int, CursesWindow*>& wins,
-                      const int win,
-                      const int startY,
-                      const int startX,
-                      const int numLines,
-                      const int numCols,
-                      std::ofstream& log);
+                    const int win,
+                    const std::string winName,
+                    const int startY,
+                    const int startX,
+                    const int numLines,
+                    const int numCols,
+                    std::ofstream& log);
 void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                          const int& maxLines,
                          const int& maxCols,
@@ -49,6 +52,12 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
                     const int& mouseLine,
                     const int& mouseCol,
                     std::ofstream& log);
+void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
+                   const int win,
+                   const int& mouseLine,
+                   const int& mouseCol,
+                   std::string outString,
+                   std::ofstream& log);
 void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const int win,
                           const std::vector<std::string>& fileStrings,
@@ -59,8 +68,6 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const int& colMinOffset,
                           const int& mouseLine,
                           const int& mouseCol,
-                          const int& leftArrowStart,
-                          const int& rightArrowStart,
                           const int& numToPrint,
                           std::ofstream& log);
 void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
