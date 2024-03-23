@@ -733,7 +733,7 @@ void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
   // flash window if mouse click deteceted in range
   if((mouseLine == wins.at(win)->getStartY()) &&
     (mouseCol >= wins.at(win)->getStartX() &&
-     mouseCol <= wins.at(win)->getStartX() + outString.length()))
+     mouseCol <= wins.at(win)->getStartX() + outString.length() - 1))
     {
       wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
       mvwaddstr(wins.at(win)->getWindow(),
