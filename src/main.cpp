@@ -106,6 +106,21 @@ int main()
   initializeWins(wins);
 #endif // _CURSES
 
+  // create testing vectors
+  initTestFilesStringVector(savedFiles,
+                            50,
+                            log);
+  initTestCurrThemesStringVector(currThemes,
+                                 50,
+                                 log);
+  const int numStrings = 1000;
+  const int stringLength = 30;
+  savedThemesStrings.clear();
+  initTestStringVector(savedThemesStrings,
+                       numStrings,
+                       stringLength,
+                       log);
+
   // run once
   {
     // init the text display string vector with THEME SWITCHER for _PROMPTWIN
@@ -120,40 +135,12 @@ int main()
                    mouseLine,
                    mouseCol,
                    log);
-
-    // string printing testing for _SAVEDFILESWIN
-    if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
-      {
-        savedFiles.clear();
-        currThemes.clear();
-        initTestFilesStringVector(savedFiles,
-                                  50,
-                                  log);
-
-        initTestCurrThemesStringVector(currThemes,
-                                       50,
-                                       log);
-      }
-
     printSavedFilesWin(wins,
                        savedFiles,
                        currThemes,
                        mouseLine,
                        mouseCol,
                        log);
-
-    //string printing testing for _SAVEDTHEMESWIN
-    if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
-      {
-        const int numStrings = 1000;
-        const int stringLength = 30;
-        savedThemesStrings.clear();
-        initTestStringVector(savedThemesStrings,
-                             numStrings,
-                             stringLength,
-                             log);
-      }
-
     printSavedThemesWin(wins,
                         savedThemesStrings,
                         mouseLine,
@@ -171,6 +158,7 @@ int main()
           break;
         }
 
+#if _CURSES
       mouseLine = -1;
       mouseCol = -1;
       if(getmouse(&mouse) == OK)
@@ -182,7 +170,6 @@ int main()
             }
         }
 
-#if _CURSES
       // check if the window size has changed
       getmaxyx(stdscr, currLines, currCols);
       if( (currLines != wins.at(_MAINWIN)->getNumLines()) ||
@@ -196,9 +183,9 @@ int main()
           wins.at(_MAINWIN)->setNumCols(currCols);
           defineWins(wins,
                      log);
+          drawBoxes(wins);
 
           // begin printing windows to buffer
-          drawBoxes(wins);
           printPromptWin(wins,
                          promptStrings,
                          currLines,
@@ -206,40 +193,12 @@ int main()
                          mouseLine,
                          mouseCol,
                          log);
-
-          // string printing testing for _SAVEDFILESWIN
-          if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
-            {
-              savedFiles.clear();
-              currThemes.clear();
-              initTestFilesStringVector(savedFiles,
-                                        50,
-                                        log);
-
-              initTestCurrThemesStringVector(currThemes,
-                                             50,
-                                             log);
-            }
-
           printSavedFilesWin(wins,
                              savedFiles,
                              currThemes,
                              mouseLine,
                              mouseCol,
                              log);
-
-          //string printing testing for _SAVEDTHEMESWIN
-          if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
-            {
-              const int numStrings = 1000;
-              const int stringLength = 30;
-              savedThemesStrings.clear();
-              initTestStringVector(savedThemesStrings,
-                                   numStrings,
-                                   stringLength,
-                                   log);
-            }
-
           printSavedThemesWin(wins,
                               savedThemesStrings,
                               mouseLine,
@@ -247,9 +206,9 @@ int main()
                               log);
         }
 
-      // print windows and update the screen
       refreshWins(wins);
       doupdate();
+      // print windows and update the screen
 
 
 #endif // _CURSES
