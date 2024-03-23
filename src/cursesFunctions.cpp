@@ -249,6 +249,44 @@ void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
+
+/*
+  Function:
+   defineArrowWin
+
+  Description:
+   Creates windows that will function as a clickable buttons and in this case
+   will output a string that looks like a left or right arrow.
+
+  Input/Output:
+   wins                 - A reference to a const unordered map
+                          <int, CursesWindow*> type that contains pointers
+                          to all currently allocated CursesWindow objects
+                          that can be indexed by key values in the file
+                          _cursesWinConsts.hpp.
+  Input:
+   win                  - a const integer containing a string to set as the
+                          name of the objects window name variable.
+
+   startY               - a const int containing the starting line of the arrow
+                          window in respect to STDSCR.
+
+   startY               - a const int containing the starting column of the arrow
+                          window in respect to STDSCR.
+
+   numLines             - a reference to a constant integer containing the number
+                          of lines the button window should be created as.
+
+   numCols              - a reference to a constant integer containing the number
+                          of columns the button window should be crated as.
+
+
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
 void defineArrowWin(std::unordered_map<int, CursesWindow*>& wins,
                     const int win,
                     std::string winName,
