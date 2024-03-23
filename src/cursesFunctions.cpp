@@ -387,6 +387,18 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
           wins.at(_SAVEDFILESWIN)->deleteWindow();
           wins.at(_SAVEDFILESWIN)->setWindow(nullptr);
         }
+
+      if(wins.at(_LARROWSAVEDFILESWIN)->getWindow() != nullptr)
+        {
+          wins.at(_LARROWSAVEDFILESWIN)->deleteWindow();
+          wins.at(_LARROWSAVEDFILESWIN)->setWindow(nullptr);
+        }
+
+      if(wins.at(_RARROWSAVEDFILESWIN)->getWindow() != nullptr)
+        {
+          wins.at(_RARROWSAVEDFILESWIN)->deleteWindow();
+          wins.at(_RARROWSAVEDFILESWIN)->setWindow(nullptr);
+        }
     }
 } // end of "defineSavedFilesWin"
 
