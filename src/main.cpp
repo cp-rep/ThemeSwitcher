@@ -35,11 +35,11 @@
 #define _CURSES 1
 
 
-void printFileStrings(std::unordered_map<int, CursesWindow*>& wins,
-                 const std::vector<std::string>& savedFileStrings,
-                 const int& mouseLine,
-                 const int& mouseCol,
-                 std::ofstream& log);
+void printSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
+                       const std::vector<std::string>& savedFileStrings,
+                       const int& mouseLine,
+                       const int& mouseCol,
+                       std::ofstream& log);
 
 // ==== main ==================================================================
 //
@@ -218,11 +218,11 @@ int main()
                               log);
         }
 
-      printFileStrings(wins,
-                       savedFileStrings,
-                       mouseLine,
-                       mouseCol,
-                       log);
+      printSFStringWins(wins,
+                        savedFileStrings,
+                        mouseLine,
+                        mouseCol,
+                        log);
 
       // if(mouseLine != -1 || mouseCol != -1)
       //   {
@@ -248,7 +248,7 @@ int main()
 
 #endif // _CURSES
 
-    //  usleep(15000);
+      usleep(15000);
     }
 
   // clean up
@@ -269,11 +269,11 @@ int main()
 
 
 
-void printFileStrings(std::unordered_map<int, CursesWindow*>& wins,
-                 const std::vector<std::string>& savedFileStrings,
-                 const int& mouseLine,
-                 const int& mouseCol,
-                 std::ofstream& log)
+void printSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
+                         const std::vector<std::string>& savedFileStrings,
+                         const int& mouseLine,
+                         const int& mouseCol,
+                         std::ofstream& log)
 
 {
 
