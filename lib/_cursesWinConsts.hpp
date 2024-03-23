@@ -4,6 +4,9 @@
 #ifndef _CURSESWINCONSTS_HPP
 #define _CURSESWINCONSTS_HPP
 
+
+const unsigned int _SFWINSINDEX = 100;
+
 // color pair values
 enum CursesColors {
   none,
