@@ -87,7 +87,6 @@ void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
       wins.insert(std::make_pair(i, newWindow));
     }
 
-  log << "numSavedFiles: " << numSavedFileWins << std::endl;
   for(int i = _SFWINSINDEX; i < numSavedFileWins + _SFWINSINDEX; i++)
     {
       CursesWindow* newWindow = new CursesWindow();
@@ -462,6 +461,7 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
                         const std::vector<std::string>& savedFileStrings,
                         std::ofstream& log)
 {
+
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
     {
       int sfWinLines = 0;
@@ -473,21 +473,23 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
       const int lineMaxOffset = 4;
       const int colMaxOffset = colMinOffset + 3;
 
-      for(int i = _SFWINSINDEX; i < sfWinLines - colMaxOffset + _SFWINSINDEX; i++)
+      for(int i = _SFWINSINDEX; i < savedFileStrings.size() + _SFWINSINDEX; i++)
         {
-          int numLines = 1;
-          int numCols = sfWinCols - colMinOffset - colMaxOffset - 4; // file count
-          int startY = (i - _SFWINSINDEX) + wins.at(_SAVEDFILESWIN)->getStartY() + lineMinOffset + 2;
-          int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset + 4;
-
-          // delete the current window if exists before creating a new one
           if(wins.at(i)->getWindow() != nullptr)
             {
               wins.at(i)->deleteWindow();
               wins.at(i)->setWindow(nullptr);
             }
+        }
 
-          // create the new window
+      for(int i = _SFWINSINDEX; i < sfWinLines - colMaxOffset + _SFWINSINDEX; i++)
+        {
+          int numLines = 1;
+          int numCols = sfWinCols - colMinOffset - colMaxOffset - 1; // file count
+          int startY = (i - _SFWINSINDEX) + wins.at(_SAVEDFILESWIN)->getStartY() +
+            lineMinOffset + 2;
+          int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset + 4;
+
           wins.at(i)->defineWindow(newwin(numLines,
                                           numCols,
                                           startY,
@@ -498,7 +500,18 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
                                    startY,
                                    startX);
         }
-
+    }
+  else
+    {
+      // the _SAVEDFILESWIN is not currently allocated. delete file string windows
+      for(int i = _SFWINSINDEX; i < savedFileStrings.size() + _SFWINSINDEX; i++)
+        {
+          if(wins.at(i)->getWindow() != nullptr)
+            {
+              wins.at(i)->deleteWindow();
+              wins.at(i)->setWindow(nullptr);
+            }
+        }
     }
 }
 
