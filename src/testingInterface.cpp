@@ -38,14 +38,14 @@ void initTestFilesStringVector(std::vector<std::string>& testStrings,
                                std::ofstream& log)
 {
   std::string tempString;
-  std::string file1 = "/home/mine/somedir/anotherdir/andanotherdir/file1.ext";
-  std::string file2 = "/home/mine/somedir//andanotherdir/file2.ext";
-  std::string file3 = "/home//mine/somedir/file3.ext";
-  std::string file4 = "/home/mine/somedir/anotherdir/andanotherdir/andonemore//file4.ext";
-  std::string file5 = "/home/mine/somedir/anotherdir/andanotherdir/andonemore/andFinalDir/file5.ext";
+  std::string file1 = "/home/mine/somedir/anotherdir/andanotherdir/file";
+  std::string file2 = "/home/mine/somedir//andanotherdir/file";
+  std::string file3 = "/home//mine/somedir/file";
+  std::string file4 = "/home/mine/somedir/anotherdir/andanotherdir/andonemore//file";
+  std::string file5 = "/home/mine/somedir/anotherdir/andanotherdir/andonemore/andFinalDir/file";
   std::string file6 = "/home/mine/somedir/anotherdir/andanotherdir/andonemore/andFinalDir//home/";
   file6.append("thisisaverylongfile/very/very/long/file/");
-  file6.append("mine/somedir/anotherdir/andanotherdir/andonemore/andFinalDir/file6.ext");
+  file6.append("mine/somedir/anotherdir/andanotherdir/andonemore/andFinalDir/file");
 
   for(int i = 0; i < numStrings; i++)
   {
@@ -75,6 +75,10 @@ void initTestFilesStringVector(std::vector<std::string>& testStrings,
       default:
         break;
       }
+
+    testStrings.at(i).append(intToStr(i));
+    testStrings.at(i).append(".ext");
+
   }
 } // end of "initTestStringVector"
 
