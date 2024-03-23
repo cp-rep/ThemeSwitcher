@@ -948,208 +948,34 @@ int printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
    NONE
 */
 void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
-                          std::unordered_map<int, CursesWindow*>& sfStringWins,
-                          const int win,
-                          const std::vector<std::string>& fileStrings,
-                          const std::vector<std::string>& themeStrings,
                           const int& lineMaxOffset,
                           const int& colMaxOffset,
                           const int& lineMinOffset,
                           const int& colMinOffset,
-                          const int& mouseLine,
-                          const int& mouseCol,
-                          const int& numToPrint,
-                          const int& arrowVal,
-                          std::ofstream& log,
-                          bool& firstRun)
+                          std::ofstream& log)
 {
-  if(wins.at(win)->getWindow() != nullptr)
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
     {
       int maxWinLines;
       int maxWinCols;
-      getmaxyx(wins.at(win)->getWindow(),
+      getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),
                maxWinLines,
                maxWinCols);
 
-      std::string fileString;
-      std::string themeString;
       std::string fileCount;
-      std::string tempString;
-      int maxPossible = maxWinCols - colMaxOffset - 3;
 
       // print list of the saved files
-      for(int i = 0; i < numToPrint; i++)
+      for(int i = 0; i < maxWinLines - lineMaxOffset - lineMinOffset; i++)
         {
-          tempString.clear();
           fileCount = intToStr(i + 1);
           fileCount.append(". ");
-          fileString = fileStrings.at(i);
-          themeString = themeStrings.at(i);
-          maxPossible = maxWinCols - colMaxOffset - 6; // extension
 
-          // enter if the filestring + the theme string wont fit in the window
-          if( (fileString.length() + fileCount.length() + themeString.length())
-              >= maxPossible)
-            {
-              int difference = (fileString.length() + fileCount.length() +
-                                themeString.length()) - maxPossible;
-              tempString = "...";
-
-              for(int j = difference; j < fileString.length(); j++)
-                {
-                  char c = fileString.at(j);
-                  tempString.push_back(c);
-                }
-
-              tempString.append("...");
-              tempString.append(themeString);
-              fileString = tempString;
-            }
-          // there was room for the strings. print dots between them
-          else
-            {
-              int dots = fileCount.length() + fileString.length();
-
-              while(dots < maxWinCols - colMaxOffset - themeString.length())
-                {
-                  fileString.push_back('.');
-                  dots++;
-                }
-
-              fileString.append(themeString);
-            }
-
-          // do not print if the string count exceeds the acceptable printing range
-          if(i + lineMinOffset >= maxWinLines - lineMaxOffset)
-            {
-              break;
-            }
-          else
-            {
-              int winPos = i + 100;
-              int startY = wins.at(win)->getStartY() + i + lineMinOffset + 2;
-              int startX = wins.at(win)->getStartX() + colMinOffset + fileCount.length();
-
-              if(firstRun == true)
-                {
-                  CursesWindow* newWindow = new CursesWindow();
-                  wins.insert(std::make_pair(winPos, newWindow));
-                  wins.at(winPos)->defineWindow(newwin(1,   // num lines
-                                                       fileString.length(), // num cols
-                                                       startY,
-                                                       startX),
-                                                "FILESTRING",
-                                                1,
-                                                fileString.length(),
-                                                startY,
-                                                startX);
-                }
-
-              mvwaddstr(wins.at(win)->getWindow(),
-                        i + lineMinOffset + 2,
-                        colMinOffset,
-                        fileCount.c_str());
-
-              // check if incoming mouse coordinates are on a file line
-              if(((mouseLine - wins.at(win)->getStartY()) == (i + lineMinOffset + 2)) &&
-                ((mouseCol - wins.at(win)->getStartX() >=
-                  colMinOffset + fileCount.length()) &&
-                 (mouseCol - wins.at(win)->getStartX()) <=
-                  wins.at(win)->getStartX() + maxWinCols - colMaxOffset))
-                {
-                  wattron(wins.at(winPos)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-                  refreshWins(wins,
-                              sfStringWins);
-//                  wnoutrefresh(wins.at(winPos)->getWindow());
-//                  doupdate();
-                }
-
-              mvwaddstr(wins.at(winPos)->getWindow(),
-                        0,
-                        0,
-                        fileString.c_str());
-              wattron(wins.at(winPos)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-
-            }
+          mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
+                    i + lineMinOffset + 2,
+                    colMinOffset,
+                    fileCount.c_str());
         }
-      firstRun = false;
     }
-
-
-
-
-
-    //   for(int i = 0; i < numToPrint; i++)
-    //     {
-    //       tempString.clear();
-    //       fileCount = intToStr(i + 1);
-    //       fileCount.append(". ");
-    //       fileString = fileStrings.at(i);
-    //       themeString = themeStrings.at(i);
-    //       maxPossible = maxWinCols - colMaxOffset - 6; // extension
-
-    //       // enter if the filestring + the theme string wont fit in the window
-    //       if( (fileString.length() + fileCount.length() + themeString.length())
-    //           >= maxPossible)
-    //         {
-    //           int difference = (fileString.length() + fileCount.length() +
-    //                             themeString.length()) - maxPossible;
-    //           tempString = "...";
-
-    //           for(int j = difference; j < fileString.length(); j++)
-    //             {
-    //               char c = fileString.at(j);
-    //               tempString.push_back(c);
-    //             }
-
-    //           tempString.append("...");
-    //           tempString.append(themeString);
-    //           fileString = tempString;
-    //         }
-    //       // there was room for the strings. print dots between them
-    //       else
-    //         {
-    //           int dots = fileCount.length() + fileString.length();
-
-    //           while(dots < maxWinCols - colMaxOffset - themeString.length())
-    //             {
-    //               fileString.push_back('.');
-    //               dots++;
-    //             }
-
-    //           fileString.append(themeString);
-    //         }
-
-    //       // do not print if the string count exceeds the acceptable printing range
-    //       if(i + lineMinOffset >= maxWinLines - lineMaxOffset)
-    //         {
-    //           break;
-    //         }
-    //       else
-    //         {
-    //           mvwaddstr(wins.at(win)->getWindow(),
-    //                     i + lineMinOffset + 2,
-    //                     colMinOffset,
-    //                     fileCount.c_str());
-
-    //           // check if incoming mouse coordinates are on a file line
-    //           if(((mouseLine - wins.at(win)->getStartY()) == (i + lineMinOffset + 2)) &&
-    //             ((mouseCol - wins.at(win)->getStartX() >=
-    //               colMinOffset + fileCount.length()) &&
-    //              (mouseCol - wins.at(win)->getStartX()) <=
-    //               wins.at(win)->getStartX() + maxWinCols - colMaxOffset))
-    //             {
-    //               wattron(wins.at(win)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-    //             }
-
-    //           mvwaddstr(wins.at(win)->getWindow(),
-    //                     i + lineMinOffset + 2,
-    //                     colMinOffset + fileCount.length(),
-    //                     fileString.c_str());
-    //           wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-    //         }
-    //     }
-    // }
 } // end of "printNumberedStrings"
 
 
@@ -1179,13 +1005,9 @@ void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
    NONE
 */
 void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
-                        std::unordered_map<int, CursesWindow*>& sfStringWins,
-                        const std::vector<std::string>& savedFilesStrings,
-                        const std::vector<std::string>& currThemesStrings,
                         const int& mouseLine,
                         const int& mouseCol,
-                        std::ofstream& log,
-                        bool& firstRun)
+                        std::ofstream& log)
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
     {
@@ -1228,21 +1050,12 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
       int arrowVal = 0;
 
       // print the file paths and current theme
-      // printNumberedStrings(wins,
-      //                      sfStringWins,
-      //                      _SAVEDFILESWIN,
-      //                      savedFilesStrings,
-      //                      currThemesStrings,
-      //                      lineMaxOffset,
-      //                      colMaxOffset,
-      //                      lineMinOffset,
-      //                      colMinOffset,
-      //                      mouseLine,
-      //                      mouseCol,
-      //                      savedFilesStrings.size(),
-      //                      arrowVal,
-      //                      log,
-      //                      firstRun);
+      printNumberedStrings(wins,
+                           lineMaxOffset,
+                           colMaxOffset,
+                           lineMinOffset,
+                           colMinOffset,
+                           log);
       arrowVal = printArrowWin(wins,
                                _LARROWSAVEDFILESWIN,
                                mouseLine,
@@ -1255,10 +1068,6 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                                mouseCol,
                                rightArrow,
                                log);
-//      refreshWins(wins,
-//                  sfStringWins);
-//      doupdate();
-
     }
 } // end of "printSavedFilesWin"
 
@@ -1480,8 +1289,7 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-void refreshWins(const std::unordered_map<int, CursesWindow*>& wins,
-                 const std::unordered_map<int, CursesWindow*>& sfStringWins)
+void refreshWins(const std::unordered_map<int, CursesWindow*>& wins)
 {
 
   // ##
@@ -1557,20 +1365,13 @@ void refreshWins(const std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-void clearWins(const std::unordered_map<int, CursesWindow*>& wins,
-               const std::unordered_map<int, CursesWindow*>& sfStringWins)
+void clearWins(const std::unordered_map<int, CursesWindow*>& wins)
 {
   std::unordered_map<int, CursesWindow*>::const_iterator it;
   for(it = wins.begin(); it != wins.end(); it++)
     {
       werase(it->second->getWindow());
     }
-
-  // for(it = sfStringWins.begin(); it != sfStringWins.end(); it++)
-  //   {
-  //     werase(it->second->getWindow());
-  //   }
-
 } // end of "clearWins"
 
 

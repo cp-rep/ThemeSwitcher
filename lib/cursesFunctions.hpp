@@ -68,28 +68,15 @@ int printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
                   std::string outString,
                   std::ofstream& log);
 void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
-                          std::unordered_map<int, CursesWindow*>& sfStringWins,
-                          const int win,
-                          const std::vector<std::string>& fileStrings,
-                          const std::vector<std::string>& themeStrings,
                           const int& lineMaxOffset,
                           const int& colMaxOffset,
                           const int& lineMinOffset,
                           const int& colMinOffset,
-                          const int& mouseLine,
-                          const int& mouseCol,
-                          const int& numToPrint,
-                          const int& arrowVal,
-                          std::ofstream& log,
-                          bool& firstRun);
+                          std::ofstream& log);
 void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
-                        std::unordered_map<int, CursesWindow*>& sfStringWins,
-                        const std::vector<std::string>& savedFilesStrings,
-                        const std::vector<std::string>& currThemesStrings,
                         const int& mouseLine,
                         const int& mouseCol,
-                        std::ofstream& log,
-                        bool& firstRun);
+                        std::ofstream& log);
 void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
                              const std::vector<std::string>& strings,
                              const int& lineMaxOffset,
@@ -104,10 +91,8 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          const int& mouseLine,
                          const int& mouseCol,
                          std::ofstream& log);
-void refreshWins(const std::unordered_map<int, CursesWindow*>& wins,
-                 const std::unordered_map<int, CursesWindow*>& sfStringWins);
-void clearWins(const std::unordered_map<int, CursesWindow*>& wins,
-               const std::unordered_map<int, CursesWindow*>& sfStringWins);
+void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
+void clearWins(const std::unordered_map<int, CursesWindow*>& wins);
 void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins);
 
 #endif // CURSESFUNCTIONS_HPP
