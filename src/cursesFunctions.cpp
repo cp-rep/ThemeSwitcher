@@ -761,7 +761,6 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-
 /*
   Function:
    printArrowWin
@@ -798,13 +797,15 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
-                   const int win,
-                   const int& mouseLine,
-                   const int& mouseCol,
-                   std::string outString,
-                   std::ofstream& log)
+int printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
+                  const int win,
+                  const int& mouseLine,
+                  const int& mouseCol,
+                  std::string outString,
+                  std::ofstream& log)
 {
+  int returnVal = 0;
+
   // flash window if mouse click deteceted in range
   if((mouseLine == wins.at(win)->getStartY()) &&
     (mouseCol >= wins.at(win)->getStartX() &&
@@ -816,10 +817,18 @@ void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
                 0,
                 outString.c_str());
       wnoutrefresh(wins.at(win)->getWindow());
+      usleep(40000);
       doupdate();
-      usleep(5000);
-    }
 
+      if(win == _LARROWSAVEDFILESWIN)
+        {
+          returnVal =  sfLArrowClicked;
+        }
+      else
+        {
+          returnVal = sfRArrowClicked;
+        }
+    }
   // print the regular window color
   wattron(wins.at(win)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
   mvwaddstr(wins.at(win)->getWindow(),
@@ -827,6 +836,8 @@ void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
             0,
             outString.c_str());
   wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+
+  return returnVal;
 } // end of "printArrowWin"
 
 
@@ -885,6 +896,7 @@ void printNumberedStrings(const std::unordered_map<int, CursesWindow*>& wins,
                           const int& mouseLine,
                           const int& mouseCol,
                           const int& numToPrint,
+                          const int& arrowVal,
                           std::ofstream& log)
 {
   if(wins.at(win)->getWindow() != nullptr)
@@ -1045,6 +1057,21 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                 maxWinCols - outString.length() - colMinOffset,
                 outString.c_str());
 
+      // print the arrow windows for _SAVEDFILESWIN
+      int arrowVal = 0;
+      arrowVal = printArrowWin(wins,
+                               _LARROWSAVEDFILESWIN,
+                               mouseLine,
+                               mouseCol,
+                               leftArrow,
+                               log);
+      arrowVal = printArrowWin(wins,
+                               _RARROWSAVEDFILESWIN,
+                               mouseLine,
+                               mouseCol,
+                               rightArrow,
+                               log);
+
       // print the file paths and current theme
       printNumberedStrings(wins,
                            _SAVEDFILESWIN,
@@ -1057,21 +1084,8 @@ void printSavedFilesWin(const std::unordered_map<int, CursesWindow*>& wins,
                            mouseLine,
                            mouseCol,
                            savedFilesStrings.size(),
+                           arrowVal,
                            log);
-
-      // print the arrow windows for _SAVEDFILESWIN
-      printArrowWin(wins,
-                    _LARROWSAVEDFILESWIN,
-                    mouseLine,
-                    mouseCol,
-                    leftArrow,
-                    log);
-      printArrowWin(wins,
-                    _RARROWSAVEDFILESWIN,
-                    mouseLine,
-                    mouseCol,
-                    rightArrow,
-                    log);
     }
 } // end of "printSavedFilesWin"
 
@@ -1223,7 +1237,7 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          std::ofstream& log)
 {
   const int maxStringSize = 31;
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
     {
       int maxWinLines;
       int maxWinCols;
@@ -1317,6 +1331,15 @@ void refreshWins(const std::unordered_map<int, CursesWindow*>& wins)
     {
       wnoutrefresh(wins.at(*vecIt)->getWindow());
     }
+
+  // for(int i = _MAINWIN; i <= _RARROWSAVEDFILESWIN; i++)
+  //   {
+  //     if(wins.at(i)->getWindow() != nullptr)
+  //       {
+  //         wnoutrefresh(wins.at(i)->getWindow());
+  //         doupdate();
+  //       }
+  //   }
 } // end of "refreshWins"
 
 
