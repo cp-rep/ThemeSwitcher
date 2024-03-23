@@ -761,6 +761,43 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 
+
+/*
+  Function:
+   printArrowWin
+
+  Description:
+   Prints the incoming "win" to STDSCR which looks like a left or right
+   arrow.
+
+  Input/Output:
+   wins                 - A reference to a const unordered map
+                          <int, CursesWindow*> type that contains pointers
+                          to all currently allocated CursesWindow objects
+                          that can be indexed by key values in the file
+                          _cursesWinConsts.hpp.
+  Input:
+   win                  - a const integer containing a value representing a window
+                          from _cursesWinConsts.hpp that should be for an arrow
+                          window.
+
+  mouseLine             - A reference to a constant integer containing the 'y'
+                          value or 'line number' in which a mouse click was
+                          detected.
+
+  mouseLine             - A reference to a constant integer containing the 'x'
+                          value or 'column number' in which a mouse click was
+                          detected.
+
+  outString             - A string type containing a the string to print to
+                          output to the incoming window buffer.
+
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
 void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
                    const int win,
                    const int& mouseLine,
