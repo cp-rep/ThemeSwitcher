@@ -35,12 +35,12 @@
 #define _CURSES 1
 
 
+
 void printSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
-                       const std::vector<std::string>& savedFileStrings,
+                       std::vector<std::string> outputStrings,
                        const int& mouseLine,
                        const int& mouseCol,
                        std::ofstream& log);
-
 
 // ==== main ==================================================================
 //
@@ -106,10 +106,10 @@ int main()
   std::vector<std::string> outputStrings;
 
   initTestFilesStringVector(savedFileStrings,
-                            50,
+                            1000,
                             log);
   initTestCurrThemesStringVector(currThemes,
-                                 50,
+                                 1000,
                                  log);
 
   const int numStrings = 1000;
@@ -152,6 +152,11 @@ int main()
                        mouseLine,
                        mouseCol,
                        log);
+    printSFStringWins(wins,
+                      outputStrings,
+                      0,
+                      0,
+                      log);
     printSavedThemesWin(wins,
                         savedThemesStrings,
                         mouseLine,
@@ -183,6 +188,7 @@ int main()
 
       // check if the window size has changed
       getmaxyx(stdscr, currLines, currCols);
+
       if( (currLines != wins.at(_MAINWIN)->getNumLines()) ||
           (currCols != wins.at(_MAINWIN)->getNumCols()))
         {
@@ -194,6 +200,11 @@ int main()
           defineWins(wins,
                      savedFileStrings,
                      log);
+          outputStrings.clear();
+          outputStrings = createSFOutputStrings(wins,
+                                                savedFileStrings,
+                                                currThemes,
+                                                log);
           drawBoxes(wins);
 
           // begin printing windows to buffer
@@ -208,18 +219,17 @@ int main()
                              mouseLine,
                              mouseCol,
                              log);
+          printSFStringWins(wins,
+                      outputStrings,
+                      0,
+                      0,
+                      log);
           printSavedThemesWin(wins,
                               savedThemesStrings,
                               mouseLine,
                               mouseCol,
                               log);
         }
-
-      printSFStringWins(wins,
-                        savedFileStrings,
-                        mouseLine,
-                        mouseCol,
-                        log);
 
       // if(mouseLine != -1 || mouseCol != -1)
       //   {
@@ -240,11 +250,8 @@ int main()
 
       refreshWins(wins);
       doupdate();
-      // print windows and update the screen
-
-
 #endif // _CURSES
-
+       //
       usleep(15000);
     }
 
@@ -264,14 +271,26 @@ int main()
 
 
 
-
-
 void printSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
-                       const std::vector<std::string>& savedFileStrings,
+                       std::vector<std::string> outputStrings,
                        const int& mouseLine,
                        const int& mouseCol,
                        std::ofstream& log)
 
 {
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr && !outputStrings.empty())
+    {
+      int maxLines = 0;
+      int maxCols = 0;
+      const int offset = 3;
+      getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(), maxLines, maxCols);
 
+      for(int i = 0; i < (maxLines - offset); i++)
+        {
+          mvwaddstr(wins.at(i + _SFWINSINDEX)->getWindow(),
+                    0,
+                    0,
+                    outputStrings.at(i).c_str());
+        }
+    }
 }
