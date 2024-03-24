@@ -54,6 +54,10 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
 void defineWins(std::unordered_map<int, CursesWindow*>& wins,
                 const std::vector<std::string>& savedFileStrings,
                 std::ofstream& log);
+std::vector<std::string> createSFOutputStrings(std::unordered_map<int, CursesWindow*>& wins,
+                                               const std::vector<std::string>& savedFileStrings,
+                                               const std::vector<std::string>& currThemes,
+                                               std::ofstream& log);
 void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
                     const std::vector<std::string>& promptStrings,
                     const int& currLines,
