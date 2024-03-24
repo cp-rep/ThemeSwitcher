@@ -245,6 +245,14 @@ int main()
                                 0,
                                 outputStrings.at(j).c_str());
                     }
+                  else
+                    {
+                      wattron(wins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+                      mvwaddstr(wins.at(i)->getWindow(),
+                                0,
+                                0,
+                                outputStrings.at(j).c_str());
+                    }
                 }
             }
         }
