@@ -144,6 +144,18 @@ int main()
                        mouseLine,
                        mouseCol,
                        log);
+    checkArrowClick(wins,
+                    _LARROWSAVEDFILESWIN,
+                    mouseLine,
+                    mouseCol,
+                    leftArrow,
+                    log);
+    checkArrowClick(wins,
+                    _RARROWSAVEDFILESWIN,
+                    mouseLine,
+                    mouseCol,
+                    rightArrow,
+                    log);
     printSFStringWins(wins,
                       outputStrings,
                       0,
@@ -219,6 +231,18 @@ int main()
                       0,
                       0,
                       log);
+          checkArrowClick(wins,
+                          _LARROWSAVEDFILESWIN,
+                          mouseLine,
+                          mouseCol,
+                          leftArrow,
+                          log);
+          checkArrowClick(wins,
+                          _RARROWSAVEDFILESWIN,
+                          mouseLine,
+                          mouseCol,
+                          rightArrow,
+                          log);
           // printSavedThemesWin(wins,
           //                     savedThemesStrings,
           //                     mouseLine,
@@ -234,6 +258,18 @@ int main()
                          mouseLine,
                          mouseCol,
                          log);
+          checkArrowClick(wins,
+                          _LARROWSAVEDFILESWIN,
+                          mouseLine,
+                          mouseCol,
+                          leftArrow,
+                          log);
+          checkArrowClick(wins,
+                          _RARROWSAVEDFILESWIN,
+                          mouseLine,
+                          mouseCol,
+                          rightArrow,
+                          log);
         }
 
       refreshWins(wins);
