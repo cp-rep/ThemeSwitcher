@@ -929,91 +929,6 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
 
 /*
   Function:
-   printArrowWin
-
-  Description:
-   Prints the incoming "win" to STDSCR which looks like a left or right
-   arrow.
-
-  Input/Output:
-   wins                 - A reference to a const unordered map
-                          <int, CursesWindow*> type that contains pointers
-                          to all currently allocated CursesWindow objects
-                          that can be indexed by key values in the file
-                          _cursesWinConsts.hpp.
-  Input:
-   win                  - a const integer containing a value representing a window
-                          from _cursesWinConsts.hpp that should be for an arrow
-                          window.
-
-  mouseLine             - A reference to a constant integer containing the 'y'
-                          value or 'line number' in which a mouse click was
-                          detected.
-
-  mouseLine             - A reference to a constant integer containing the 'x'
-                          value or 'column number' in which a mouse click was
-                          detected.
-
-  outString             - A string type containing a the string to print to
-                          output to the incoming window buffer.
-
-  Output:
-   NONE
-
-  Returns:
-   NONE
-*/
-int printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
-                  const int win,
-                  const int& mouseLine,
-                  const int& mouseCol,
-                  std::string outString,
-                  std::ofstream& log)
-{
-  int returnVal = 0;
-
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
-     wins.at(win)->getWindow() != nullptr)
-    {
-      // flash window if mouse click deteceted in range
-      if((mouseLine == wins.at(win)->getStartY()) &&
-         (mouseCol >= wins.at(win)->getStartX() &&
-          mouseCol <= wins.at(win)->getStartX() + outString.length() - 1))
-        {
-          wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-          mvwaddstr(wins.at(win)->getWindow(),
-                    0,
-                    0,
-                    outString.c_str());
-          wnoutrefresh(wins.at(win)->getWindow());
-          doupdate();
-          usleep(40000);
-
-          if(win == _LARROWSAVEDFILESWIN)
-            {
-              returnVal =  sfLArrowClicked;
-            }
-          else
-            {
-              returnVal = sfRArrowClicked;
-            }
-        }
-      // print the regular window color
-      wattron(wins.at(win)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-      mvwaddstr(wins.at(win)->getWindow(),
-                0,
-                0,
-                outString.c_str());
-      wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-    }
-
-  return returnVal;
-} // end of "printArrowWin"
-
-
-
-/*
-  Function:
    printNumberedStrings
 
   Description:
@@ -1164,18 +1079,6 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                            lineMinOffset,
                            colMinOffset,
                            log);
-      arrowVal = printArrowWin(wins,
-                               _LARROWSAVEDFILESWIN,
-                               mouseLine,
-                               mouseCol,
-                               leftArrow,
-                               log);
-      arrowVal = printArrowWin(wins,
-                               _RARROWSAVEDFILESWIN,
-                               mouseLine,
-                               mouseCol,
-                               rightArrow,
-                               log);
     }
 } // end of "printSavedFilesWin"
 
@@ -1436,6 +1339,91 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
 
 /*
   Function:
+   checkArrowClick
+
+  Description:
+   Prints the incoming "win" to STDSCR which looks like a left or right
+   arrow.
+
+  Input/Output:
+   wins                 - A reference to a const unordered map
+                          <int, CursesWindow*> type that contains pointers
+                          to all currently allocated CursesWindow objects
+                          that can be indexed by key values in the file
+                          _cursesWinConsts.hpp.
+  Input:
+   win                  - a const integer containing a value representing a window
+                          from _cursesWinConsts.hpp that should be for an arrow
+                          window.
+
+  mouseLine             - A reference to a constant integer containing the 'y'
+                          value or 'line number' in which a mouse click was
+                          detected.
+
+  mouseLine             - A reference to a constant integer containing the 'x'
+                          value or 'column number' in which a mouse click was
+                          detected.
+
+  outString             - A string type containing a the string to print to
+                          output to the incoming window buffer.
+
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
+int checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
+                    const int win,
+                    const int& mouseLine,
+                    const int& mouseCol,
+                    std::string outString,
+                    std::ofstream& log)
+{
+  int returnVal = 0;
+
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
+     wins.at(win)->getWindow() != nullptr)
+    {
+      // flash window if mouse click deteceted in range
+      if((mouseLine == wins.at(win)->getStartY()) &&
+         (mouseCol >= wins.at(win)->getStartX() &&
+          mouseCol <= wins.at(win)->getStartX() + outString.length() - 1))
+        {
+          wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+          mvwaddstr(wins.at(win)->getWindow(),
+                    0,
+                    0,
+                    outString.c_str());
+          wnoutrefresh(wins.at(win)->getWindow());
+          doupdate();
+          usleep(40000);
+
+          if(win == _LARROWSAVEDFILESWIN)
+            {
+              returnVal =  sfLArrowClicked;
+            }
+          else
+            {
+              returnVal = sfRArrowClicked;
+            }
+        }
+      // print the regular window color
+      wattron(wins.at(win)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+      mvwaddstr(wins.at(win)->getWindow(),
+                0,
+                0,
+                outString.c_str());
+      wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+    }
+
+  return returnVal;
+} // end of "checkArrowClick"
+
+
+
+/*
+  Function:
    checkFileClick
 
   Description:
@@ -1528,6 +1516,26 @@ void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
                 }
             }
         }
+      else
+        {
+          int offSet = 3;
+          int j = 0;
+          int i = 0;
+          for(i = _SFWINSINDEX, j = 0 ; i < _SFWINSINDEX + _SAVEDFILESWINSTARTY +
+                wins.at(_SAVEDFILESWIN)->getNumLines() - offSet; i++, j++)
+            {
+              // make sure not to test values outside of the maximum printed lines
+              if(j >= outputStrings.size())
+                {
+                  break;
+                }
+                  wattron(wins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+                  mvwaddstr(wins.at(i)->getWindow(),
+                            0,
+                            0,
+                            outputStrings.at(j).c_str());
+            }
+        }
     }
 } // end of "checkFileClick"
 
@@ -1583,8 +1591,6 @@ void refreshWins(const std::unordered_map<int, CursesWindow*>& wins)
     {
       wnoutrefresh(wins.at(*vecIt)->getWindow());
     }
-
-
 
   // ##
   // for(int i = _MAINWIN; i <= _RARROWSAVEDFILESWIN; i++)
@@ -1666,7 +1672,9 @@ void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins,
   for(it = wins.begin(); it != wins.end(); it++)
     {
       if((it->second->getWindowName() != "SAVEDFILE") &&
-         (it->second->getWindowName() != "_PROMPTWIN"))
+         (it->second->getWindowName() != "_PROMPTWIN")&&
+         (it->second->getWindowName() != "_LARROWSAVEDFILESWIN") &&
+         (it->second->getWindowName() != "_RARROWSAVEDFILESWIN"))
         {
           if(val == '[')
             {
