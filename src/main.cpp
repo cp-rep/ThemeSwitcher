@@ -237,7 +237,9 @@ int main()
                     wins.at(_SAVEDFILESWIN)->getNumLines() - 3; i++, j++)
                 {
 
-                  if(mouseLine == wins.at(i)->getStartY())
+                  if(mouseLine == wins.at(i)->getStartY() &&
+                     (mouseCol >= wins.at(i)->getStartX() &&
+                       mouseCol <= wins.at(i)->getNumCols() + wins.at(i)->getStartX()))
                     {
                       wattron(wins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
                       mvwaddstr(wins.at(i)->getWindow(),
