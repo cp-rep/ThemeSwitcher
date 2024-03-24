@@ -31,7 +31,6 @@
 #include "testingInterface.hpp"
 
 #define _DEBUG 0
-#define _LOG 1
 #define _CURSES 1
 
 
@@ -41,7 +40,6 @@
 // ============================================================================
 int main()
 {
-#if _LOG
   // ## CREATE LOGGING SYSTEM
   time_t rawtime;
   struct tm* timeinfo;
@@ -84,11 +82,9 @@ int main()
       log << "LOG Started" << std::endl;
       log << "Time and Date: " << asctime(timeinfo) << std::endl;
     }
-#endif // _LOG
 
   // local variables
   int input = 0;
-  MEVENT mouse;
   int currLines = 0;
   int currCols = 0;
   int mouseLine = -1;
@@ -98,16 +94,16 @@ int main()
   std::vector<std::string> currThemes;
   std::vector<std::string> savedThemesStrings;
   std::vector<std::string> outputStrings;
+  const int numStrings = 5;
+  const int stringLength = 30;
 
+  // init the temporary testing string vectors
   initTestFilesStringVector(savedFileStrings,
-                            1000,
+                            numStrings,
                             log);
   initTestCurrThemesStringVector(currThemes,
-                                 1000,
+                                 numStrings,
                                  log);
-
-  const int numStrings = 1000;
-  const int stringLength = 30;
   initTestStringVector(savedThemesStrings,
                        numStrings,
                        stringLength,
@@ -117,11 +113,11 @@ int main()
 #if _CURSES
   std::unordered_map<int, CursesWindow*> wins;
   std::unordered_map<int, CursesWindow*> sfStringWins;
+  MEVENT mouse;
   initializeCurses();
   initializeWins(wins,
                  savedFileStrings.size(),
                  log);
-#endif // _CURSES
 
   // run once
   {
@@ -152,15 +148,17 @@ int main()
                       0,
                       0,
                       log);
-    printSavedThemesWin(wins,
-                        savedThemesStrings,
-                        mouseLine,
-                        mouseCol,
-                        log);
+    // printSavedThemesWin(wins,
+    //                     savedThemesStrings,
+    //                     mouseLine,
+    //                     mouseCol,
+    //                     log);
   }
+#endif // _CURSES
 
   while(true)
     {
+#if _CURSES
       // get user input from mouse or keyboard
       input = wgetch(wins.at(_MAINWIN)->getWindow());
 
@@ -169,9 +167,9 @@ int main()
           break;
         }
 
-#if _CURSES
       mouseLine = -1;
       mouseCol = -1;
+
       if(getmouse(&mouse) == OK)
         {
           if(mouse.bstate & BUTTON1_PRESSED)
@@ -220,49 +218,50 @@ int main()
                       0,
                       0,
                       log);
-          printSavedThemesWin(wins,
-                              savedThemesStrings,
-                              mouseLine,
-                              mouseCol,
-                              log);
+          // printSavedThemesWin(wins,
+          //                     savedThemesStrings,
+          //                     mouseLine,
+          //                     mouseCol,
+          //                     log);
         }
 
-      if(mouseLine != -1 || mouseCol != -1)
-        {
-          if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
-            {
-              int j = 0;
-              int i = 0;
-              for(i = _SFWINSINDEX, j = 0 ; i < _SFWINSINDEX + _SAVEDFILESWINSTARTY +
-                    wins.at(_SAVEDFILESWIN)->getNumLines() - 3; i++, j++)
-                {
-
-                  if(mouseLine == wins.at(i)->getStartY() &&
-                     (mouseCol >= wins.at(i)->getStartX() &&
-                       mouseCol <= wins.at(i)->getNumCols() + wins.at(i)->getStartX()))
-                    {
-                      wattron(wins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-                      mvwaddstr(wins.at(i)->getWindow(),
-                                0,
-                                0,
-                                outputStrings.at(j).c_str());
-                    }
-                  else
-                    {
-                      wattron(wins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-                      mvwaddstr(wins.at(i)->getWindow(),
-                                0,
-                                0,
-                                outputStrings.at(j).c_str());
-                    }
-                }
-            }
-        }
+      // if(mouseLine != -1 || mouseCol != -1)
+      //   {
+      //     if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
+      //        !outputStrings.empty())
+      //       {
+      //         int offSet = 3;
+      //         int j = 0;
+      //         int i = 0;
+      //         for(i = _SFWINSINDEX, j = 0 ; i < _SFWINSINDEX + _SAVEDFILESWINSTARTY +
+      //               wins.at(_SAVEDFILESWIN)->getNumLines() - offSet; i++, j++)
+      //           {
+      //             if(mouseLine == wins.at(i)->getStartY() &&
+      //                (mouseCol >= wins.at(i)->getStartX() &&
+      //                  mouseCol <= wins.at(i)->getNumCols() + wins.at(i)->getStartX()))
+      //               {
+      //                 wattron(wins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+      //                 mvwaddstr(wins.at(i)->getWindow(),
+      //                           0,
+      //                           0,
+      //                           outputStrings.at(j).c_str());
+      //               }
+      //             else
+      //               {
+      //                 wattron(wins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+      //                 mvwaddstr(wins.at(i)->getWindow(),
+      //                           0,
+      //                           0,
+      //                           outputStrings.at(j).c_str());
+      //               }
+      //           }
+      //       }
+      //   }
 
       refreshWins(wins);
       doupdate();
 #endif // _CURSES
-       //
+
       usleep(15000);
     }
 
