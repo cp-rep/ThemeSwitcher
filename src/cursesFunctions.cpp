@@ -513,7 +513,7 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
             }
         }
     }
-}
+} // end of "defineSFStringWins"
 
 
 /*
@@ -767,6 +767,71 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins,
                 numCols);
 } // end of "defineWins"
 
+
+
+std::vector<std::string> createSFOutputStrings(std::unordered_map<int, CursesWindow*>& wins,
+                                               const std::vector<std::string>& savedFileStrings,
+                                               const std::vector<std::string>& currThemes,
+                                               std::ofstream& log)
+{
+  std::vector<std::string> outputStrings;
+  std::string dots = "...";
+  int maxLines = 0;
+  int maxCols = 0;
+
+  if(wins.at(_SFWINSINDEX)->getWindow() != nullptr)
+    {
+      int maxPossible = maxCols - 6;
+      std::string tempString;
+      std::string fileString;
+      std::string themeString;
+
+      getmaxyx(wins.at(_SFWINSINDEX)->getWindow(), maxLines, maxCols);
+      int i = 0;
+
+      for(i = 0; i < savedFileStrings.size(); i++)
+        {
+          fileString.clear();
+          themeString.clear();
+          tempString.clear();
+          fileString = savedFileStrings.at(i);
+          themeString = currThemes.at(i);
+          int totalFileLength = fileString.length() + dots.length() + themeString.length();
+
+
+          if(totalFileLength > maxCols)
+            {
+              int difference = totalFileLength - maxCols;
+
+              tempString.append(dots);
+
+              for(int j = difference + dots.length(); j < fileString.length(); j++)
+                {
+                  char c = fileString.at(j);
+                  tempString.push_back(c);
+                }
+
+              tempString.append(dots);
+              tempString.append(themeString);
+              fileString = tempString;
+            }
+          else
+            {
+              int dotCount = fileString.length();
+
+              while(dotCount < maxCols - themeString.length())
+                {
+                  fileString.push_back('.');
+                  dotCount++;
+                }
+              fileString.append(themeString);
+            }
+          outputStrings.push_back(fileString);
+        }
+    }
+
+  return outputStrings;
+} // end of "createSFOutputStrings"
 
 
 /*
