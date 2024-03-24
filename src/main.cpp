@@ -232,15 +232,21 @@ int main()
           if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
              !outputStrings.empty())
             {
+              const int minLineOffset = 3;
+              const int maxLineOffset = 3;
+              const int minColOffset = 5;
+              const int maxColOffset = 4;
               int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
               int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
+              const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
+              const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
 
-              // check that the mouse click is inside the window range for
-              // _SAVEDFILESWIN before running any CPU time on the loop
-              if((mouseLine >= wins.at(_SAVEDFILESWIN)->getStartY() &&
-                 mouseLine <= wins.at(_SAVEDFILESWIN)->getStartY() + maxLines) &&
-                 (mouseCol >= wins.at(_SAVEDFILESWIN)->getStartX() &&
-                  mouseCol <= wins.at(_SAVEDFILESWIN)->getStartX() + maxCols))
+              // only enter if the mouse click is within a file clicking range of
+              // the window
+              if((mouseLine >= (startY + minLineOffset &&
+                 mouseLine <= startY + maxLines - minColOffset - maxColOffset)) &&
+                 ((mouseCol >= startX + minColOffset) &&
+                  (mouseCol <= startX + maxCols - maxColOffset)))
                 {
                   int offSet = 3;
                   int j = 0;
