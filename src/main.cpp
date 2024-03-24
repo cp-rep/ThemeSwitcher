@@ -36,12 +36,6 @@
 
 
 
-void printSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
-                       std::vector<std::string> outputStrings,
-                       const int& mouseLine,
-                       const int& mouseCol,
-                       std::ofstream& log);
-
 // ==== main ==================================================================
 //
 // ============================================================================
@@ -140,7 +134,8 @@ int main()
                                           savedFileStrings,
                                           currThemes,
                                           log);
-    drawBoxes(wins);
+    drawBoxes(wins,
+              log);
     printPromptWin(wins,
                    promptStrings,
                    currLines,
@@ -205,7 +200,8 @@ int main()
                                                 savedFileStrings,
                                                 currThemes,
                                                 log);
-          drawBoxes(wins);
+          drawBoxes(wins,
+                    log);
 
           // begin printing windows to buffer
           printPromptWin(wins,
@@ -268,29 +264,3 @@ int main()
 
   return 0;
 } // end of "main"
-
-
-
-void printSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
-                       std::vector<std::string> outputStrings,
-                       const int& mouseLine,
-                       const int& mouseCol,
-                       std::ofstream& log)
-
-{
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr && !outputStrings.empty())
-    {
-      int maxLines = 0;
-      int maxCols = 0;
-      const int offset = 3;
-      getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(), maxLines, maxCols);
-
-      for(int i = 0; i < (maxLines - offset); i++)
-        {
-          mvwaddstr(wins.at(i + _SFWINSINDEX)->getWindow(),
-                    0,
-                    0,
-                    outputStrings.at(i).c_str());
-        }
-    }
-}
