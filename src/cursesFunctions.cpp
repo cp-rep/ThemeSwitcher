@@ -758,7 +758,6 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins,
   defineSFStringWins(wins,
                      savedFileStrings,
                      log);
-
   defineSavedThemesWin(wins,
                        numLines,
                        numCols);
@@ -802,7 +801,6 @@ std::vector<std::string> createSFOutputStrings(std::unordered_map<int, CursesWin
           if(totalFileLength > maxCols)
             {
               int difference = totalFileLength - maxCols;
-
               tempString.append(dots);
 
               for(int j = difference + dots.length(); j < fileString.length(); j++)
@@ -832,6 +830,7 @@ std::vector<std::string> createSFOutputStrings(std::unordered_map<int, CursesWin
 
   return outputStrings;
 } // end of "createSFOutputStrings"
+
 
 
 /*
@@ -1150,6 +1149,32 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
+
+void printSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
+                       std::vector<std::string> outputStrings,
+                       const int& mouseLine,
+                       const int& mouseCol,
+                       std::ofstream& log)
+
+{
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr && !outputStrings.empty())
+    {
+      int maxLines = 0;
+      int maxCols = 0;
+      const int offset = 3;
+      getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(), maxLines, maxCols);
+
+      for(int i = 0; i < (maxLines - offset); i++)
+        {
+          mvwaddstr(wins.at(i + _SFWINSINDEX)->getWindow(),
+                    0,
+                    0,
+                    outputStrings.at(i).c_str());
+        }
+    }
+} // end of "printSFStringWins"
+
+
 /*
   Function:
    printSavedThemeStrings
@@ -1466,14 +1491,16 @@ void clearWins(const std::unordered_map<int, CursesWindow*>& wins)
   Returns:
    NONE
 */
-void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins)
+void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins,
+               std::ofstream& log)
 {
   char val = 'A';
   std::unordered_map<int, CursesWindow*>::const_iterator it;
 
   for(it = wins.begin(); it != wins.end(); it++)
     {
-      if(it->second->getWindowName() != "SAVEDFILE")
+      if((it->second->getWindowName() != "SAVEDFILE") &&
+         (it->second->getWindowName() != "_PROMPTWIN"))
         {
           if(val == '[')
             {
