@@ -3,8 +3,9 @@
 // Author: https://github.com/cp-rep
 //
 // Disclaimer:
-//  You may use and freely distribute my code as long as you leave the original
-//  author provided above in any works that use or heavily borrow from it.
+//  You may use and freely distribute my code from this project as long as you
+//  leave the original author provided above in any works that use or borrow
+//  from it.
 //
 //  Using this program is at your own discretion and trust in the software.
 //  Using it means take you responsibility for any and all events that may
@@ -119,7 +120,7 @@ int main()
                  savedFileStrings.size(),
                  log);
 
-  // run once
+  // run once, defining the windows and printing initial starting data
   {
     // init the text display string vector with THEME SWITCHER for _PROMPTWIN
     definePromptTitle(promptStrings);
@@ -225,38 +226,61 @@ int main()
           //                     log);
         }
 
-      // if(mouseLine != -1 || mouseCol != -1)
-      //   {
-      //     if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
-      //        !outputStrings.empty())
-      //       {
-      //         int offSet = 3;
-      //         int j = 0;
-      //         int i = 0;
-      //         for(i = _SFWINSINDEX, j = 0 ; i < _SFWINSINDEX + _SAVEDFILESWINSTARTY +
-      //               wins.at(_SAVEDFILESWIN)->getNumLines() - offSet; i++, j++)
-      //           {
-      //             if(mouseLine == wins.at(i)->getStartY() &&
-      //                (mouseCol >= wins.at(i)->getStartX() &&
-      //                  mouseCol <= wins.at(i)->getNumCols() + wins.at(i)->getStartX()))
-      //               {
-      //                 wattron(wins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-      //                 mvwaddstr(wins.at(i)->getWindow(),
-      //                           0,
-      //                           0,
-      //                           outputStrings.at(j).c_str());
-      //               }
-      //             else
-      //               {
-      //                 wattron(wins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-      //                 mvwaddstr(wins.at(i)->getWindow(),
-      //                           0,
-      //                           0,
-      //                           outputStrings.at(j).c_str());
-      //               }
-      //           }
-      //       }
-      //   }
+      // while this works it seems like a waste of resources to do this check for
+      if(mouseLine != -1 || mouseCol != -1)
+        {
+          if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
+             !outputStrings.empty())
+            {
+              int maxLines = 0;
+              int maxCols = 0;
+              getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),
+                       maxLines,
+                       maxCols);
+
+              // check that the mouse click is inside the window range for
+              // _SAVEDFILESWIN before running any CPU time on the loop
+              if((mouseLine >= wins.at(_SAVEDFILESWIN)->getStartY() &&
+                 mouseLine <= wins.at(_SAVEDFILESWIN)->getStartY() + maxLines) &&
+                 (mouseCol >= wins.at(_SAVEDFILESWIN)->getStartX() &&
+                  mouseCol <= wins.at(_SAVEDFILESWIN)->getStartX() + maxCols))
+                {
+                  int offSet = 3;
+                  int j = 0;
+                  int i = 0;
+                  for(i = _SFWINSINDEX, j = 0 ; i < _SFWINSINDEX + _SAVEDFILESWINSTARTY +
+                        wins.at(_SAVEDFILESWIN)->getNumLines() - offSet; i++, j++)
+                    {
+                      // make sure not to test values outside of the maximum printed lines
+                      if(j >= outputStrings.size())
+                        {
+                          break;
+                        }
+
+                      // check which window was clicked on and highlight it if clicked
+                      if(mouseLine == wins.at(i)->getStartY() &&
+                         (mouseCol >= wins.at(i)->getStartX() &&
+                          mouseCol <= wins.at(i)->getNumCols() + wins.at(i)->getStartX()))
+                        {
+                          wattron(wins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+                          mvwaddstr(wins.at(i)->getWindow(),
+                                    0,
+                                    0,
+                                    outputStrings.at(j).c_str());
+                        }
+                      // a window was not clicked so print the default color scheme
+                      else
+                        {
+                          wattron(wins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+                          mvwaddstr(wins.at(i)->getWindow(),
+                                    0,
+                                    0,
+                                    outputStrings.at(j).c_str());
+                        }
+                    }
+                }
+            }
+        }
 
       refreshWins(wins);
       doupdate();
