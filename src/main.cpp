@@ -41,6 +41,7 @@ void printSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
                        const int& mouseCol,
                        std::ofstream& log);
 
+
 // ==== main ==================================================================
 //
 // ============================================================================
@@ -102,6 +103,7 @@ int main()
   std::vector<std::string> savedFileStrings;
   std::vector<std::string> currThemes;
   std::vector<std::string> savedThemesStrings;
+  std::vector<std::string> outputStrings;
 
   initTestFilesStringVector(savedFileStrings,
                             50,
@@ -127,7 +129,6 @@ int main()
                  log);
 #endif // _CURSES
 
-
   // run once
   {
     // init the text display string vector with THEME SWITCHER for _PROMPTWIN
@@ -135,6 +136,10 @@ int main()
     defineWins(wins,
                savedFileStrings,
                log);
+    outputStrings = createSFOutputStrings(wins,
+                                          savedFileStrings,
+                                          currThemes,
+                                          log);
     drawBoxes(wins);
     printPromptWin(wins,
                    promptStrings,
@@ -262,10 +267,10 @@ int main()
 
 
 void printSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
-                         const std::vector<std::string>& savedFileStrings,
-                         const int& mouseLine,
-                         const int& mouseCol,
-                         std::ofstream& log)
+                       const std::vector<std::string>& savedFileStrings,
+                       const int& mouseLine,
+                       const int& mouseCol,
+                       std::ofstream& log)
 
 {
 
