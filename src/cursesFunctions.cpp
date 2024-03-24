@@ -50,69 +50,6 @@ void initializeCurses()
 } // end of "initializeCurses"
 
 
-void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
-                    const std::vector<std::string>& outputStrings,
-                    const int& mouseLine,
-                    const int& mouseCol,
-                    std::ofstream& log)
-{
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
-     !outputStrings.empty())
-    {
-      const int minLineOffset = 3;
-      const int maxLineOffset = 3;
-      const int minColOffset = 5;
-      const int maxColOffset = 4;
-      int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
-      int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
-      const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
-      const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
-
-      // enter iff the mouse click is within a file clicking range of
-      // the window
-      if((mouseLine >= (startY + minLineOffset &&
-                        mouseLine <= startY + maxLines - minColOffset -
-                        maxColOffset)) &&
-         ((mouseCol >= startX + minColOffset) &&
-          (mouseCol <= startX + maxCols - maxColOffset)))
-        {
-          int offSet = 3;
-          int j = 0;
-          int i = 0;
-          for(i = _SFWINSINDEX, j = 0 ; i < _SFWINSINDEX + _SAVEDFILESWINSTARTY +
-                wins.at(_SAVEDFILESWIN)->getNumLines() - offSet; i++, j++)
-            {
-              // make sure not to test values outside of the maximum printed lines
-              if(j >= outputStrings.size())
-                {
-                  break;
-                }
-
-              // check which window was clicked on and highlight it if clicked
-              if(mouseLine == wins.at(i)->getStartY() &&
-                 (mouseCol >= wins.at(i)->getStartX() &&
-                  mouseCol <= wins.at(i)->getNumCols() + wins.at(i)->getStartX()))
-                {
-                  wattron(wins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-                  mvwaddstr(wins.at(i)->getWindow(),
-                            0,
-                            0,
-                            outputStrings.at(j).c_str());
-                }
-              // a window was not clicked so print the default color scheme
-              else
-                {
-                  wattron(wins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-                  mvwaddstr(wins.at(i)->getWindow(),
-                            0,
-                            0,
-                            outputStrings.at(j).c_str());
-                }
-            }
-        }
-    }
-}
-
 
 /*
   Function:
@@ -386,6 +323,15 @@ void defineArrowWin(std::unordered_map<int, CursesWindow*>& wins,
                                  startY,
                                  startX);
     }
+  else
+    {
+      // if for any reason _SAVEDFILESWIN isnt allocated and an arrow is, delete it
+      if(wins.at(win)->getWindow() != nullptr)
+        {
+          wins.at(win)->deleteWindow();
+          wins.at(win)->setWindow(nullptr);
+        }
+    }
 } // end of "defineArrowWin"
 
 
@@ -518,7 +464,6 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-
 void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
                         const std::vector<std::string>& savedFileStrings,
                         std::ofstream& log)
@@ -590,6 +535,7 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
         }
     }
 } // end of "defineSFStringWins"
+
 
 
 /*
@@ -1232,6 +1178,30 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
+/*
+  Function:
+   printSavedFilesWin
+
+  Description:
+   Prints the saved files data to the buffer for the _SAVEDFILESWIN window.
+
+  Input/Output:
+   wins                     - A reference to a const unordered map
+                              <int, CursesWindow*> type that contains pointers
+                              to all currently allocated CursesWindow objects
+                              that can be indexed by key values in the file
+                              _cursesWinConsts.hpp.
+  Input:
+  savedFilesStrings         - a reference to to a constant vector of strings
+                              containing the paths for the files that have/can
+                              be modified by ThemesSwitcher for changing
+                              the color theme.
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
 void printSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
                        std::vector<std::string> outputStrings,
                        const int& mouseLine,
@@ -1266,6 +1236,7 @@ void printSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
         }
     }
 } // end of "printSFStringWins"
+
 
 
 /*
@@ -1405,7 +1376,6 @@ void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
 
   Returns:
    NONE
-   NONE
 */
 void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          const std::vector<std::string>& savedThemesStrings,
@@ -1457,6 +1427,105 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
         }
     }
 } // end of "printSavedThemesWin"
+
+
+
+/*
+  Function:
+   checkFileClick
+
+  Description:
+   Checks if the incoming mouse click Line and Col values match with a
+   printed file line.  If they do, the matching file line coordinate file
+   line is printed in the "highlighted" color scheme.
+
+  Input/Output:
+   wins                     - A reference to a const unordered map
+                              <int, CursesWindow*> type that contains pointers
+                              to all currently allocated CursesWindow objects
+                              that can be indexed by key values in the file
+                              _cursesWinConsts.hpp.
+  Input:
+  outputStrings             - a reference to to a constant vector of strings
+                              containing the formatted file string lines
+                              that will be used for outputing to file line
+                              windows.
+
+  mouseLine                 - a reference to a constant integer that contains
+                              the current Y(line) value of the just clicked
+                              mouse click.
+
+  mouseCol                  - a reference to a constant integer that contains
+                              the current X(col) value of the just clicked
+                              mouse click.
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
+void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
+                    const std::vector<std::string>& outputStrings,
+                    const int& mouseLine,
+                    const int& mouseCol,
+                    std::ofstream& log)
+{
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
+     !outputStrings.empty())
+    {
+      const int minLineOffset = 3;
+      const int maxLineOffset = 3;
+      const int minColOffset = 5;
+      const int maxColOffset = 4;
+      int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
+      int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
+      const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
+      const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
+
+      // enter iff the mouse click is within a file clicking range of
+      // the window
+      if((mouseLine >= (startY + minLineOffset &&
+                        mouseLine <= startY + maxLines - minColOffset -
+                        maxColOffset)) &&
+         ((mouseCol >= startX + minColOffset) &&
+          (mouseCol <= startX + maxCols - maxColOffset)))
+        {
+          int offSet = 3;
+          int j = 0;
+          int i = 0;
+          for(i = _SFWINSINDEX, j = 0 ; i < _SFWINSINDEX + _SAVEDFILESWINSTARTY +
+                wins.at(_SAVEDFILESWIN)->getNumLines() - offSet; i++, j++)
+            {
+              // make sure not to test values outside of the maximum printed lines
+              if(j >= outputStrings.size())
+                {
+                  break;
+                }
+
+              // check which window was clicked on and highlight it if clicked
+              if(mouseLine == wins.at(i)->getStartY() &&
+                 (mouseCol >= wins.at(i)->getStartX() &&
+                  mouseCol <= wins.at(i)->getNumCols() + wins.at(i)->getStartX()))
+                {
+                  wattron(wins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+                  mvwaddstr(wins.at(i)->getWindow(),
+                            0,
+                            0,
+                            outputStrings.at(j).c_str());
+                }
+              // a window was not clicked so print the default color scheme
+              else
+                {
+                  wattron(wins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+                  mvwaddstr(wins.at(i)->getWindow(),
+                            0,
+                            0,
+                            outputStrings.at(j).c_str());
+                }
+            }
+        }
+    }
+} // end of "checkFileClick"
 
 
 
