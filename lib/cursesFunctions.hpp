@@ -100,6 +100,11 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          const int& mouseLine,
                          const int& mouseCol,
                          std::ofstream& log);
+void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
+                    const std::vector<std::string>& outputStrings,
+                    const int& mouseLine,
+                    const int& mouseCol,
+                    std::ofstream& log);
 void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
 void clearWins(const std::unordered_map<int, CursesWindow*>& wins);
 void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins,
