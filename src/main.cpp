@@ -227,22 +227,27 @@ int main()
                               log);
         }
 
-      // if(mouseLine != -1 || mouseCol != -1)
-      //   {
-      //     // log << "mouseLine: " << mouseLine << std::endl;
-      //     // log << "startY: " << wins.at(100)->getStartY() << std::endl;
-      //     // log << "added mouse: " << mouseLine + 100 - 13 << std::endl;
-      //     std::string fileString = savedFileStrings.at(0);
+      if(mouseLine != -1 || mouseCol != -1)
+        {
+          if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+            {
+              int j = 0;
+              int i = 0;
+              for(i = _SFWINSINDEX, j = 0 ; i < _SFWINSINDEX + _SAVEDFILESWINSTARTY +
+                    wins.at(_SAVEDFILESWIN)->getNumLines() - 3; i++, j++)
+                {
 
-      //     if(mouseLine == wins.at(mouseLine + 100 - 13)->getStartY())
-      //       {
-      //         wattron(wins.at(mouseLine + 100 - 13)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-      //         mvwaddstr(wins.at(mouseLine + 100 - 13)->getWindow(),
-      //                   0,
-      //                   0,
-      //                   fileString.c_str());
-      //       }
-      //   }
+                  if(mouseLine == wins.at(i)->getStartY())
+                    {
+                      wattron(wins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+                      mvwaddstr(wins.at(i)->getWindow(),
+                                0,
+                                0,
+                                outputStrings.at(j).c_str());
+                    }
+                }
+            }
+        }
 
       refreshWins(wins);
       doupdate();
