@@ -6,6 +6,11 @@ void initTestStringVector(std::vector<std::string>& testStrings,
                           const int numChars,
                           std::ofstream& log)
 {
+  if(numStrings == 0)
+    {
+      return;
+    }
+
   std::string tempString;
   std::string extension = ".ext";
   bool appendedExt = false;
@@ -37,6 +42,11 @@ void initTestFilesStringVector(std::vector<std::string>& testStrings,
                                const int numStrings,
                                std::ofstream& log)
 {
+  if(numStrings == 0)
+    {
+      return;
+    }
+
   std::string tempString;
   std::string file1 = "/home/mine/somedir/anotherdir/andanotherdir/file";
   std::string file2 = "/home/mine/somedir//andanotherdir/file";
@@ -78,7 +88,6 @@ void initTestFilesStringVector(std::vector<std::string>& testStrings,
 
     testStrings.at(i).append(intToStr(i));
     testStrings.at(i).append(".ext");
-
   }
 } // end of "initTestStringVector"
 
@@ -88,6 +97,11 @@ void initTestCurrThemesStringVector(std::vector<std::string>& testStrings,
                                const int numStrings,
                                std::ofstream& log)
 {
+  if(numStrings == 0)
+    {
+      return;
+    }
+
   std::string tempString;
   std::string theme1 = "dracula_theme.el";
   std::string theme2 = "doom_one_theme.el";
@@ -132,6 +146,11 @@ void initTestCurrThemesStringVector(std::vector<std::string>& testStrings,
 void printTestStringVectorToLog(const std::vector<std::string>& strings,
                                 std::ofstream& log)
 {
+  if(strings.empty())
+    {
+      return;
+    }
+
   std::vector<std::string>::const_iterator it;
   int i = 0;
 
