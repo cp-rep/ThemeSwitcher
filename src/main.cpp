@@ -229,60 +229,11 @@ int main()
       // while this works it seems like a waste of resources to do this check for
       if(mouseLine != -1 || mouseCol != -1)
         {
-          if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
-             !outputStrings.empty())
-            {
-              const int minLineOffset = 3;
-              const int maxLineOffset = 3;
-              const int minColOffset = 5;
-              const int maxColOffset = 4;
-              int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
-              int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
-              const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
-              const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
-
-              // only enter if the mouse click is within a file clicking range of
-              // the window
-              if((mouseLine >= (startY + minLineOffset &&
-                 mouseLine <= startY + maxLines - minColOffset - maxColOffset)) &&
-                 ((mouseCol >= startX + minColOffset) &&
-                  (mouseCol <= startX + maxCols - maxColOffset)))
-                {
-                  int offSet = 3;
-                  int j = 0;
-                  int i = 0;
-                  for(i = _SFWINSINDEX, j = 0 ; i < _SFWINSINDEX + _SAVEDFILESWINSTARTY +
-                        wins.at(_SAVEDFILESWIN)->getNumLines() - offSet; i++, j++)
-                    {
-                      // make sure not to test values outside of the maximum printed lines
-                      if(j >= outputStrings.size())
-                        {
-                          break;
-                        }
-
-                      // check which window was clicked on and highlight it if clicked
-                      if(mouseLine == wins.at(i)->getStartY() &&
-                         (mouseCol >= wins.at(i)->getStartX() &&
-                          mouseCol <= wins.at(i)->getNumCols() + wins.at(i)->getStartX()))
-                        {
-                          wattron(wins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-                          mvwaddstr(wins.at(i)->getWindow(),
-                                    0,
-                                    0,
-                                    outputStrings.at(j).c_str());
-                        }
-                      // a window was not clicked so print the default color scheme
-                      else
-                        {
-                          wattron(wins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-                          mvwaddstr(wins.at(i)->getWindow(),
-                                    0,
-                                    0,
-                                    outputStrings.at(j).c_str());
-                        }
-                    }
-                }
-            }
+          checkFileClick(wins,
+                         outputStrings,
+                         mouseLine,
+                         mouseCol,
+                         log);
         }
 
       refreshWins(wins);

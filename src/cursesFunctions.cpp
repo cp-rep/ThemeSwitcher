@@ -834,9 +834,9 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins,
   defineSFStringWins(wins,
                      savedFileStrings,
                      log);
-  // defineSavedThemesWin(wins,
-  //                      numLines,
-  //                      numCols);
+  defineSavedThemesWin(wins,
+                       numLines,
+                       numCols);
   defineHelpWin(wins,
                 numLines,
                 numCols);
