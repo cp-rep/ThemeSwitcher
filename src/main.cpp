@@ -232,11 +232,8 @@ int main()
           if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
              !outputStrings.empty())
             {
-              int maxLines = 0;
-              int maxCols = 0;
-              getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),
-                       maxLines,
-                       maxCols);
+              int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
+              int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
 
               // check that the mouse click is inside the window range for
               // _SAVEDFILESWIN before running any CPU time on the loop
