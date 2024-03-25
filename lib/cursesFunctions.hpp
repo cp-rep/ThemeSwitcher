@@ -15,9 +15,6 @@ const std::string leftArrow = " < ";
 const std::string rightArrow = " > ";
 const std::string sfLeftArrow = "_LARROWSAVEDFILESWIN";
 const std::string sfRightArrow = "_RARROWSAVEDFILESWIN";
-const int sfLArrowClicked = 1;
-const int sfRArrowClicked = 2;
-
 
 // _SAVEDTHEMESWIN
 const std::string stTitle = "SAVED THEMES:";
@@ -104,6 +101,8 @@ void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
                     const std::vector<std::string>& outputStrings,
                     const int& mouseLine,
                     const int& mouseCol,
+                    int& outputStringPos,
+                    const int& arrowClickVal,
                     std::ofstream& log);
 void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
 void clearWins(const std::unordered_map<int, CursesWindow*>& wins);
