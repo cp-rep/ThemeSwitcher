@@ -90,6 +90,7 @@ int main()
   int currCols = 0;
   int mouseLine = -1;
   int mouseCol = -1;
+  int arrowClickVal = 0;
   std::vector<std::string> promptStrings;
   std::vector<std::string> savedFileStrings;
   std::vector<std::string> currThemes;
@@ -147,18 +148,23 @@ int main()
                        log);
     checkArrowClick(wins,
                     _LARROWSAVEDFILESWIN,
+                    outputStrings,
+                    outputStringPos,
                     mouseLine,
                     mouseCol,
                     leftArrow,
                     log);
     checkArrowClick(wins,
                     _RARROWSAVEDFILESWIN,
+                    outputStrings,
+                    outputStringPos,
                     mouseLine,
                     mouseCol,
                     rightArrow,
                     log);
     printSFStringWins(wins,
                       outputStrings,
+                      outputStringPos,
                       0,
                       0,
                       log);
@@ -202,8 +208,9 @@ int main()
       if((currLines != wins.at(_MAINWIN)->getNumLines()) ||
           (currCols != wins.at(_MAINWIN)->getNumCols()))
         {
+          arrowClickVal = 0;
           clearWins(wins);
-          outputStringPos = 0;
+//          outputStringPos = 0;
 
           // the window size has changed. update window dimensions
           wins.at(_MAINWIN)->setNumLines(currLines);
@@ -232,18 +239,23 @@ int main()
                              mouseCol,
                              log);
           printSFStringWins(wins,
-                      outputStrings,
-                      0,
-                      0,
-                      log);
+                            outputStrings,
+                            outputStringPos,
+                            0,
+                            0,
+                            log);
           checkArrowClick(wins,
                           _LARROWSAVEDFILESWIN,
+                          outputStrings,
+                          outputStringPos,
                           mouseLine,
                           mouseCol,
                           leftArrow,
                           log);
           checkArrowClick(wins,
                           _RARROWSAVEDFILESWIN,
+                          outputStrings,
+                          outputStringPos,
                           mouseLine,
                           mouseCol,
                           rightArrow,
@@ -258,15 +270,18 @@ int main()
       // check for a mouse click and operate on the line/col values
       if(mouseLine != -1 || mouseCol != -1)
         {
-          int arrowClickVal = 0;
           arrowClickVal = checkArrowClick(wins,
                                           _LARROWSAVEDFILESWIN,
+                                          outputStrings,
+                                          outputStringPos,
                                           mouseLine,
                                           mouseCol,
                                           leftArrow,
                                           log);
           arrowClickVal = checkArrowClick(wins,
                                           _RARROWSAVEDFILESWIN,
+                                          outputStrings,
+                                          outputStringPos,
                                           mouseLine,
                                           mouseCol,
                                           rightArrow,
@@ -276,7 +291,6 @@ int main()
                          mouseLine,
                          mouseCol,
                          outputStringPos,
-                         arrowClickVal,
                          log);
         }
 
