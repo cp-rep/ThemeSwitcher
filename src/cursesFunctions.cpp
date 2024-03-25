@@ -1336,99 +1336,6 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-/*
-  Function:
-   checkArrowClick
-
-  Description:
-   Prints the incoming "win" to STDSCR which looks like a left or right
-   arrow.
-
-  Input/Output:
-   wins                 - A reference to a const unordered map
-                          <int, CursesWindow*> type that contains pointers
-                          to all currently allocated CursesWindow objects
-                          that can be indexed by key values in the file
-                          _cursesWinConsts.hpp.
-  Input:
-   win                  - a const integer containing a value representing a window
-                          from _cursesWinConsts.hpp that should be for an arrow
-                          window.
-
-  mouseLine             - A reference to a constant integer containing the 'y'
-                          value or 'line number' in which a mouse click was
-                          detected.
-
-  mouseLine             - A reference to a constant integer containing the 'x'
-                          value or 'column number' in which a mouse click was
-                          detected.
-
-  outString             - A string type containing a the string to print to
-                          output to the incoming window buffer.
-
-  Output:
-   NONE
-
-  Returns:
-   NONE
-*/
-int checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
-                    const int win,
-                    const std::vector<std::string>& outputStrings,
-                    int& outputStringPos,
-                    const int& mouseLine,
-                    const int& mouseCol,
-                    std::string outString,
-                    std::ofstream& log)
-{
-  int returnVal = 0;
-
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
-     wins.at(win)->getWindow() != nullptr)
-    {
-      // flash window if mouse click deteceted in range
-      if((mouseLine == wins.at(win)->getStartY()) &&
-         (mouseCol >= wins.at(win)->getStartX() &&
-          mouseCol <= wins.at(win)->getStartX() + outString.length() - 1))
-        {
-          wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-          mvwaddstr(wins.at(win)->getWindow(),
-                    0,
-                    0,
-                    outString.c_str());
-          wnoutrefresh(wins.at(win)->getWindow());
-          doupdate();
-          usleep(40000);
-
-          if(win == _LARROWSAVEDFILESWIN)
-            {
-              // shiftFilesRight(wins,
-              //                 outputStrings,
-              //                 outputStringPos,
-              //                 log);
-            }
-          else
-            {
-              shiftFilesRight(wins,
-                              outputStrings,
-                              outputStringPos,
-                              log);
-            }
-        }
-      // print the regular window color
-      wattron(wins.at(win)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-      mvwaddstr(wins.at(win)->getWindow(),
-                0,
-                0,
-                outString.c_str());
-      wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-    }
-
-  return returnVal;
-} // end of "checkArrowClick"
-
-
-
 void shiftFilesRight(const std::unordered_map<int, CursesWindow*>& wins,
                      const std::vector<std::string>& outputStrings,
                      int& outputStringPos,
@@ -1499,7 +1406,174 @@ void shiftFilesRight(const std::unordered_map<int, CursesWindow*>& wins,
             }
         }
     }
-}
+} // end of "shiftFilesRight"
+
+
+
+void shiftFilesLeft(const std::unordered_map<int, CursesWindow*>& wins,
+                    const std::vector<std::string>& outputStrings,
+                    int& outputStringPos,
+                    std::ofstream& log)
+{
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
+     !outputStrings.empty())
+    {
+      const int minLineOffset = 4;
+      const int maxLineOffset = 2;
+      const int minColOffset = 7;
+      const int maxColOffset = 4;
+      int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
+      int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
+      const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
+      const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
+
+      // get number of printable file windows
+      int val = maxLines - minLineOffset - maxLineOffset;
+
+      // check if there is another list to 'scroll' to
+      if(outputStringPos - val >= 0)
+        {
+          // delete the current set of windows
+          int i = 0;
+          for(i = outputStringPos + _SFWINSINDEX;
+              (i < _SFWINSINDEX + val + outputStringPos) &&
+                (i < outputStrings.size() + _SFWINSINDEX);
+              i++)
+            {
+              if(wins.at(i)->getWindow() != nullptr)
+                {
+                  werase(wins.at(i)->getWindow());
+                  wnoutrefresh(wins.at(i)->getWindow());
+                  wins.at(i)->deleteWindow();
+                  wins.at(i)->setWindow(nullptr);
+                }
+            }
+
+          outputStringPos -= val;
+
+          // allocate the new set of windows for the scrolled output strings
+          for(i = outputStringPos + _SFWINSINDEX; i < _SFWINSINDEX + outputStringPos + val; i++)
+            {
+              if((i - _SFWINSINDEX) >= 0)
+                {
+                  const int lineMinOffset = 2;
+                  const int colMinOffset = 3;
+                  const int lineMaxOffset = 4;
+                  const int colMaxOffset = colMinOffset + 3;
+                  const int fileCountOffset = 4;
+                  int numLines = 1;
+                  int numCols = maxCols - colMinOffset - colMaxOffset - 1;
+                  int startY = (i  - _SFWINSINDEX - outputStringPos) + wins.at(_SAVEDFILESWIN)->getStartY() +
+                    lineMinOffset + 2;
+                  int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset + fileCountOffset;
+
+                  wins.at(i)->defineWindow(newwin(numLines,
+                                                  numCols,
+                                                  startY,
+                                                  startX),
+                                           "SAVEDFILE",
+                                           numLines,
+                                           numCols,
+                                           startY,
+                                           startX);
+                }
+            }
+        }
+    }
+} // end of "shiftFilesLeft"
+
+
+
+/*
+  Function:
+   checkArrowClick
+
+  Description:
+   Prints the incoming "win" to STDSCR which looks like a left or right
+   arrow.
+
+  Input/Output:
+   wins                 - A reference to a const unordered map
+                          <int, CursesWindow*> type that contains pointers
+                          to all currently allocated CursesWindow objects
+                          that can be indexed by key values in the file
+                          _cursesWinConsts.hpp.
+  Input:
+   win                  - a const integer containing a value representing a window
+                          from _cursesWinConsts.hpp that should be for an arrow
+                          window.
+
+  mouseLine             - A reference to a constant integer containing the 'y'
+                          value or 'line number' in which a mouse click was
+                          detected.
+
+  mouseLine             - A reference to a constant integer containing the 'x'
+                          value or 'column number' in which a mouse click was
+                          detected.
+
+  outString             - A string type containing a the string to print to
+                          output to the incoming window buffer.
+
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
+int checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
+                    const int win,
+                    const std::vector<std::string>& outputStrings,
+                    int& outputStringPos,
+                    const int& mouseLine,
+                    const int& mouseCol,
+                    std::string outString,
+                    std::ofstream& log)
+{
+  int returnVal = 0;
+
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
+     wins.at(win)->getWindow() != nullptr)
+    {
+      // flash window if mouse click deteceted in range
+      if((mouseLine == wins.at(win)->getStartY()) &&
+         (mouseCol >= wins.at(win)->getStartX() &&
+          mouseCol <= wins.at(win)->getStartX() + outString.length() - 1))
+        {
+          wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+          mvwaddstr(wins.at(win)->getWindow(),
+                    0,
+                    0,
+                    outString.c_str());
+          wnoutrefresh(wins.at(win)->getWindow());
+          doupdate();
+          usleep(40000);
+
+          if(win == _LARROWSAVEDFILESWIN)
+            {
+              shiftFilesLeft(wins,
+                              outputStrings,
+                              outputStringPos,
+                              log);
+            }
+          else
+            {
+              shiftFilesRight(wins,
+                              outputStrings,
+                              outputStringPos,
+                              log);
+            }
+        }
+      // print the regular window color
+      wattron(wins.at(win)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+      mvwaddstr(wins.at(win)->getWindow(),
+                0,
+                0,
+                outString.c_str());
+      wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+    }
+
+  return returnVal;
+} // end of "checkArrowClick"
 
 
 
