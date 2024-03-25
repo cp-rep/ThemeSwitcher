@@ -1111,16 +1111,15 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
 */
 void printSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
                        std::vector<std::string> outputStrings,
+                       const int& outputStringPos,
                        const int& mouseLine,
                        const int& mouseCol,
                        std::ofstream& log)
-
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr && !outputStrings.empty())
     {
       const int offset = 3;
       int upperBound = 0;
-
       int maxLines = 0;
       int maxCols = 0;
       getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(), maxLines, maxCols);
@@ -1375,6 +1374,8 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
 */
 int checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
                     const int win,
+                    const std::vector<std::string>& outputStrings,
+                    int& outputStringPos,
                     const int& mouseLine,
                     const int& mouseCol,
                     std::string outString,
@@ -1401,11 +1402,17 @@ int checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
 
           if(win == _LARROWSAVEDFILESWIN)
             {
-              returnVal =  _LARROWSAVEDFILESWIN;
+              // shiftFilesRight(wins,
+              //                 outputStrings,
+              //                 outputStringPos,
+              //                 log);
             }
           else
             {
-              returnVal = _RARROWSAVEDFILESWIN;
+              shiftFilesRight(wins,
+                              outputStrings,
+                              outputStringPos,
+                              log);
             }
         }
       // print the regular window color
@@ -1419,6 +1426,80 @@ int checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
 
   return returnVal;
 } // end of "checkArrowClick"
+
+
+
+void shiftFilesRight(const std::unordered_map<int, CursesWindow*>& wins,
+                     const std::vector<std::string>& outputStrings,
+                     int& outputStringPos,
+                     std::ofstream& log)
+{
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
+     !outputStrings.empty())
+    {
+      const int minLineOffset = 4;
+      const int maxLineOffset = 2;
+      const int minColOffset = 7;
+      const int maxColOffset = 4;
+      int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
+      int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
+      const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
+      const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
+
+      // get number of printable file windows
+      int val = maxLines - minLineOffset - maxLineOffset;
+
+      // check if there is another list to 'scroll' to
+      if(outputStringPos + val < outputStrings.size())
+        {
+          // delete the current set of windows
+          int i = 0;
+          for(i = outputStringPos + _SFWINSINDEX;
+              (i < _SFWINSINDEX + val + outputStringPos) &&
+                (i < outputStrings.size() + _SFWINSINDEX);
+              i++)
+            {
+              if(wins.at(i)->getWindow() != nullptr)
+                {
+                  werase(wins.at(i)->getWindow());
+                  wnoutrefresh(wins.at(i)->getWindow());
+                  wins.at(i)->deleteWindow();
+                  wins.at(i)->setWindow(nullptr);
+                }
+            }
+
+          outputStringPos += val;
+
+          // allocate the new set of windows for the scrolled output strings
+          for(i = outputStringPos + _SFWINSINDEX; i < _SFWINSINDEX + outputStringPos + val; i++)
+            {
+              if((i - _SFWINSINDEX) < outputStrings.size())
+                {
+                  const int lineMinOffset = 2;
+                  const int colMinOffset = 3;
+                  const int lineMaxOffset = 4;
+                  const int colMaxOffset = colMinOffset + 3;
+                  const int fileCountOffset = 4;
+                  int numLines = 1;
+                  int numCols = maxCols - colMinOffset - colMaxOffset - 1;
+                  int startY = (i  - _SFWINSINDEX - outputStringPos) + wins.at(_SAVEDFILESWIN)->getStartY() +
+                    lineMinOffset + 2;
+                  int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset + fileCountOffset;
+
+                  wins.at(i)->defineWindow(newwin(numLines,
+                                                  numCols,
+                                                  startY,
+                                                  startX),
+                                           "SAVEDFILE",
+                                           numLines,
+                                           numCols,
+                                           startY,
+                                           startX);
+                }
+            }
+        }
+    }
+}
 
 
 
@@ -1461,7 +1542,6 @@ void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
                     const int& mouseLine,
                     const int& mouseCol,
                     int& outputStringPos,
-                    const int& arrowClickVal,
                     std::ofstream& log)
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
@@ -1476,70 +1556,7 @@ void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
       const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
       const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
 
-      // left arrow click detected, attempt to scroll up
-      if(arrowClickVal == _LARROWSAVEDFILESWIN)
-        {
-        }
-      // right arrow click detected, attempt to scroll down
-      else if(arrowClickVal == _RARROWSAVEDFILESWIN)
-        {
-          // get number of printable file windows
-          int val = maxLines - minLineOffset - maxLineOffset;
-
-          // check if there is another list to 'scroll' to
-          if(outputStringPos + val < outputStrings.size())
-            {
-              // delete the current set of windows
-              int i = 0;
-
-              for(i = outputStringPos + _SFWINSINDEX;
-                  (i < _SFWINSINDEX + val + outputStringPos) &&
-                    (i < outputStrings.size() + _SFWINSINDEX);
-                  i++)
-                {
-                  if(wins.at(i)->getWindow() != nullptr)
-                    {
-                      werase(wins.at(i)->getWindow());
-                      wnoutrefresh(wins.at(i)->getWindow());
-                      wins.at(i)->deleteWindow();
-                      wins.at(i)->setWindow(nullptr);
-                    }
-                }
-
-              outputStringPos += val;
-
-              // allocate the new set of windows for the scrolled output strings
-              for(i = outputStringPos + _SFWINSINDEX; i < _SFWINSINDEX + outputStringPos + val; i++)
-                {
-                  if((i - _SFWINSINDEX) < outputStrings.size())
-                    {
-                      const int lineMinOffset = 2;
-                      const int colMinOffset = 3;
-                      const int lineMaxOffset = 4;
-                      const int colMaxOffset = colMinOffset + 3;
-                      const int fileCountOffset = 4;
-                      int numLines = 1;
-                      int numCols = maxCols - colMinOffset - colMaxOffset - 1;
-                      int startY = (i  - _SFWINSINDEX - outputStringPos) + wins.at(_SAVEDFILESWIN)->getStartY() +
-                        lineMinOffset + 2;
-                      int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset + fileCountOffset;
-
-                      wins.at(i)->defineWindow(newwin(numLines,
-                                                      numCols,
-                                                      startY,
-                                                      startX),
-                                               "SAVEDFILE",
-                                               numLines,
-                                               numCols,
-                                               startY,
-                                               startX);
-                    }
-                }
-            }
-        }
-
-      // enter iff the mouse click is within a file clicking range of
-      // the window
+      // enter iff the mouse click is in file clicking range offsets
       if(((mouseLine >= startY + minLineOffset) &&
                         (mouseLine <= startY + maxLines - maxLineOffset - 1)) &&
          ((mouseCol >= startX + minColOffset) &&
@@ -1588,13 +1605,13 @@ void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
           int i = 0;
           int val = maxLines - minLineOffset - maxLineOffset;
 
-          // check if there is another list to 'scroll' to
+          // check not out of range of the input list before printing
           if(outputStringPos < outputStrings.size())
             {
               for(i = _SFWINSINDEX + outputStringPos, j = outputStringPos;
                   i < _SFWINSINDEX + startY + maxLines + outputStringPos - offSet; i++, j++)
                 {
-                  // make sure not to test values outside of the maximum printed lines
+                  // stop printing when end of list is reached
                   if(j >= outputStrings.size())
                     {
                       break;
