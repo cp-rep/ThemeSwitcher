@@ -95,7 +95,8 @@ int main()
   std::vector<std::string> currThemes;
   std::vector<std::string> savedThemesStrings;
   std::vector<std::string> outputStrings;
-  const int numStrings = 5;
+  int outputStringPos = 0;
+  const int numStrings = 100;
   const int stringLength = 30;
 
   // init the temporary testing string vectors
@@ -195,10 +196,14 @@ int main()
       // check if the window size has changed
       getmaxyx(stdscr, currLines, currCols);
 
-      if( (currLines != wins.at(_MAINWIN)->getNumLines()) ||
+      // if screen size changed, reprint a default screen with current
+      // data positions
+
+      if((currLines != wins.at(_MAINWIN)->getNumLines()) ||
           (currCols != wins.at(_MAINWIN)->getNumCols()))
         {
           clearWins(wins);
+          outputStringPos = 0;
 
           // the window size has changed. update window dimensions
           wins.at(_MAINWIN)->setNumLines(currLines);
@@ -250,26 +255,29 @@ int main()
           //                     log);
         }
 
-      // while this works it seems like a waste of resources to do this check for
+      // check for a mouse click and operate on the line/col values
       if(mouseLine != -1 || mouseCol != -1)
         {
+          int arrowClickVal = 0;
+          arrowClickVal = checkArrowClick(wins,
+                                          _LARROWSAVEDFILESWIN,
+                                          mouseLine,
+                                          mouseCol,
+                                          leftArrow,
+                                          log);
+          arrowClickVal = checkArrowClick(wins,
+                                          _RARROWSAVEDFILESWIN,
+                                          mouseLine,
+                                          mouseCol,
+                                          rightArrow,
+                                          log);
           checkFileClick(wins,
                          outputStrings,
                          mouseLine,
                          mouseCol,
+                         outputStringPos,
+                         arrowClickVal,
                          log);
-          checkArrowClick(wins,
-                          _LARROWSAVEDFILESWIN,
-                          mouseLine,
-                          mouseCol,
-                          leftArrow,
-                          log);
-          checkArrowClick(wins,
-                          _RARROWSAVEDFILESWIN,
-                          mouseLine,
-                          mouseCol,
-                          rightArrow,
-                          log);
         }
 
       refreshWins(wins);
