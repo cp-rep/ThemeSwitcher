@@ -499,8 +499,8 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
           upperBound = sfWinLines - colMaxOffset;
         }
 
-      int j = 0;
-      for(int i = _SFWINSINDEX, j = 0; i < (upperBound + _SFWINSINDEX); i++, j++)
+      //int j = 0;
+      for(int i = _SFWINSINDEX, j = 0; i < (upperBound + _SFWINSINDEX); i++)// j++)
         {
           int numLines = 1;
           int numCols = sfWinCols - colMinOffset - colMaxOffset - 1; // file count
@@ -1401,11 +1401,11 @@ int checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
 
           if(win == _LARROWSAVEDFILESWIN)
             {
-              returnVal =  sfLArrowClicked;
+              returnVal =  _LARROWSAVEDFILESWIN;
             }
           else
             {
-              returnVal = sfRArrowClicked;
+              returnVal = _RARROWSAVEDFILESWIN;
             }
         }
       // print the regular window color
@@ -1460,33 +1460,98 @@ void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
                     const std::vector<std::string>& outputStrings,
                     const int& mouseLine,
                     const int& mouseCol,
+                    int& outputStringPos,
+                    const int& arrowClickVal,
                     std::ofstream& log)
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
      !outputStrings.empty())
     {
-      const int minLineOffset = 3;
-      const int maxLineOffset = 3;
-      const int minColOffset = 5;
+      const int minLineOffset = 4;
+      const int maxLineOffset = 2;
+      const int minColOffset = 7;
       const int maxColOffset = 4;
       int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
       int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
       const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
       const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
 
+      // left arrow click detected, attempt to scroll up
+      if(arrowClickVal == _LARROWSAVEDFILESWIN)
+        {
+        }
+      // right arrow click detected, attempt to scroll down
+      else if(arrowClickVal == _RARROWSAVEDFILESWIN)
+        {
+          // get number of printable file windows
+          int val = maxLines - minLineOffset - maxLineOffset;
+
+          // check if there is another list to 'scroll' to
+          if(outputStringPos + val < outputStrings.size())
+            {
+              // delete the current set of windows
+              int i = 0;
+
+              for(i = outputStringPos + _SFWINSINDEX;
+                  (i < _SFWINSINDEX + val + outputStringPos) &&
+                    (i < outputStrings.size() + _SFWINSINDEX);
+                  i++)
+                {
+                  if(wins.at(i)->getWindow() != nullptr)
+                    {
+                      werase(wins.at(i)->getWindow());
+                      wnoutrefresh(wins.at(i)->getWindow());
+                      wins.at(i)->deleteWindow();
+                      wins.at(i)->setWindow(nullptr);
+                    }
+                }
+
+              outputStringPos += val;
+
+              // allocate the new set of windows for the scrolled output strings
+              for(i = outputStringPos + _SFWINSINDEX; i < _SFWINSINDEX + outputStringPos + val; i++)
+                {
+                  if((i - _SFWINSINDEX) < outputStrings.size())
+                    {
+                      const int lineMinOffset = 2;
+                      const int colMinOffset = 3;
+                      const int lineMaxOffset = 4;
+                      const int colMaxOffset = colMinOffset + 3;
+                      const int fileCountOffset = 4;
+                      int numLines = 1;
+                      int numCols = maxCols - colMinOffset - colMaxOffset - 1;
+                      int startY = (i  - _SFWINSINDEX - outputStringPos) + wins.at(_SAVEDFILESWIN)->getStartY() +
+                        lineMinOffset + 2;
+                      int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset + fileCountOffset;
+
+                      wins.at(i)->defineWindow(newwin(numLines,
+                                                      numCols,
+                                                      startY,
+                                                      startX),
+                                               "SAVEDFILE",
+                                               numLines,
+                                               numCols,
+                                               startY,
+                                               startX);
+                    }
+                }
+            }
+        }
+
       // enter iff the mouse click is within a file clicking range of
       // the window
-      if((mouseLine >= (startY + minLineOffset &&
-                        mouseLine <= startY + maxLines - minColOffset -
-                        maxColOffset)) &&
+      if(((mouseLine >= startY + minLineOffset) &&
+                        (mouseLine <= startY + maxLines - maxLineOffset - 1)) &&
          ((mouseCol >= startX + minColOffset) &&
           (mouseCol <= startX + maxCols - maxColOffset)))
         {
           int offSet = 3;
           int j = 0;
           int i = 0;
-          for(i = _SFWINSINDEX, j = 0 ; i < _SFWINSINDEX + _SAVEDFILESWINSTARTY +
-                wins.at(_SAVEDFILESWIN)->getNumLines() - offSet; i++, j++)
+
+            for(i = _SFWINSINDEX + outputStringPos, j = outputStringPos;
+                i < _SFWINSINDEX + _SAVEDFILESWINSTARTY +
+                  wins.at(_SAVEDFILESWIN)->getNumLines() - offSet + outputStringPos; i++, j++)
             {
               // make sure not to test values outside of the maximum printed lines
               if(j >= outputStrings.size())
@@ -1521,19 +1586,26 @@ void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
           int offSet = 3;
           int j = 0;
           int i = 0;
-          for(i = _SFWINSINDEX, j = 0 ; i < _SFWINSINDEX + _SAVEDFILESWINSTARTY +
-                wins.at(_SAVEDFILESWIN)->getNumLines() - offSet; i++, j++)
+          int val = maxLines - minLineOffset - maxLineOffset;
+
+          // check if there is another list to 'scroll' to
+          if(outputStringPos < outputStrings.size())
             {
-              // make sure not to test values outside of the maximum printed lines
-              if(j >= outputStrings.size())
+              for(i = _SFWINSINDEX + outputStringPos, j = outputStringPos;
+                  i < _SFWINSINDEX + startY + maxLines + outputStringPos - offSet; i++, j++)
                 {
-                  break;
-                }
+                  // make sure not to test values outside of the maximum printed lines
+                  if(j >= outputStrings.size())
+                    {
+                      break;
+                    }
+
                   wattron(wins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
                   mvwaddstr(wins.at(i)->getWindow(),
                             0,
                             0,
                             outputStrings.at(j).c_str());
+                }
             }
         }
     }
