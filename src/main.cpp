@@ -91,7 +91,7 @@ int main()
   int mouseLine = -1;
   int mouseCol = -1;
   int arrowClickVal = 0;
-  int lastHighlighted = -1;
+  int highlight = -1;
   std::vector<std::string> promptStrings;
   std::vector<std::string> savedFileStrings;
   std::vector<std::string> currThemes;
@@ -150,7 +150,7 @@ int main()
     printSavedFilesStrings(wins,
                           outputStrings,
                           outputStringPos,
-                          lastHighlighted,
+                          highlight,
                           log);
 
 
@@ -228,7 +228,7 @@ int main()
           printSavedFilesStrings(wins,
                                  outputStrings,
                                  outputStringPos,
-                                 lastHighlighted,
+                                 highlight,
                                  log);
 
           // printSavedThemesWin(wins,
@@ -257,17 +257,17 @@ int main()
                           mouseCol,
                           rightArrow,
                           log);
-          lastHighlighted = checkFileClick(wins,
+          highlight = checkFileClick(wins,
                                            outputStrings,
                                            mouseLine,
                                            mouseCol,
                                            outputStringPos,
-                                           lastHighlighted,
+                                           highlight,
                                            log);
           printSavedFilesStrings(wins,
                                  outputStrings,
                                  outputStringPos,
-                                 lastHighlighted,
+                                 highlight,
                                  log);
         }
 
