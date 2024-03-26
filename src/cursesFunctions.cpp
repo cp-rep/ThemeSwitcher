@@ -1128,19 +1128,21 @@ void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
   // ##
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr && !outputStrings.empty())
     {
-      const int offset = 3;
+      const int minLineOffset = 4;
+      const int maxLineOffset = 2;
+      const int totalOffset = minLineOffset + maxLineOffset;
       int upperBound = 0;
       int maxLines = 0;
       int maxCols = 0;
       getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(), maxLines, maxCols);
 
-      if((maxLines - offset) > outputStrings.size())
+      if((maxLines - totalOffset) > outputStrings.size())
         {
           upperBound = outputStrings.size();
         }
       else
         {
-          upperBound = maxLines - offset;
+          upperBound = maxLines - totalOffset;
         }
 
       for(int i = outputStringPos; i < upperBound; i++)
@@ -1153,6 +1155,7 @@ void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
             {
               wattron(wins.at(i + _SFWINSINDEX)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
             }
+
           mvwaddstr(wins.at(i + _SFWINSINDEX)->getWindow(),
                     0,
                     0,
