@@ -1647,7 +1647,7 @@ int checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
                    const int& mouseLine,
                    const int& mouseCol,
                    int& outputStringPos,
-                   int lastHighlighted,
+                   int highlight,
                    std::ofstream& log)
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
@@ -1673,58 +1673,13 @@ int checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
           int i = 0;
           int windowNum = mouseLine - (wins.at(_SAVEDFILESWIN)->getStartY()
             + minLineOffset) + _SFWINSINDEX;
-
           // account for a partially filled window of files
-          if(windowNum - _SFWINSINDEX <= outputStrings.size())
-            {
-              // if(lastHighlighted != -1)
-              //   {
-              //     wattron(wins.at(lastHighlighted)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-              //     mvwaddstr(wins.at(lastHighlighted)->getWindow(),
-              //               0,
-              //               0,
-              //               outputStrings.at((lastHighlighted - _SFWINSINDEX) + outputStringPos).c_str());
-              //   }
-
-              // wattron(wins.at(windowNum)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-              // mvwaddstr(wins.at(windowNum)->getWindow(),
-              //           0,
-              //           0,
-              //           outputStrings.at((windowNum - _SFWINSINDEX) + outputStringPos).c_str());
-
-              // lastHighlighted = windowNum;
-              return windowNum;
-          }
+          return windowNum;
         }
-      else
-        {
-          int offSet = 3;
-          int j = 0;
-          int i = 0;
-          int val = maxLines - minLineOffset - maxLineOffset;
-
-          // check not out of range of the input list before printing
-          // if(outputStringPos < outputStrings.size())
-          //   {
-          //     for(i = _SFWINSINDEX + outputStringPos, j = outputStringPos;
-          //         i < _SFWINSINDEX + startY + maxLines + outputStringPos - offSet; i++, j++)
-          //       {
-          //         // stop printing when end of list is reached
-          //         if(j >= outputStrings.size())
-          //           {
-          //             break;
-          //           }
-
-          //         wattron(wins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-          //         mvwaddstr(wins.at(i)->getWindow(),
-          //                   0,
-          //                   0,
-          //                   outputStrings.at(j).c_str());
-          //       }
-          //   }
-        }
-
-      return lastHighlighted;
+      }
+  else
+    {
+      return highlight;
     }
   return -1;
 } // end of "checkFileClick"

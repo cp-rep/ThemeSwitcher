@@ -113,7 +113,7 @@ int checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
                     const int& mouseLine,
                     const int& mouseCol,
                     int& outputStringPos,
-                    int lastHighlighted,
+                    int highlight,
                     std::ofstream& log);
 void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
 void clearWins(const std::unordered_map<int, CursesWindow*>& wins);
