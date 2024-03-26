@@ -1674,7 +1674,7 @@ int checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
           int j = 0;
           int i = 0;
           int windowNum = mouseLine - (wins.at(_SAVEDFILESWIN)->getStartY()
-            + minLineOffset) + _SFWINSINDEX;
+            + minLineOffset) + _SFWINSINDEX + outputStringPos;
           // account for a partially filled window of files
           return windowNum;
         }
