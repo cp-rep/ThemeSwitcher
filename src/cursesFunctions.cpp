@@ -1676,11 +1676,8 @@ int checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
           // account for a partially filled window of files
           return windowNum;
         }
-      }
-  else
-    {
-      return highlight;
     }
+
   return -1;
 } // end of "checkFileClick"
 
