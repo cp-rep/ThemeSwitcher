@@ -147,11 +147,12 @@ int main()
                         mouseLine,
                         mouseCol,
                         log);
-    printSavedFileStrings(wins,
+    printSavedFilesStrings(wins,
                           outputStrings,
                           outputStringPos,
                           lastHighlighted,
                           log);
+
 
     // printSavedThemesWin(wins,
     //                     savedThemesStrings,
@@ -224,11 +225,11 @@ int main()
                              mouseLine,
                              mouseCol,
                              log);
-          printSavedFileStrings(wins,
-                                outputStrings,
-                                outputStringPos,
-                                lastHighlighted,
-                                log);
+          printSavedFilesStrings(wins,
+                                 outputStrings,
+                                 outputStringPos,
+                                 lastHighlighted,
+                                 log);
 
           // printSavedThemesWin(wins,
           //                     savedThemesStrings,
@@ -263,11 +264,11 @@ int main()
                                            outputStringPos,
                                            lastHighlighted,
                                            log);
-          printSavedFileStrings(wins,
-                                outputStrings,
-                                outputStringPos,
-                                lastHighlighted,
-                                log);
+          printSavedFilesStrings(wins,
+                                 outputStrings,
+                                 outputStringPos,
+                                 lastHighlighted,
+                                 log);
         }
 
       refreshWins(wins);
