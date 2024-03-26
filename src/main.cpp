@@ -92,6 +92,7 @@ int main()
   int mouseCol = -1;
   int arrowClickVal = 0;
   int highlight = -1;
+  int currStartWin = 0;
   std::vector<std::string> promptStrings;
   std::vector<std::string> savedFileStrings;
   std::vector<std::string> currThemes;
@@ -128,8 +129,13 @@ int main()
     // init the text display string vector with THEME SWITCHER for _PROMPTWIN
     definePromptTitle(promptStrings);
     defineWins(wins,
-               savedFileStrings,
+               outputStringPos,
                log);
+    defineSFStringWins(wins,
+                       sfStringWins,
+                       savedFileStrings,
+                       outputStringPos,
+                       log);
     outputStrings = createSFOutputStrings(wins,
                                           savedFileStrings,
                                           currThemes,
@@ -144,16 +150,16 @@ int main()
                    mouseCol,
                    log);
     printSavedFilesWin(wins,
-                        mouseLine,
-                        mouseCol,
-                        log);
+                       mouseLine,
+                       mouseCol,
+                       log);
     printSavedFilesStrings(wins,
-                          outputStrings,
-                          outputStringPos,
-                          highlight,
-                          log);
-
-
+                           sfStringWins,
+                           outputStrings,
+                           outputStringPos,
+                           currStartWin,
+                           highlight,
+                           log);
     // printSavedThemesWin(wins,
     //                     savedThemesStrings,
     //                     mouseLine,
@@ -195,43 +201,44 @@ int main()
       if((currLines != wins.at(_MAINWIN)->getNumLines()) ||
           (currCols != wins.at(_MAINWIN)->getNumCols()))
         {
-          arrowClickVal = 0;
-          clearWins(wins);
+          // arrowClickVal = 0;
+          // clearWins(wins);
 
-          // the window size has changed. update window dimensions
-          wins.at(_MAINWIN)->setNumLines(currLines);
-          wins.at(_MAINWIN)->setNumCols(currCols);
+          // // the window size has changed. update window dimensions
+          // wins.at(_MAINWIN)->setNumLines(currLines);
+          // wins.at(_MAINWIN)->setNumCols(currCols);
 
-          // ##handle resizing in define functions
-          defineWins(wins,
-                     savedFileStrings,
-                     log);
-          outputStrings.clear();
-          outputStrings = createSFOutputStrings(wins,
-                                                savedFileStrings,
-                                                currThemes,
-                                                log);
-          drawBoxes(wins,
-                    log);
+          // // ##handle resizing in define functions
+          // defineWins(wins,
+          //            savedFileStrings,
+          //            outputStringPos,
+          //            log);
+          // outputStrings.clear();
+          // outputStrings = createSFOutputStrings(wins,
+          //                                       savedFileStrings,
+          //                                       currThemes,
+          //                                       log);
+          // drawBoxes(wins,
+          //           log);
 
-          // begin printing windows to buffer
-          printPromptWin(wins,
-                         promptStrings,
-                         currLines,
-                         currCols,
-                         mouseLine,
-                         mouseCol,
-                         log);
-          printSavedFilesWin(wins,
-                             mouseLine,
-                             mouseCol,
-                             log);
-          printSavedFilesStrings(wins,
-                                 outputStrings,
-                                 outputStringPos,
-                                 highlight,
-                                 log);
-
+          // // begin printing windows to buffer
+          // printPromptWin(wins,
+          //                promptStrings,
+          //                currLines,
+          //                currCols,
+          //                mouseLine,
+          //                mouseCol,
+          //                log);
+          // printSavedFilesWin(wins,
+          //                    mouseLine,
+          //                    mouseCol,
+          //                    log);
+          // printSavedFilesStrings(wins,
+          //                        outputStrings,
+          //                        outputStringPos,
+          //                        currStartWin,
+          //                        highlight,
+          //                        log);
           // printSavedThemesWin(wins,
           //                     savedThemesStrings,
           //                     mouseLine,
@@ -242,37 +249,39 @@ int main()
       // check for a mouse click and operate on the line/col values
       if(mouseLine != -1 || mouseCol != -1)
         {
-          checkArrowClick(wins,
-                          _LARROWSAVEDFILESWIN,
-                          outputStrings,
-                          outputStringPos,
-                          mouseLine,
-                          mouseCol,
-                          leftArrow,
-                          log);
-          checkArrowClick(wins,
-                          _RARROWSAVEDFILESWIN,
-                          outputStrings,
-                          outputStringPos,
-                          mouseLine,
-                          mouseCol,
-                          rightArrow,
-                          log);
-          highlight = checkFileClick(wins,
-                                     outputStrings,
-                                     outputStringPos,
-                                     mouseLine,
-                                     mouseCol,
-                                     highlight,
-                                     log);
-          printSavedFilesStrings(wins,
-                                 outputStrings,
-                                 outputStringPos,
-                                 highlight,
-                                 log);
+          // checkArrowClick(wins,
+          //                 _LARROWSAVEDFILESWIN,
+          //                 outputStrings,
+          //                 outputStringPos,
+          //                 mouseLine,
+          //                 mouseCol,
+          //                 leftArrow,
+          //                 log);
+          // checkArrowClick(wins,
+          //                 _RARROWSAVEDFILESWIN,
+          //                 outputStrings,
+          //                 outputStringPos,
+          //                 mouseLine,
+          //                 mouseCol,
+          //                 rightArrow,
+          //                 log);
+          // highlight = checkFileClick(wins,
+          //                            outputStrings,
+          //                            outputStringPos,
+          //                            mouseLine,
+          //                            mouseCol,
+          //                            highlight,
+          //                            log);
+          // printSavedFilesStrings(wins,
+          //                        outputStrings,
+          //                        outputStringPos,
+          //                        currStartWin,
+          //                        highlight,
+          //                        log);
         }
 
       refreshWins(wins);
+      refreshWins(sfStringWins);
       doupdate();
 #endif // _CURSES
 
@@ -286,6 +295,7 @@ int main()
       it != wins.end(); it++)
     {
       it->second->deleteWindow();
+      it->second->setWindow(nullptr);
     }
   wins.clear();
 #endif // _CURSES
