@@ -1070,7 +1070,17 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                 outString.c_str());
 
       // print the arrow windows for _SAVEDFILESWIN
-      int arrowVal = 0;
+      printSFWinArrow(wins,
+                      _LARROWSAVEDFILESWIN,
+                      leftArrow,
+                      _BLACK_TEXT,
+                      log);
+
+      printSFWinArrow(wins,
+                      _RARROWSAVEDFILESWIN,
+                      rightArrow,
+                      _BLACK_TEXT,
+                      log);
 
       // print the file paths and current theme
       printNumberedStrings(wins,
@@ -1116,6 +1126,7 @@ void printSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
                        const int& mouseCol,
                        std::ofstream& log)
 {
+  // ##
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr && !outputStrings.empty())
     {
       const int offset = 3;
@@ -1483,6 +1494,20 @@ void shiftFilesLeft(const std::unordered_map<int, CursesWindow*>& wins,
 } // end of "shiftFilesLeft"
 
 
+void printSFWinArrow(const std::unordered_map<int, CursesWindow*>& wins,
+                     const int win,
+                     std::string outString,
+                     const int colorPair,
+                     std::ofstream& log)
+{
+  wattron(wins.at(win)->getWindow(), COLOR_PAIR(colorPair));
+  mvwaddstr(wins.at(win)->getWindow(),
+            0,
+            0,
+            outString.c_str());
+} // end of "printSFWinArrow"
+
+
 
 /*
   Function:
@@ -1520,17 +1545,15 @@ void shiftFilesLeft(const std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-int checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
-                    const int win,
-                    const std::vector<std::string>& outputStrings,
-                    int& outputStringPos,
-                    const int& mouseLine,
-                    const int& mouseCol,
-                    std::string outString,
-                    std::ofstream& log)
+void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
+                     const int win,
+                     const std::vector<std::string>& outputStrings,
+                     int& outputStringPos,
+                     const int& mouseLine,
+                     const int& mouseCol,
+                     std::string outString,
+                     std::ofstream& log)
 {
-  int returnVal = 0;
-
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
      wins.at(win)->getWindow() != nullptr)
     {
@@ -1539,15 +1562,18 @@ int checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
          (mouseCol >= wins.at(win)->getStartX() &&
           mouseCol <= wins.at(win)->getStartX() + outString.length() - 1))
         {
-          wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-          mvwaddstr(wins.at(win)->getWindow(),
-                    0,
-                    0,
-                    outString.c_str());
+
+          // give the arrow button that was clicked the 'click effect'
+          printSFWinArrow(wins,
+                          win,
+                          outString,
+                          _WHITE_TEXT,
+                          log);
           wnoutrefresh(wins.at(win)->getWindow());
           doupdate();
           usleep(40000);
 
+          // 'shift' list left
           if(win == _LARROWSAVEDFILESWIN)
             {
               shiftFilesLeft(wins,
@@ -1555,6 +1581,7 @@ int checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
                               outputStringPos,
                               log);
             }
+          // 'shift' list right
           else
             {
               shiftFilesRight(wins,
@@ -1562,17 +1589,14 @@ int checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
                               outputStringPos,
                               log);
             }
-        }
-      // print the regular window color
-      wattron(wins.at(win)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-      mvwaddstr(wins.at(win)->getWindow(),
-                0,
-                0,
-                outString.c_str());
-      wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-    }
 
-  return returnVal;
+          printSFWinArrow(wins,
+                          win,
+                          outString,
+                          _BLACK_TEXT,
+                          log);
+        }
+    }
 } // end of "checkArrowClick"
 
 
