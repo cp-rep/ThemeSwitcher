@@ -1119,11 +1119,11 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-void printSavedFileStrings(std::unordered_map<int, CursesWindow*>& wins,
-                           std::vector<std::string> outputStrings,
-                           const int& outputStringPos,
-                           const int& highlight,
-                           std::ofstream& log)
+void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
+                            std::vector<std::string> outputStrings,
+                            const int& outputStringPos,
+                            const int& highlight,
+                            std::ofstream& log)
 {
   // ##
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr && !outputStrings.empty())

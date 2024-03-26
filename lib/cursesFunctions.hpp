@@ -77,11 +77,11 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                         const int& mouseLine,
                         const int& mouseCol,
                         std::ofstream& log);
-void printSavedFileStrings(std::unordered_map<int, CursesWindow*>& wins,
-                           std::vector<std::string> outputStrings,
-                           const int& outputStringPos,
-                           const int& highlight,
-                           std::ofstream& log);
+void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
+                            std::vector<std::string> outputStrings,
+                            const int& outputStringPos,
+                            const int& highlight,
+                            std::ofstream& log);
 void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
                              const std::vector<std::string>& strings,
                              const int& lineMaxOffset,
