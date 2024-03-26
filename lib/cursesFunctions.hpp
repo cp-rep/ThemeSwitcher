@@ -40,7 +40,9 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                          const int& maxCols,
                          std::ofstream& log);
 void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
+                        std::unordered_map<int, CursesWindow*>& sfStringWins,
                         const std::vector<std::string>& savedFileStrings,
+                        const int& outputStringPos,
                         std::ofstream& log);
 void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
                           const int& maxLines,
@@ -49,7 +51,7 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                    const int& maxLines,
                    const int& maxCols);
 void defineWins(std::unordered_map<int, CursesWindow*>& wins,
-                const std::vector<std::string>& savedFileStrings,
+                const int& outputStringPos,
                 std::ofstream& log);
 std::vector<std::string> createSFOutputStrings(std::unordered_map<int, CursesWindow*>& wins,
                                                const std::vector<std::string>& savedFileStrings,
@@ -78,8 +80,10 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                         const int& mouseCol,
                         std::ofstream& log);
 void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
+                            std::unordered_map<int, CursesWindow*>& sfStringWins,
                             std::vector<std::string> outputStrings,
                             const int& outputStringPos,
+                            const int& currStartWin,
                             const int& highlight,
                             std::ofstream& log);
 void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
