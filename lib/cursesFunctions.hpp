@@ -109,11 +109,12 @@ void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
                     const int& mouseCol,
                     std::string outString,
                     std::ofstream& log);
-void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
+int checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
                     const std::vector<std::string>& outputStrings,
                     const int& mouseLine,
                     const int& mouseCol,
                     int& outputStringPos,
+                    int lastHighlighted,
                     std::ofstream& log);
 void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
 void clearWins(const std::unordered_map<int, CursesWindow*>& wins);

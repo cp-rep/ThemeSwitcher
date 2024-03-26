@@ -1635,12 +1635,13 @@ void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
-                    const std::vector<std::string>& outputStrings,
-                    const int& mouseLine,
-                    const int& mouseCol,
-                    int& outputStringPos,
-                    std::ofstream& log)
+int checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
+                   const std::vector<std::string>& outputStrings,
+                   const int& mouseLine,
+                   const int& mouseCol,
+                   int& outputStringPos,
+                   int lastHighlighted,
+                   std::ofstream& log)
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
      !outputStrings.empty())
@@ -1663,38 +1664,26 @@ void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
           int offSet = 3;
           int j = 0;
           int i = 0;
+          int windowNum = mouseLine - (wins.at(_SAVEDFILESWIN)->getStartY()
+            + minLineOffset) + _SFWINSINDEX;
 
-            for(i = _SFWINSINDEX + outputStringPos, j = outputStringPos;
-                i < _SFWINSINDEX + _SAVEDFILESWINSTARTY +
-                  wins.at(_SAVEDFILESWIN)->getNumLines() - offSet + outputStringPos; i++, j++)
+
+          if(lastHighlighted != -1)
             {
-              // make sure not to test values outside of the maximum printed lines
-              if(j >= outputStrings.size())
-                {
-                  break;
-                }
-
-              // check which window was clicked on and highlight it if clicked
-              if(mouseLine == wins.at(i)->getStartY() &&
-                 (mouseCol >= wins.at(i)->getStartX() &&
-                  mouseCol <= wins.at(i)->getNumCols() + wins.at(i)->getStartX()))
-                {
-                  wattron(wins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-                  mvwaddstr(wins.at(i)->getWindow(),
-                            0,
-                            0,
-                            outputStrings.at(j).c_str());
-                }
-              // a window was not clicked so print the default color scheme
-              else
-                {
-                  wattron(wins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-                  mvwaddstr(wins.at(i)->getWindow(),
-                            0,
-                            0,
-                            outputStrings.at(j).c_str());
-                }
+              wattron(wins.at(lastHighlighted)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+              mvwaddstr(wins.at(lastHighlighted)->getWindow(),
+                        0,
+                        0,
+                        outputStrings.at((lastHighlighted - _SFWINSINDEX) + outputStringPos).c_str());
             }
+
+          wattron(wins.at(windowNum)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+          mvwaddstr(wins.at(windowNum)->getWindow(),
+                    0,
+                    0,
+                    outputStrings.at((windowNum - _SFWINSINDEX) + outputStringPos).c_str());
+
+          lastHighlighted = windowNum;
         }
       else
         {
@@ -1723,7 +1712,10 @@ void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
                 }
             }
         }
+
+      return lastHighlighted;
     }
+  return -1;
 } // end of "checkFileClick"
 
 
