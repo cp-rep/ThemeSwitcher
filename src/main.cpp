@@ -91,6 +91,7 @@ int main()
   int mouseLine = -1;
   int mouseCol = -1;
   int arrowClickVal = 0;
+  int lastHighlighted = -1;
   std::vector<std::string> promptStrings;
   std::vector<std::string> savedFileStrings;
   std::vector<std::string> currThemes;
@@ -257,12 +258,14 @@ int main()
                           mouseCol,
                           rightArrow,
                           log);
-          checkFileClick(wins,
-                         outputStrings,
-                         mouseLine,
-                         mouseCol,
-                         outputStringPos,
-                         log);
+
+          lastHighlighted = checkFileClick(wins,
+                                           outputStrings,
+                                           mouseLine,
+                                           mouseCol,
+                                           outputStringPos,
+                                           lastHighlighted,
+                                           log);
         }
 
       refreshWins(wins);
