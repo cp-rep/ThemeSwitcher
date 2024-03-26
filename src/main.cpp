@@ -98,7 +98,7 @@ int main()
   std::vector<std::string> savedThemesStrings;
   std::vector<std::string> outputStrings;
   int outputStringPos = 0;
-  const int numStrings = 25;
+  const int numStrings = 100;
   const int stringLength = 30;
 
   // init the temporary testing string vectors
@@ -173,6 +173,7 @@ int main()
           break;
         }
 
+      highlight = -1;
       mouseLine = -1;
       mouseCol = -1;
 
@@ -258,12 +259,12 @@ int main()
                           rightArrow,
                           log);
           highlight = checkFileClick(wins,
-                                           outputStrings,
-                                           mouseLine,
-                                           mouseCol,
-                                           outputStringPos,
-                                           highlight,
-                                           log);
+                                     outputStrings,
+                                     outputStringPos,
+                                     mouseLine,
+                                     mouseCol,
+                                     highlight,
+                                     log);
           printSavedFilesStrings(wins,
                                  outputStrings,
                                  outputStringPos,
