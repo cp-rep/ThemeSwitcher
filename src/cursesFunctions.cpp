@@ -1125,7 +1125,6 @@ void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
                             const int& highlight,
                             std::ofstream& log)
 {
-  // ##
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr && !outputStrings.empty())
     {
       const int minLineOffset = 4;
@@ -1136,13 +1135,13 @@ void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
       int maxCols = 0;
       getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(), maxLines, maxCols);
 
-      if((maxLines - totalOffset) > outputStrings.size())
+      if((maxLines - totalOffset + outputStringPos) > outputStrings.size())
         {
           upperBound = outputStrings.size();
         }
       else
         {
-          upperBound = maxLines - totalOffset;
+          upperBound = maxLines - totalOffset + outputStringPos;
         }
 
       for(int i = outputStringPos; i < upperBound; i++)
