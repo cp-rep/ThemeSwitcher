@@ -147,12 +147,11 @@ int main()
                         mouseLine,
                         mouseCol,
                         log);
-    printSFStringWins(wins,
-                      outputStrings,
-                      outputStringPos,
-                      0,
-                      0,
-                      log);
+    printSavedFileStrings(wins,
+                          outputStrings,
+                          outputStringPos,
+                          lastHighlighted,
+                          log);
 
     // printSavedThemesWin(wins,
     //                     savedThemesStrings,
@@ -225,12 +224,11 @@ int main()
                              mouseLine,
                              mouseCol,
                              log);
-          printSFStringWins(wins,
-                            outputStrings,
-                            outputStringPos,
-                            0,
-                            0,
-                            log);
+          printSavedFileStrings(wins,
+                                outputStrings,
+                                outputStringPos,
+                                lastHighlighted,
+                                log);
 
           // printSavedThemesWin(wins,
           //                     savedThemesStrings,
@@ -258,7 +256,6 @@ int main()
                           mouseCol,
                           rightArrow,
                           log);
-
           lastHighlighted = checkFileClick(wins,
                                            outputStrings,
                                            mouseLine,
@@ -266,6 +263,11 @@ int main()
                                            outputStringPos,
                                            lastHighlighted,
                                            log);
+          printSavedFileStrings(wins,
+                                outputStrings,
+                                outputStringPos,
+                                lastHighlighted,
+                                log);
         }
 
       refreshWins(wins);
