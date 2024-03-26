@@ -97,7 +97,7 @@ int main()
   std::vector<std::string> savedThemesStrings;
   std::vector<std::string> outputStrings;
   int outputStringPos = 0;
-  const int numStrings = 100;
+  const int numStrings = 25;
   const int stringLength = 30;
 
   // init the temporary testing string vectors
@@ -143,31 +143,16 @@ int main()
                    mouseCol,
                    log);
     printSavedFilesWin(wins,
-                       mouseLine,
-                       mouseCol,
-                       log);
-    checkArrowClick(wins,
-                    _LARROWSAVEDFILESWIN,
-                    outputStrings,
-                    outputStringPos,
-                    mouseLine,
-                    mouseCol,
-                    leftArrow,
-                    log);
-    checkArrowClick(wins,
-                    _RARROWSAVEDFILESWIN,
-                    outputStrings,
-                    outputStringPos,
-                    mouseLine,
-                    mouseCol,
-                    rightArrow,
-                    log);
+                        mouseLine,
+                        mouseCol,
+                        log);
     printSFStringWins(wins,
                       outputStrings,
                       outputStringPos,
                       0,
                       0,
                       log);
+
     // printSavedThemesWin(wins,
     //                     savedThemesStrings,
     //                     mouseLine,
@@ -210,11 +195,12 @@ int main()
         {
           arrowClickVal = 0;
           clearWins(wins);
-//          outputStringPos = 0;
 
           // the window size has changed. update window dimensions
           wins.at(_MAINWIN)->setNumLines(currLines);
           wins.at(_MAINWIN)->setNumCols(currCols);
+
+          // ##handle resizing in define functions
           defineWins(wins,
                      savedFileStrings,
                      log);
@@ -244,6 +230,17 @@ int main()
                             0,
                             0,
                             log);
+
+          // printSavedThemesWin(wins,
+          //                     savedThemesStrings,
+          //                     mouseLine,
+          //                     mouseCol,
+          //                     log);
+        }
+
+      // check for a mouse click and operate on the line/col values
+      if(mouseLine != -1 || mouseCol != -1)
+        {
           checkArrowClick(wins,
                           _LARROWSAVEDFILESWIN,
                           outputStrings,
@@ -260,32 +257,6 @@ int main()
                           mouseCol,
                           rightArrow,
                           log);
-          // printSavedThemesWin(wins,
-          //                     savedThemesStrings,
-          //                     mouseLine,
-          //                     mouseCol,
-          //                     log);
-        }
-
-      // check for a mouse click and operate on the line/col values
-      if(mouseLine != -1 || mouseCol != -1)
-        {
-          arrowClickVal = checkArrowClick(wins,
-                                          _LARROWSAVEDFILESWIN,
-                                          outputStrings,
-                                          outputStringPos,
-                                          mouseLine,
-                                          mouseCol,
-                                          leftArrow,
-                                          log);
-          arrowClickVal = checkArrowClick(wins,
-                                          _RARROWSAVEDFILESWIN,
-                                          outputStrings,
-                                          outputStringPos,
-                                          mouseLine,
-                                          mouseCol,
-                                          rightArrow,
-                                          log);
           checkFileClick(wins,
                          outputStrings,
                          mouseLine,
