@@ -1644,9 +1644,9 @@ void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
 */
 int checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
                    const std::vector<std::string>& outputStrings,
+                   int& outputStringPos,
                    const int& mouseLine,
                    const int& mouseCol,
-                   int& outputStringPos,
                    int highlight,
                    std::ofstream& log)
 {
