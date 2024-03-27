@@ -11,13 +11,15 @@
 // _SAVEDFILESWIN
 const std::string sfTitle = "SAVED FILES:";
 const std::string sfThemeTitle = "CURRENT THEME:";
-const std::string leftArrow = " < ";
-const std::string rightArrow = " > ";
 const std::string sfLeftArrow = "_LARROWSAVEDFILESWIN";
 const std::string sfRightArrow = "_RARROWSAVEDFILESWIN";
 
 // _SAVEDTHEMESWIN
 const std::string stTitle = "SAVED THEMES:";
+
+// arrows
+const std::string leftArrow = " < ";
+const std::string rightArrow = " > ";
 
 void initializeCurses();
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
@@ -101,17 +103,24 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          const int& mouseCol,
                          std::ofstream& log);
 void shiftFilesRight(const std::unordered_map<int, CursesWindow*>& wins,
+                     std::vector<CursesWindow*>& sfStringWins,
                      const std::vector<std::string>& outputStrings,
                      int& outputStringPos,
                      std::ofstream& log);
-void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
-                    const int win,
+void shiftFilesLeft(const std::unordered_map<int, CursesWindow*>& wins,
+                    std::vector<CursesWindow*>& sfStringWins,
                     const std::vector<std::string>& outputStrings,
                     int& outputStringPos,
-                    const int& mouseLine,
-                    const int& mouseCol,
-                    std::string outString,
                     std::ofstream& log);
+void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
+                     std::vector<CursesWindow*>& sfStringWins,
+                     const int win,
+                     const std::vector<std::string>& outputStrings,
+                     int& outputStringPos,
+                     const int& mouseLine,
+                     const int& mouseCol,
+                     std::string outString,
+                     std::ofstream& log);
 int checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
                    const std::vector<std::string>& outputStrings,
                    int& outputStringPos,
@@ -125,5 +134,8 @@ void refreshSFStringWins(const std::vector<CursesWindow*>& sfStringWins,
 void clearWins(const std::unordered_map<int, CursesWindow*>& wins);
 void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins,
                std::ofstream& log);
+void drawSFStringBoxes(const std::unordered_map<int, CursesWindow*>& wins,
+                       const std::vector<CursesWindow*> & sfStringWins,
+                       std::ofstream& log);
 
 #endif // CURSESFUNCTIONS_HPP

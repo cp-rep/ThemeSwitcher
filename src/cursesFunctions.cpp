@@ -1118,21 +1118,24 @@ void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
     {
       int j = outputStringPos;
-      for(int i = 0; i < sfStringWins.size(); i++, j++)
+      for(int i = 0; i < sfStringWins.size() && j < outputStrings.size(); i++, j++)
         {
-          if(highlight == i)
+          if(sfStringWins.at(i)->getWindow() != nullptr)
             {
-              wattron(sfStringWins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-            }
-          else
-            {
-              wattron(sfStringWins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-            }
+              if(highlight == i)
+                {
+                  wattron(sfStringWins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+                }
+              else
+                {
+                  wattron(sfStringWins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+                }
 
-          mvwaddstr(sfStringWins.at(i)->getWindow(),
-                    0,
-                    0,
-                    outputStrings.at(j).c_str());
+              // mvwaddstr(sfStringWins.at(i)->getWindow(),
+              //           0,
+              //           0,
+              //           outputStrings.at(j).c_str());
+            }
         }
     }
 } // end of "printSFStringWins"
@@ -1331,6 +1334,7 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 void shiftFilesRight(const std::unordered_map<int, CursesWindow*>& wins,
+                     std::vector<CursesWindow*>& sfStringWins,
                      const std::vector<std::string>& outputStrings,
                      int& outputStringPos,
                      std::ofstream& log)
@@ -1355,26 +1359,22 @@ void shiftFilesRight(const std::unordered_map<int, CursesWindow*>& wins,
         {
           // delete the current set of windows
           int i = 0;
-          for(i = outputStringPos + 0;
-              (i < 0 + val + outputStringPos) &&
-                (i < outputStrings.size() + 0);
-              i++)
+          for(i = 0; i < sfStringWins.size(); i++)
             {
-              if(wins.at(i)->getWindow() != nullptr)
+              if(sfStringWins.at(i)->getWindow() != nullptr)
                 {
-                  werase(wins.at(i)->getWindow());
-                  wnoutrefresh(wins.at(i)->getWindow());
-                  wins.at(i)->deleteWindow();
-                  wins.at(i)->setWindow(nullptr);
+                  werase(sfStringWins.at(i)->getWindow());
+                  wnoutrefresh(sfStringWins.at(i)->getWindow());
+                  sfStringWins.at(i)->deleteWindow();
+                  sfStringWins.at(i)->setWindow(nullptr);
                 }
             }
 
-          outputStringPos += val;
-
           // allocate the new set of windows for the scrolled output strings
-          for(i = outputStringPos + 0; i < 0 + outputStringPos + val; i++)
+          int j = 0;
+          for(i = 0, j = outputStringPos; i < sfStringWins.size(); i++, j++)
             {
-              if((i - 0) < outputStrings.size())
+              if(j < outputStrings.size())
                 {
                   const int lineMinOffset = 2;
                   const int colMinOffset = 3;
@@ -1383,21 +1383,21 @@ void shiftFilesRight(const std::unordered_map<int, CursesWindow*>& wins,
                   const int fileCountOffset = 4;
                   int numLines = 1;
                   int numCols = maxCols - colMinOffset - colMaxOffset - 1;
-                  int startY = (i  - 0 - outputStringPos) + wins.at(_SAVEDFILESWIN)->getStartY() +
-                    lineMinOffset + 2;
+                  int startY = i + wins.at(_SAVEDFILESWIN)->getStartY() + lineMinOffset + 2;
                   int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset + fileCountOffset;
 
-                  wins.at(i)->defineWindow(newwin(numLines,
-                                                  numCols,
-                                                  startY,
-                                                  startX),
-                                           "SAVEDFILE",
-                                           numLines,
-                                           numCols,
-                                           startY,
-                                           startX);
+                  sfStringWins.at(i)->defineWindow(newwin(numLines,
+                                                          numCols,
+                                                          startY,
+                                                          startX),
+                                                   "SAVEDFILE",
+                                                   numLines,
+                                                   numCols,
+                                                   startY,
+                                                   startX);
                 }
             }
+          outputStringPos += val;
         }
     }
 } // end of "shiftFilesRight"
@@ -1405,6 +1405,7 @@ void shiftFilesRight(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 void shiftFilesLeft(const std::unordered_map<int, CursesWindow*>& wins,
+                    std::vector<CursesWindow*>& sfStringWins,
                     const std::vector<std::string>& outputStrings,
                     int& outputStringPos,
                     std::ofstream& log)
@@ -1529,6 +1530,7 @@ void printSFWinArrow(const std::unordered_map<int, CursesWindow*>& wins,
    NONE
 */
 void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
+                     std::vector<CursesWindow*>& sfStringWins,
                      const int win,
                      const std::vector<std::string>& outputStrings,
                      int& outputStringPos,
@@ -1559,15 +1561,17 @@ void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
           // 'shift' list left
           if(win == _LARROWSAVEDFILESWIN)
             {
-              shiftFilesLeft(wins,
-                              outputStrings,
-                              outputStringPos,
-                              log);
+              // shiftFilesLeft(wins,
+              //                sfStringWins,
+              //                outputStrings,
+              //                outputStringPos,
+              //                log);
             }
           // 'shift' list right
           else
             {
               shiftFilesRight(wins,
+                              sfStringWins,
                               outputStrings,
                               outputStringPos,
                               log);
@@ -1821,5 +1825,23 @@ void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins,
               box(it->second->getWindow(), val, val);
             }
       }
+    }
+} // end of "drawBoxes"
+
+void drawSFStringBoxes(const std::unordered_map<int, CursesWindow*>& wins,
+                       const std::vector<CursesWindow*> & sfStringWins,
+                       std::ofstream& log)
+{
+  char val = '.';
+
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+    {
+      for(int i = 0; i < sfStringWins.size(); i++)
+        {
+          if(sfStringWins.at(i)->getWindow() != nullptr)
+            {
+              box(sfStringWins.at(i)->getWindow(), val, val);
+            }
+        }
     }
 } // end of "drawBoxes"
