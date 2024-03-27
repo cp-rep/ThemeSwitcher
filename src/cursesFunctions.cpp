@@ -459,7 +459,7 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
 
 
 void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
-                        std::unordered_map<int, CursesWindow*>& sfStringWins,
+                        std::vector<CursesWindow*>& sfStringWins,
                         const std::vector<std::string>& savedFileStrings,
                         const int& outputStringPos,
                         std::ofstream& log)
@@ -489,7 +489,7 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
         {
 
           CursesWindow* newWindow = new CursesWindow();
-          sfStringWins.insert(std::make_pair(i, newWindow));
+          sfStringWins.push_back(newWindow);
 
           int numLines = 1;
           int numCols = maxCols - minColOffset - maxColOffset - 1;
@@ -511,11 +511,17 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
   else
     {
       // the _SAVEDFILESWIN is not currently allocated. delete file string windows
-      for(std::unordered_map<int, CursesWindow*>::iterator it = sfStringWins.begin();
-          it != wins.end(); it++)
+      // for(std::unordered_map<int, CursesWindow*>::iterator it = sfStringWins.begin();
+      //     it != wins.end(); it++)
+      //   {
+      //     it->second->deleteWindow();
+      //     it->second->setWindow(nullptr);
+      //   }
+
+      for(int i = 0; i < sfStringWins.size(); i++)
         {
-          it->second->deleteWindow();
-          it->second->setWindow(nullptr);
+          sfStringWins.at(i)->deleteWindow();
+          sfStringWins.at(i)->setWindow(nullptr);
         }
       sfStringWins.clear();
       }
@@ -1102,7 +1108,7 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
    NONE
 */
 void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
-                            std::unordered_map<int, CursesWindow*>& sfStringWins,
+                            std::vector<CursesWindow*>& sfStringWins,
                             std::vector<std::string> outputStrings,
                             const int& outputStringPos,
                             const int& currStartWin,
@@ -1111,38 +1117,22 @@ void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
     {
-      std::unordered_map<int, CursesWindow*>::const_iterator it;
-      std::vector<int> tempWins;
-
-      // store all currently initialized window indexes
-      for(it = sfStringWins.begin(); it != sfStringWins.end(); it++)
-        {
-          if(it->second->getWindow() != nullptr)
-            {
-              tempWins.push_back(it->first);
-            }
-        }
-
-      std::sort(tempWins.begin(), tempWins.end());
-
-      int i = outputStringPos;
-      for(std::vector<int>::iterator vecIt = tempWins.begin();
-          vecIt != tempWins.end(); vecIt++)
+      int j = outputStringPos;
+      for(int i = 0; i < sfStringWins.size(); i++, j++)
         {
           if(highlight == i)
             {
-              wattron(sfStringWins.at(*vecIt)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+              wattron(sfStringWins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
             }
           else
             {
-              wattron(sfStringWins.at(*vecIt)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+              wattron(sfStringWins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
             }
 
-          mvwaddstr(sfStringWins.at(*vecIt)->getWindow(),
+          mvwaddstr(sfStringWins.at(i)->getWindow(),
                     0,
                     0,
-                    outputStrings.at(i).c_str());
-          i++;
+                    outputStrings.at(j).c_str());
         }
     }
 } // end of "printSFStringWins"
@@ -1666,6 +1656,21 @@ int checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
 
   return -1;
 } // end of "checkFileClick"
+
+
+void refreshSFStringWins(const std::vector<CursesWindow*>& sfStringWins,
+                         std::ofstream& log)
+{
+  for(int i = 0; i < sfStringWins.size(); i++)
+    {
+      if(sfStringWins.at(i)->getWindow() != nullptr)
+        {
+          wnoutrefresh(sfStringWins.at(i)->getWindow());
+          doupdate();
+        }
+    }
+}
+
 
 
 
