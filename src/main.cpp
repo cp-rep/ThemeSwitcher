@@ -117,7 +117,7 @@ int main()
   // ## initialize curses and starting windows ##
 #if _CURSES
   std::unordered_map<int, CursesWindow*> wins;
-  std::unordered_map<int, CursesWindow*> sfStringWins;
+  std::vector<CursesWindow*> sfStringWins;
   MEVENT mouse;
   initializeCurses();
   initializeWins(wins,
@@ -281,7 +281,8 @@ int main()
         }
 
       refreshWins(wins);
-      refreshWins(sfStringWins);
+      refreshSFStringWins(sfStringWins,
+                          log);
       doupdate();
 #endif // _CURSES
 
