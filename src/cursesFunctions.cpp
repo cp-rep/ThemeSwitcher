@@ -1089,7 +1089,7 @@ void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
                             std::vector<std::string> outputStrings,
                             const int& outputStringPos,
                             const int& currStartWin,
-                            const int& highlight,
+                            const int& highlightWinNum,
                             std::ofstream& log)
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
@@ -1099,7 +1099,7 @@ void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
         {
           if(sfStringWins.at(i)->getWindow() != nullptr)
             {
-              if(highlight == i)
+              if(highlightWinNum == i)
                 {
                   wattron(sfStringWins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
                 }
@@ -1527,43 +1527,37 @@ void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-int checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
-                   const std::vector<std::string>& outputStrings,
-                   int& outputStringPos,
-                   const int& mouseLine,
-                   const int& mouseCol,
-                   int highlight,
-                   std::ofstream& log)
+void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
+                    const std::vector<std::string>& outputStrings,
+                    int& outputStringPos,
+                    const int& mouseLine,
+                    const int& mouseCol,
+                    int& highlightWinNum,
+                    std::ofstream& log)
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
      !outputStrings.empty())
     {
-      const int minLineOffset = 4;
-      const int maxLineOffset = 2;
-      const int minColOffset = 7;
-      const int maxColOffset = 4;
       int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
       int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
       const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
       const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
 
       // enter iff the mouse click is in file clicking range offsets
-      if(((mouseLine >= startY + minLineOffset) &&
-                        (mouseLine <= startY + maxLines - maxLineOffset - 1)) &&
-         ((mouseCol >= startX + minColOffset) &&
-          (mouseCol <= startX + maxCols - maxColOffset)))
+      if(((mouseLine >= startY + _SFSWINMINLINEOFFSET) &&
+                        (mouseLine < startY + maxLines - _SFSWINMAXLINEOFFSET)) &&
+         ((mouseCol >= startX + _SFSWINMINCOLOFFSET) &&
+          (mouseCol < startX + maxCols - _SFSWINMAXCOLOFFSET)))
         {
-          int offSet = 3;
-          int j = 0;
-          int i = 0;
-          int windowNum = mouseLine - (wins.at(_SAVEDFILESWIN)->getStartY()
-                                       + minLineOffset);
-
-          return windowNum;
+          highlightWinNum = mouseLine - (wins.at(_SAVEDFILESWIN)->getStartY()
+                                       + _SFSWINMINLINEOFFSET);
+        }
+      else
+        {
+          highlightWinNum = -1;
         }
     }
 
-  return -1;
 } // end of "checkFileClick"
 
 
