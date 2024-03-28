@@ -482,7 +482,7 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
       const int minLineOffset = 4;
       const int maxLineOffset = 2;
       const int minColOffset = 7;
-      const int maxColOffset = 4;
+      const int maxColOffset = 3;
       int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
       int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
       const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
@@ -499,15 +499,10 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
           CursesWindow* newWindow = new CursesWindow();
           sfStringWins.push_back(newWindow);
 
-          const int lineMinOffset = 2;
-          const int colMinOffset = 3;
-          const int lineMaxOffset = 4;
-          const int colMaxOffset = colMinOffset + 3;
-          const int fileCountOffset = 4;
           int numLines = 1;
-          int numCols = maxCols - colMinOffset - colMaxOffset - 1;
-          int startY = i + wins.at(_SAVEDFILESWIN)->getStartY() + lineMinOffset + 2;
-          int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset + fileCountOffset;
+          int numCols = maxCols - minColOffset - maxColOffset;
+          int startY = i + wins.at(_SAVEDFILESWIN)->getStartY() + minLineOffset;
+          int startX = wins.at(_SAVEDFILESWIN)->getStartX() + minColOffset;
 
           sfStringWins.at(i)->defineWindow(newwin(numLines,
                                                   numCols,
@@ -1340,17 +1335,17 @@ void shiftFilesRight(const std::unordered_map<int, CursesWindow*>& wins,
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
      !outputStrings.empty())
     {
-      const int minLineOffset = 4;
-      const int maxLineOffset = 2;
-      const int minColOffset = 7;
-      const int maxColOffset = 4;
+      const int lineMinOffset = 4;
+      const int lineMaxOffset = 2;
+      const int colMinOffset = 7;
+      const int colMaxOffset = 3;
       int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
       int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
       const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
       const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
 
       // get number of printable file windows
-      int val = maxLines - minLineOffset - maxLineOffset;
+      int val = maxLines - lineMinOffset - lineMaxOffset;
 
       // check if there is another list to 'scroll' to
       if(outputStringPos + val < outputStrings.size())
@@ -1375,15 +1370,10 @@ void shiftFilesRight(const std::unordered_map<int, CursesWindow*>& wins,
             {
               if(j < outputStrings.size())
                 {
-                  const int lineMinOffset = 2;
-                  const int colMinOffset = 3;
-                  const int lineMaxOffset = 4;
-                  const int colMaxOffset = colMinOffset + 3;
-                  const int fileCountOffset = 4;
                   int numLines = 1;
-                  int numCols = maxCols - colMinOffset - colMaxOffset - 1;
-                  int startY = i + wins.at(_SAVEDFILESWIN)->getStartY() + lineMinOffset + 2;
-                  int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset + fileCountOffset;
+                  int numCols = maxCols - colMinOffset - colMaxOffset;
+                  int startY = i + wins.at(_SAVEDFILESWIN)->getStartY() + lineMinOffset;
+                  int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset;
 
                   sfStringWins.at(i)->defineWindow(newwin(numLines,
                                                           numCols,
@@ -1412,69 +1402,62 @@ void shiftFilesLeft(const std::unordered_map<int, CursesWindow*>& wins,
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
      !outputStrings.empty())
     {
-      const int minLineOffset = 4;
-      const int maxLineOffset = 2;
-      const int minColOffset = 7;
-      const int maxColOffset = 4;
+      const int lineMinOffset = 4;
+      const int lineMaxOffset = 2;
+      const int colMinOffset = 7;
+      const int colMaxOffset = 3;
       int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
       int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
       const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
       const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
 
       // get number of printable file windows
-      int val = maxLines - minLineOffset - maxLineOffset;
+      int val = maxLines - lineMinOffset - lineMaxOffset;
 
       // check if there is another list to 'scroll' to
-      if(outputStringPos - val >= 0)
+      if(outputStringPos + val < outputStrings.size())
         {
           // delete the current set of windows
           int i = 0;
-          for(i = outputStringPos + 0;
-              (i < 0 + val + outputStringPos) &&
-                (i < outputStrings.size() + 0);
-              i++)
+          for(i = 0; i < sfStringWins.size(); i++)
             {
-              if(wins.at(i)->getWindow() != nullptr)
+              if(sfStringWins.at(i)->getWindow() != nullptr)
                 {
-                  werase(wins.at(i)->getWindow());
-                  wnoutrefresh(wins.at(i)->getWindow());
-                  wins.at(i)->deleteWindow();
-                  wins.at(i)->setWindow(nullptr);
+                  werase(sfStringWins.at(i)->getWindow());
+                  wnoutrefresh(sfStringWins.at(i)->getWindow());
+                  sfStringWins.at(i)->deleteWindow();
+                  sfStringWins.at(i)->setWindow(nullptr);
                 }
             }
-
-          outputStringPos -= val;
 
           // allocate the new set of windows for the scrolled output strings
-          for(i = outputStringPos + 0; i < 0 + outputStringPos + val; i++)
+          int j = 0;
+          for(i = 0, j = outputStringPos; i < val &&
+                i < (outputStrings.size() - (outputStringPos + val)); i++, j++)
             {
-              if((i - 0) >= 0)
+              if(j < outputStrings.size())
                 {
-                  const int lineMinOffset = 2;
-                  const int colMinOffset = 3;
-                  const int lineMaxOffset = 4;
-                  const int colMaxOffset = colMinOffset + 3;
-                  const int fileCountOffset = 4;
                   int numLines = 1;
-                  int numCols = maxCols - colMinOffset - colMaxOffset - 1;
-                  int startY = (i  - 0 - outputStringPos) + wins.at(_SAVEDFILESWIN)->getStartY() +
-                    lineMinOffset + 2;
-                  int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset + fileCountOffset;
+                  int numCols = maxCols - colMinOffset - colMaxOffset;
+                  int startY = i + wins.at(_SAVEDFILESWIN)->getStartY() + lineMinOffset;
+                  int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset;
 
-                  wins.at(i)->defineWindow(newwin(numLines,
-                                                  numCols,
-                                                  startY,
-                                                  startX),
-                                           "SAVEDFILE",
-                                           numLines,
-                                           numCols,
-                                           startY,
-                                           startX);
+                  sfStringWins.at(i)->defineWindow(newwin(numLines,
+                                                          numCols,
+                                                          startY,
+                                                          startX),
+                                                   "SAVEDFILE",
+                                                   numLines,
+                                                   numCols,
+                                                   startY,
+                                                   startX);
                 }
             }
+          outputStringPos += val;
         }
     }
-} // end of "shiftFilesLeft"
+}// end of "shiftFilesLeft"
+
 
 
 void printSFWinArrow(const std::unordered_map<int, CursesWindow*>& wins,
