@@ -58,10 +58,12 @@ const unsigned int _SAVEDFILESWINMINLINES = 10;
 const unsigned int _SAVEDFILESWINMAXLINES = 24;
 const unsigned int _SAVEDFILESWINMINCOLS = 60;
 const unsigned int _SAVEDFILESWINMAXCOLS = 140;
-const unsigned int _SFWINMINLINEOFFSET = 4;
-const unsigned int _SFWINMAXLINEOFFSET = 2;
-const unsigned int _SFWINMINCOLOFFSET = 7;
-const unsigned int _SFWINMAXCOLOFFSET = 3;
+
+// SAVED FILE STRING WIN OFFSETS
+const unsigned int _SFSWINMINLINEOFFSET = 4;
+const unsigned int _SFSWINMAXLINEOFFSET = 2;
+const unsigned int _SFSWINMINCOLOFFSET = 7;
+const unsigned int _SFSWINMAXCOLOFFSET = 3;
 
 // _SAVEDFILESWIN DIMENSION  S
 const unsigned int _SAVEDTHEMESWINSTARTY = _PROMPTWINSTARTY + _PROMPTWINMAXLINES + 1;
