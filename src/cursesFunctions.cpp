@@ -1351,58 +1351,32 @@ void shiftFilesLeft(const std::unordered_map<int, CursesWindow*>& wins,
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
      !outputStrings.empty())
     {
-      const int lineMinOffset = 4;
-      const int lineMaxOffset = 2;
-      const int colMinOffset = 7;
-      const int colMaxOffset = 3;
       int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
       int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
       const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
       const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
 
       // get number of printable file windows
-      int val = maxLines - lineMinOffset - lineMaxOffset;
+      int val = maxLines - _SFSWINMINLINEOFFSET - _SFSWINMAXLINEOFFSET;
 
       // check if there is another list to 'scroll' to
-      if(outputStringPos + val < outputStrings.size())
+      if(outputStringPos - val >= 0)
         {
-          // delete the current set of windows
-          int i = 0;
-          for(i = 0; i < sfStringWins.size(); i++)
-            {
-              if(sfStringWins.at(i)->getWindow() != nullptr)
-                {
-                  werase(sfStringWins.at(i)->getWindow());
-                  wnoutrefresh(sfStringWins.at(i)->getWindow());
-                  sfStringWins.at(i)->deleteWindow();
-                  sfStringWins.at(i)->setWindow(nullptr);
-                }
-            }
-
-          // allocate the new set of windows for the scrolled output strings
-          int j = 0;
-          for(i = 0, j = outputStringPos; i < val &&
-                i < (outputStrings.size() - (outputStringPos + val)); i++, j++)
-            {
-              if(j < outputStrings.size())
-                {
-                  int numLines = 1;
-                  int numCols = maxCols - colMinOffset - colMaxOffset;
-                  int startY = i + wins.at(_SAVEDFILESWIN)->getStartY() + lineMinOffset;
-                  int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset;
-
-                  sfStringWins.at(i)->defineWindow(newwin(numLines,
-                                                          numCols,
-                                                          startY,
-                                                          startX),
-                                                   "SAVEDFILE",
-                                                   numLines,
-                                                   numCols,
-                                                   startY,
-                                                   startX);
-                }
-            }
-          outputStringPos += val;
+          outputStringPos -= val;
+          defineSFStringWins(wins,
+                             sfStringWins,
+                             outputStrings,
+                             outputStringPos,
+                             log);
+        }
+      else
+        {
+          outputStringPos = 0;
+          defineSFStringWins(wins,
+                             sfStringWins,
+                             outputStrings,
+                             outputStringPos,
+                             log);
         }
     }
 }// end of "shiftFilesLeft"
@@ -1492,11 +1466,11 @@ void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
           // 'shift' list left
           if(win == _LARROWSAVEDFILESWIN)
             {
-              // shiftFilesLeft(wins,
-              //                sfStringWins,
-              //                outputStrings,
-              //                outputStringPos,
-              //                log);
+              shiftFilesLeft(wins,
+                             sfStringWins,
+                             outputStrings,
+                             outputStringPos,
+                             log);
             }
           // 'shift' list right
           else
