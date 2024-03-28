@@ -98,8 +98,8 @@ int main()
   std::vector<std::string> currThemes;
   std::vector<std::string> savedThemesStrings;
   std::vector<std::string> outputStrings;
-  int outputStringPos = 1;
-  const int numStrings = 15;
+  int outputStringPos = 0;
+  const int numStrings = 100;
   const int stringLength = 30;
 
   // init the temporary testing string vectors
@@ -153,21 +153,21 @@ int main()
                        mouseLine,
                        mouseCol,
                        log);
-    // printSavedFilesStrings(wins,
-    //                        sfStringWins,
-    //                        outputStrings,
-    //                        outputStringPos,
-    //                        currStartWin,
-    //                        highlight,
-    //                        log);
+    printSavedFilesStrings(wins,
+                           sfStringWins,
+                           outputStrings,
+                           outputStringPos,
+                           currStartWin,
+                           highlight,
+                           log);
     // printSavedThemesWin(wins,
     //                     savedThemesStrings,
     //                     mouseLine,
     //                     mouseCol,
     //                     log);
-    drawSFStringBoxes(wins,
-                      sfStringWins,
-                      log);
+    // drawSFStringBoxes(wins,
+    //                   sfStringWins,
+    //                   log);
   }
 #endif // _CURSES
 
@@ -204,44 +204,50 @@ int main()
       if((currLines != wins.at(_MAINWIN)->getNumLines()) ||
           (currCols != wins.at(_MAINWIN)->getNumCols()))
         {
-          // arrowClickVal = 0;
-          // clearWins(wins);
+          arrowClickVal = 0;
+          clearWins(wins);
+          clearSFStringWins(sfStringWins);
 
-          // // the window size has changed. update window dimensions
-          // wins.at(_MAINWIN)->setNumLines(currLines);
-          // wins.at(_MAINWIN)->setNumCols(currCols);
+          // the window size has changed. update window dimensions
+          wins.at(_MAINWIN)->setNumLines(currLines);
+          wins.at(_MAINWIN)->setNumCols(currCols);
 
-          // // ##handle resizing in define functions
-          // defineWins(wins,
-          //            savedFileStrings,
-          //            outputStringPos,
-          //            log);
-          // outputStrings.clear();
-          // outputStrings = createSFOutputStrings(wins,
-          //                                       savedFileStrings,
-          //                                       currThemes,
-          //                                       log);
-          // drawBoxes(wins,
-          //           log);
+          // ##handle resizing in define functions
+          defineWins(wins,
+                     outputStringPos,
+                     log);
+          outputStrings.clear();
+          outputStrings = createSFOutputStrings(wins,
+                                                savedFileStrings,
+                                                currThemes,
+                                                log);
+          defineSFStringWins(wins,
+                             sfStringWins,
+                             savedFileStrings,
+                             outputStringPos,
+                             log);
+          drawBoxes(wins,
+                    log);
 
-          // // begin printing windows to buffer
-          // printPromptWin(wins,
-          //                promptStrings,
-          //                currLines,
-          //                currCols,
-          //                mouseLine,
-          //                mouseCol,
-          //                log);
-          // printSavedFilesWin(wins,
-          //                    mouseLine,
-          //                    mouseCol,
-          //                    log);
-          // printSavedFilesStrings(wins,
-          //                        outputStrings,
-          //                        outputStringPos,
-          //                        currStartWin,
-          //                        highlight,
-          //                        log);
+          // begin printing windows to buffer
+          printPromptWin(wins,
+                         promptStrings,
+                         currLines,
+                         currCols,
+                         mouseLine,
+                         mouseCol,
+                         log);
+          printSavedFilesWin(wins,
+                             mouseLine,
+                             mouseCol,
+                             log);
+          printSavedFilesStrings(wins,
+                                 sfStringWins,
+                                 outputStrings,
+                                 outputStringPos,
+                                 currStartWin,
+                                 highlight,
+                                 log);
           // printSavedThemesWin(wins,
           //                     savedThemesStrings,
           //                     mouseLine,
@@ -252,6 +258,7 @@ int main()
       // check for a mouse click and operate on the line/col values
       if(mouseLine != -1 || mouseCol != -1)
         {
+          clearSFStringWins(sfStringWins);
           checkArrowClick(wins,
                           sfStringWins,
                           _LARROWSAVEDFILESWIN,
@@ -277,16 +284,16 @@ int main()
           //                            mouseCol,
           //                            highlight,
           //                            log);
-          // printSavedFilesStrings(wins,
-          //                        sfStringWins,
-          //                        outputStrings,
-          //                        outputStringPos,
-          //                        currStartWin,
-          //                        highlight,
-          //                        log);
-          drawSFStringBoxes(wins,
-                            sfStringWins,
-                            log);
+          printSavedFilesStrings(wins,
+                                 sfStringWins,
+                                 outputStrings,
+                                 outputStringPos,
+                                 currStartWin,
+                                 highlight,
+                                 log);
+          // drawSFStringBoxes(wins,
+          //                   sfStringWins,
+          //                   log);
         }
 
       refreshWins(wins);
