@@ -120,7 +120,7 @@ void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
                      std::ofstream& log);
 void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
                     const std::vector<std::string>& outputStrings,
-                    int& outputStringPos,
+                    const int& outputStringPos,
                     const int& mouseLine,
                     const int& mouseCol,
                     int& highlightWinNum,
