@@ -763,12 +763,12 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins,
                       numLines,
                       numCols,
                       log);
-  // defineSavedThemesWin(wins,
-  //                      numLines,
-  //                      numCols);
-  // defineHelpWin(wins,
-  //               numLines,
-  //               numCols);
+  defineSavedThemesWin(wins,
+                       numLines,
+                       numCols);
+  defineHelpWin(wins,
+                numLines,
+                numCols);
 } // end of "defineWins"
 
 
