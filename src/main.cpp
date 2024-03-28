@@ -136,7 +136,7 @@ int main()
                        savedFileStrings,
                        outputStringPos,
                        log);
-    outputStrings = createSFOutputStrings(wins,
+    outputStrings = createSFOutputStrings(sfStringWins,
                                           savedFileStrings,
                                           currThemes,
                                           log);
@@ -216,16 +216,16 @@ int main()
           defineWins(wins,
                      outputStringPos,
                      log);
-          outputStrings.clear();
-          outputStrings = createSFOutputStrings(wins,
-                                                savedFileStrings,
-                                                currThemes,
-                                                log);
           defineSFStringWins(wins,
                              sfStringWins,
                              savedFileStrings,
                              outputStringPos,
                              log);
+          outputStrings.clear();
+          outputStrings = createSFOutputStrings(sfStringWins,
+                                                savedFileStrings,
+                                                currThemes,
+                                                log);
           drawBoxes(wins,
                     log);
 
