@@ -487,7 +487,6 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
 
       for(int i = 0; i < upperBound; i++)
         {
-
           CursesWindow* newWindow = new CursesWindow();
           sfStringWins.push_back(newWindow);
 
@@ -510,21 +509,15 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
     }
   else
     {
-      // the _SAVEDFILESWIN is not currently allocated. delete file string windows
-      // for(std::unordered_map<int, CursesWindow*>::iterator it = sfStringWins.begin();
-      //     it != wins.end(); it++)
-      //   {
-      //     it->second->deleteWindow();
-      //     it->second->setWindow(nullptr);
-      //   }
-
       for(int i = 0; i < sfStringWins.size(); i++)
         {
+          werase(sfStringWins.at(i)->getWindow());
+          wnoutrefresh(sfStringWins.at(i)->getWindow());
           sfStringWins.at(i)->deleteWindow();
           sfStringWins.at(i)->setWindow(nullptr);
         }
       sfStringWins.clear();
-      }
+    }
 } // end of "defineSFStringWins"
 
 
@@ -1372,7 +1365,8 @@ void shiftFilesRight(const std::unordered_map<int, CursesWindow*>& wins,
 
           // allocate the new set of windows for the scrolled output strings
           int j = 0;
-          for(i = 0, j = outputStringPos; i < sfStringWins.size(); i++, j++)
+          for(i = 0, j = outputStringPos; i < val &&
+                i < (outputStrings.size() - (outputStringPos + val)); i++, j++)
             {
               if(j < outputStrings.size())
                 {
