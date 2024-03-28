@@ -91,7 +91,7 @@ int main()
   int mouseLine = -1;
   int mouseCol = -1;
   int arrowClickVal = 0;
-  int highlight = -1;
+  int highlightWinNum = -1;
   int currStartWin = 0;
   std::vector<std::string> promptStrings;
   std::vector<std::string> savedFileStrings;
@@ -159,7 +159,7 @@ int main()
                            outputStrings,
                            outputStringPos,
                            currStartWin,
-                           highlight,
+                           highlightWinNum,
                            log);
     // printSavedThemesWin(wins,
     //                     savedThemesStrings,
@@ -184,7 +184,7 @@ int main()
           break;
         }
 
-      highlight = -1;
+      highlightWinNum = -1;
       mouseLine = -1;
       mouseCol = -1;
 
@@ -249,7 +249,7 @@ int main()
                                  outputStrings,
                                  outputStringPos,
                                  currStartWin,
-                                 highlight,
+                                 highlightWinNum,
                                  log);
           // printSavedThemesWin(wins,
           //                     savedThemesStrings,
@@ -283,19 +283,19 @@ int main()
                           mouseCol,
                           rightArrow,
                           log);
-          highlight = checkFileClick(wins,
-                                     outputStrings,
-                                     outputStringPos,
-                                     mouseLine,
-                                     mouseCol,
-                                     highlight,
-                                     log);
+          checkFileClick(wins,
+                         outputStrings,
+                         outputStringPos,
+                         mouseLine,
+                         mouseCol,
+                         highlightWinNum,
+                         log);
           printSavedFilesStrings(wins,
                                  sfStringWins,
                                  outputStrings,
                                  outputStringPos,
                                  currStartWin,
-                                 highlight,
+                                 highlightWinNum,
                                  log);
           refreshWins(wins);
           refreshSFStringWins(sfStringWins,
