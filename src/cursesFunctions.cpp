@@ -485,6 +485,17 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
           upperBound = maxLines - totalLineOffset;
         }
 
+      for(int i = 0; i < sfStringWins.size(); i++)
+        {
+          if(sfStringWins.at(i)->getWindow() != nullptr)
+            {
+              werase(sfStringWins.at(i)->getWindow());
+              wnoutrefresh(sfStringWins.at(i)->getWindow());
+              sfStringWins.at(i)->deleteWindow();
+              sfStringWins.at(i)->setWindow(nullptr);
+            }
+        }
+
       for(int i = 0; i < upperBound; i++)
         {
           CursesWindow* newWindow = new CursesWindow();
@@ -1771,6 +1782,17 @@ void clearWins(const std::unordered_map<int, CursesWindow*>& wins)
 } // end of "clearWins"
 
 
+
+void clearSFStringWins(const std::vector<CursesWindow*>& sfStringWins)
+{
+  for(int i = 0; i < sfStringWins.size(); i++)
+    {
+      if(sfStringWins.at(i)->getWindow() != nullptr)
+        {
+          werase(sfStringWins.at(i)->getWindow());
+        }
+    }
+} // end of "clearWins"
 
 /*
   Function:
