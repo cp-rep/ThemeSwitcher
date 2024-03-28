@@ -1124,10 +1124,10 @@ void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
                   wattron(sfStringWins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
                 }
 
-              // mvwaddstr(sfStringWins.at(i)->getWindow(),
-              //           0,
-              //           0,
-              //           outputStrings.at(j).c_str());
+              mvwaddstr(sfStringWins.at(i)->getWindow(),
+                        0,
+                        0,
+                        outputStrings.at(j).c_str());
             }
         }
     }
