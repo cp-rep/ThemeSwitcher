@@ -132,6 +132,7 @@ void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
 void refreshSFStringWins(const std::vector<CursesWindow*>& sfStringWins,
                          std::ofstream& log);
 void clearWins(const std::unordered_map<int, CursesWindow*>& wins);
+void clearSFStringWins(const std::vector<CursesWindow*>& sfStringWins);
 void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins,
                std::ofstream& log);
 void drawSFStringBoxes(const std::unordered_map<int, CursesWindow*>& wins,
