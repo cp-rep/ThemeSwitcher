@@ -458,7 +458,7 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
+void defineSFStringWins(const std::unordered_map<int, CursesWindow*>& wins,
                         std::vector<CursesWindow*>& sfStringWins,
                         const std::vector<std::string>& savedFileStrings,
                         const int& outputStringPos,
@@ -470,10 +470,10 @@ void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
       if(sfStringWins.at(i)->getWindow() != nullptr)
         {
           werase(sfStringWins.at(i)->getWindow());
-          wnoutrefresh(sfStringWins.at(i)->getWindow());
           sfStringWins.at(i)->deleteWindow();
           sfStringWins.at(i)->setWindow(nullptr);
         }
+
     }
   sfStringWins.clear();
 
@@ -1350,42 +1350,11 @@ void shiftFilesRight(const std::unordered_map<int, CursesWindow*>& wins,
       // check if there is another list to 'scroll' to
       if(outputStringPos + val < outputStrings.size())
         {
-          // delete the current set of windows
-          int i = 0;
-          for(i = 0; i < sfStringWins.size(); i++)
-            {
-              if(sfStringWins.at(i)->getWindow() != nullptr)
-                {
-                  werase(sfStringWins.at(i)->getWindow());
-                  wnoutrefresh(sfStringWins.at(i)->getWindow());
-                  sfStringWins.at(i)->deleteWindow();
-                  sfStringWins.at(i)->setWindow(nullptr);
-                }
-            }
-
-          // allocate the new set of windows for the scrolled output strings
-          int j = 0;
-          for(i = 0, j = outputStringPos; i < val &&
-                i < (outputStrings.size() - (outputStringPos + val)); i++, j++)
-            {
-              if(j < outputStrings.size())
-                {
-                  int numLines = 1;
-                  int numCols = maxCols - colMinOffset - colMaxOffset;
-                  int startY = i + wins.at(_SAVEDFILESWIN)->getStartY() + lineMinOffset;
-                  int startX = wins.at(_SAVEDFILESWIN)->getStartX() + colMinOffset;
-
-                  sfStringWins.at(i)->defineWindow(newwin(numLines,
-                                                          numCols,
-                                                          startY,
-                                                          startX),
-                                                   "SAVEDFILE",
-                                                   numLines,
-                                                   numCols,
-                                                   startY,
-                                                   startX);
-                }
-            }
+          defineSFStringWins(wins,
+                             sfStringWins,
+                             outputStrings,
+                             outputStringPos,
+                             log);
           outputStringPos += val;
         }
     }
@@ -1634,7 +1603,7 @@ int checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
           int j = 0;
           int i = 0;
           int windowNum = mouseLine - (wins.at(_SAVEDFILESWIN)->getStartY()
-            + minLineOffset);
+                                       + minLineOffset);
 
           return windowNum;
         }
@@ -1652,7 +1621,6 @@ void refreshSFStringWins(const std::vector<CursesWindow*>& sfStringWins,
       if(sfStringWins.at(i)->getWindow() != nullptr)
         {
           wnoutrefresh(sfStringWins.at(i)->getWindow());
-          doupdate();
         }
     }
 }
