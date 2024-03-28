@@ -99,7 +99,7 @@ int main()
   std::vector<std::string> savedThemesStrings;
   std::vector<std::string> outputStrings;
   int outputStringPos = 0;
-  const int numStrings = 17;
+  const int numStrings = 100;
   const int stringLength = 30;
 
   // init the temporary testing string vectors
