@@ -99,7 +99,7 @@ int main()
   std::vector<std::string> savedThemesStrings;
   std::vector<std::string> outputStrings;
   int outputStringPos = 0;
-  const int numStrings = 100;
+  const int numStrings = 17;
   const int stringLength = 30;
 
   // init the temporary testing string vectors
@@ -136,7 +136,8 @@ int main()
                        savedFileStrings,
                        outputStringPos,
                        log);
-    outputStrings = createSFOutputStrings(sfStringWins,
+    outputStrings = createSFOutputStrings(wins,
+                                          sfStringWins,
                                           savedFileStrings,
                                           currThemes,
                                           log);
@@ -165,9 +166,6 @@ int main()
     //                     mouseLine,
     //                     mouseCol,
     //                     log);
-    // drawSFStringBoxes(wins,
-    //                   sfStringWins,
-    //                   log);
   }
 #endif // _CURSES
 
@@ -200,13 +198,13 @@ int main()
 
       // if screen size changed, reprint a default screen with current
       // data positions
-
       if((currLines != wins.at(_MAINWIN)->getNumLines()) ||
           (currCols != wins.at(_MAINWIN)->getNumCols()))
         {
           arrowClickVal = 0;
           clearWins(wins);
           clearSFStringWins(sfStringWins);
+          outputStrings.clear();
 
           // the window size has changed. update window dimensions
           wins.at(_MAINWIN)->setNumLines(currLines);
@@ -222,7 +220,8 @@ int main()
                              outputStringPos,
                              log);
           outputStrings.clear();
-          outputStrings = createSFOutputStrings(sfStringWins,
+          outputStrings = createSFOutputStrings(wins,
+                                                sfStringWins,
                                                 savedFileStrings,
                                                 currThemes,
                                                 log);
@@ -258,7 +257,6 @@ int main()
       // check for a mouse click and operate on the line/col values
       if(mouseLine != -1 || mouseCol != -1)
         {
-          clearSFStringWins(sfStringWins);
           checkArrowClick(wins,
                           sfStringWins,
                           _LARROWSAVEDFILESWIN,
@@ -277,13 +275,13 @@ int main()
                           mouseCol,
                           rightArrow,
                           log);
-          // highlight = checkFileClick(wins,
-          //                            outputStrings,
-          //                            outputStringPos,
-          //                            mouseLine,
-          //                            mouseCol,
-          //                            highlight,
-          //                            log);
+          highlight = checkFileClick(wins,
+                                     outputStrings,
+                                     outputStringPos,
+                                     mouseLine,
+                                     mouseCol,
+                                     highlight,
+                                     log);
           printSavedFilesStrings(wins,
                                  sfStringWins,
                                  outputStrings,
@@ -291,11 +289,12 @@ int main()
                                  currStartWin,
                                  highlight,
                                  log);
-          // drawSFStringBoxes(wins,
-          //                   sfStringWins,
-          //                   log);
         }
 
+
+      // drawSFStringBoxes(wins,
+      //                   sfStringWins,
+      //                   log);
       refreshWins(wins);
       refreshSFStringWins(sfStringWins,
                           log);
