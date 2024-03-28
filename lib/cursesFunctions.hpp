@@ -83,7 +83,7 @@ void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
                             std::vector<std::string> outputStrings,
                             const int& outputStringPos,
                             const int& currStartWin,
-                            const int& highlight,
+                            const int& highlightWinNum,
                             std::ofstream& log);
 void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
                              const std::vector<std::string>& strings,
@@ -118,13 +118,13 @@ void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
                      const int& mouseCol,
                      std::string outString,
                      std::ofstream& log);
-int checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
-                   const std::vector<std::string>& outputStrings,
-                   int& outputStringPos,
-                   const int& mouseLine,
-                   const int& mouseCol,
-                   int highlight,
-                   std::ofstream& log);
+void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
+                    const std::vector<std::string>& outputStrings,
+                    int& outputStringPos,
+                    const int& mouseLine,
+                    const int& mouseCol,
+                    int& highlightWinNum,
+                    std::ofstream& log);
 void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
 void refreshSFStringWins(const std::vector<CursesWindow*>& sfStringWins,
                          std::ofstream& log);
