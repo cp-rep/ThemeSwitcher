@@ -948,10 +948,6 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
    NONE
 */
 void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
-                          const int& lineMaxOffset,
-                          const int& colMaxOffset,
-                          const int& lineMinOffset,
-                          const int& colMinOffset,
                           std::ofstream& log)
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
@@ -965,14 +961,14 @@ void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
       std::string fileCount;
 
       // print list of the saved files
-      for(int i = 0; i < maxWinLines - lineMaxOffset - lineMinOffset; i++)
+      for(int i = 0; i < maxWinLines - _SFWINMAXLINEOFFSET - _SFWINMINLINEOFFSET; i++)
         {
           fileCount = intToStr(i + 1);
           fileCount.append(". ");
 
           mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
-                    i + lineMinOffset + 2,
-                    colMinOffset,
+                    i + _SFWINMINLINEOFFSET + 2,
+                    _SFWINMINCOLOFFSET,
                     fileCount.c_str());
         }
     }
@@ -1017,10 +1013,6 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                maxWinLines,
                maxWinCols);
 
-      const int lineMinOffset = 2;
-      const int colMinOffset = 3;
-      const int lineMaxOffset = 4;
-      const int colMaxOffset = colMinOffset + 3;
       int printColPosition;
       std::string filesCount;
 
@@ -1033,17 +1025,17 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
       // print win title
       outString = sfTitle;
       mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
-                i + lineMinOffset,
-                colMinOffset,
+                i + _SFWINMINLINEOFFSET,
+                _SFWINMINCOLOFFSET,
                 outString.c_str());
 
       // print current theme title
       wattron(wins.at(_SAVEDFILESWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
       outString = sfThemeTitle;
-      printColPosition = maxWinCols - outString.length() - colMinOffset;
+      printColPosition = maxWinCols - outString.length() - _SFWINMINCOLOFFSET;
       mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
-                i + lineMinOffset,
-                maxWinCols - outString.length() - colMinOffset,
+                i + _SFWINMINLINEOFFSET,
+                maxWinCols - outString.length() - _SFWINMINCOLOFFSET,
                 outString.c_str());
 
       // print the arrow windows for _SAVEDFILESWIN
@@ -1061,10 +1053,6 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
 
       // print the file paths and current theme
       printNumberedStrings(wins,
-                           lineMaxOffset,
-                           colMaxOffset,
-                           lineMinOffset,
-                           colMinOffset,
                            log);
     }
 } // end of "printSavedFilesWin"
