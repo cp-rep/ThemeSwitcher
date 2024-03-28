@@ -41,7 +41,7 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                          const int& maxLines,
                          const int& maxCols,
                          std::ofstream& log);
-void defineSFStringWins(std::unordered_map<int, CursesWindow*>& wins,
+void defineSFStringWins(const std::unordered_map<int, CursesWindow*>& wins,
                         std::vector<CursesWindow*>& sfStringWins,
                         const std::vector<std::string>& savedFileStrings,
                         const int& outputStringPos,
