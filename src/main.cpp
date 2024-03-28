@@ -166,6 +166,10 @@ int main()
     //                     mouseLine,
     //                     mouseCol,
     //                     log);
+    refreshWins(wins);
+    refreshSFStringWins(sfStringWins,
+                        log);
+    doupdate();
   }
 #endif // _CURSES
 
@@ -252,6 +256,10 @@ int main()
           //                     mouseLine,
           //                     mouseCol,
           //                     log);
+          refreshWins(wins);
+          refreshSFStringWins(sfStringWins,
+                              log);
+          doupdate();
         }
 
       // check for a mouse click and operate on the line/col values
@@ -289,16 +297,14 @@ int main()
                                  currStartWin,
                                  highlight,
                                  log);
+          refreshWins(wins);
+          refreshSFStringWins(sfStringWins,
+                              log);
+                doupdate();
         }
-
-
       // drawSFStringBoxes(wins,
       //                   sfStringWins,
       //                   log);
-      refreshWins(wins);
-      refreshSFStringWins(sfStringWins,
-                          log);
-      doupdate();
 #endif // _CURSES
 
       usleep(15000);
