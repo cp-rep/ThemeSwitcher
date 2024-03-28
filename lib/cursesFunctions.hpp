@@ -68,10 +68,6 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
                     const int& mouseCol,
                     std::ofstream& log);
 void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
-                          const int& lineMaxOffset,
-                          const int& colMaxOffset,
-                          const int& lineMinOffset,
-                          const int& colMinOffset,
                           std::ofstream& log);
 void printSFWinArrow(const std::unordered_map<int, CursesWindow*>& wins,
                      const int win,
