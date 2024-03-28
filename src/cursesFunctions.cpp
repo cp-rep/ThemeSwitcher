@@ -479,17 +479,13 @@ void defineSFStringWins(const std::unordered_map<int, CursesWindow*>& wins,
 
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
     {
-      const int minLineOffset = 4;
-      const int maxLineOffset = 2;
-      const int minColOffset = 7;
-      const int maxColOffset = 3;
       int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
       int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
       const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
       const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
 
       // get number of printable file windows
-      int val = maxLines - minLineOffset - maxLineOffset;
+      int val = maxLines - _SFWINMINLINEOFFSET - _SFWINMAXLINEOFFSET;
 
       // allocate the new set of windows for the scrolled output strings
       int j = 0;
@@ -500,9 +496,9 @@ void defineSFStringWins(const std::unordered_map<int, CursesWindow*>& wins,
           sfStringWins.push_back(newWindow);
 
           int numLines = 1;
-          int numCols = maxCols - minColOffset - maxColOffset;
-          int startY = i + wins.at(_SAVEDFILESWIN)->getStartY() + minLineOffset;
-          int startX = wins.at(_SAVEDFILESWIN)->getStartX() + minColOffset;
+          int numCols = maxCols - _SFWINMINCOLOFFSET - _SFWINMAXCOLOFFSET;
+          int startY = i + wins.at(_SAVEDFILESWIN)->getStartY() + _SFWINMINLINEOFFSET;
+          int startX = wins.at(_SAVEDFILESWIN)->getStartX() + _SFWINMINCOLOFFSET;
 
           sfStringWins.at(i)->defineWindow(newwin(numLines,
                                                   numCols,
