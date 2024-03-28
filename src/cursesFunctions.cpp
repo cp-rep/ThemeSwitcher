@@ -1319,17 +1319,13 @@ void shiftFilesRight(const std::unordered_map<int, CursesWindow*>& wins,
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
      !outputStrings.empty())
     {
-      const int lineMinOffset = 4;
-      const int lineMaxOffset = 2;
-      const int colMinOffset = 7;
-      const int colMaxOffset = 3;
       int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
       int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
       const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
       const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
 
       // get number of printable file windows
-      int val = maxLines - lineMinOffset - lineMaxOffset;
+      int val = maxLines - _SFSWINMINLINEOFFSET - _SFSWINMAXLINEOFFSET;
 
       // check if there is another list to 'scroll' to
       if(outputStringPos + val < outputStrings.size())
