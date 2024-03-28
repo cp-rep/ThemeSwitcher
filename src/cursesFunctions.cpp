@@ -782,7 +782,7 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-std::vector<std::string> createSFOutputStrings(std::unordered_map<int, CursesWindow*>& wins,
+std::vector<std::string> createSFOutputStrings(std::vector<CursesWindow*>& sfStringWins,
                                                const std::vector<std::string>& savedFileStrings,
                                                const std::vector<std::string>& currThemes,
                                                std::ofstream& log)
@@ -798,14 +798,14 @@ std::vector<std::string> createSFOutputStrings(std::unordered_map<int, CursesWin
   int maxLines = 0;
   int maxCols = 0;
 
-  if(wins.at(0)->getWindow() != nullptr)
+  if(sfStringWins.at(0)->getWindow() != nullptr)
     {
       int maxPossible = maxCols - 6;
       std::string tempString;
       std::string fileString;
       std::string themeString;
 
-      getmaxyx(wins.at(0)->getWindow(), maxLines, maxCols);
+      getmaxyx(sfStringWins.at(0)->getWindow(), maxLines, maxCols);
       int i = 0;
 
       for(i = 0; i < savedFileStrings.size(); i++)

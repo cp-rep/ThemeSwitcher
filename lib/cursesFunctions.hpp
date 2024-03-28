@@ -55,7 +55,7 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
 void defineWins(std::unordered_map<int, CursesWindow*>& wins,
                 const int& outputStringPos,
                 std::ofstream& log);
-std::vector<std::string> createSFOutputStrings(std::unordered_map<int, CursesWindow*>& wins,
+std::vector<std::string> createSFOutputStrings(std::vector<CursesWindow*>& sfStringWins,
                                                const std::vector<std::string>& savedFileStrings,
                                                const std::vector<std::string>& currThemes,
                                                std::ofstream& log);
