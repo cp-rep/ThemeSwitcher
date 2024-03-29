@@ -82,7 +82,7 @@ void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
                     const int& numSavedFileWins,
                     std::ofstream& log)
 {
-  for(int i = _MAINWIN; i <= _RARROWSAVEDFILESWIN; i++)
+  for(int i = _MAINWIN; i <= _RARROWSAVEDTHEMESWIN; i++)
     {
       CursesWindow* newWindow = new CursesWindow();
       wins.insert(std::make_pair(i, newWindow));
@@ -288,7 +288,8 @@ void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
    NONE
 */
 void defineArrowWin(std::unordered_map<int, CursesWindow*>& wins,
-                    const int win,
+                    const int mainWin,
+                    const int arrowWin,
                     std::string winName,
                     const int startY,
                     const int startX,
@@ -296,33 +297,33 @@ void defineArrowWin(std::unordered_map<int, CursesWindow*>& wins,
                     const int numCols,
                     std::ofstream& log)
 {
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+  if(wins.at(mainWin)->getWindow() != nullptr)
     {
       // delete the current window if exists before creating a new one
-      if(wins.at(win)->getWindow() != nullptr)
+      if(wins.at(arrowWin)->getWindow() != nullptr)
         {
-          wins.at(win)->deleteWindow();
-          wins.at(win)->setWindow(nullptr);
+          wins.at(arrowWin)->deleteWindow();
+          wins.at(arrowWin)->setWindow(nullptr);
         }
 
       // create the new window
-      wins.at(win)->defineWindow(newwin(numLines,
-                                        numCols,
-                                        startY,
-                                        startX),
-                                 winName,
-                                 numLines,
-                                 numCols,
-                                 startY,
-                                 startX);
+      wins.at(arrowWin)->defineWindow(newwin(numLines,
+                                             numCols,
+                                             startY,
+                                             startX),
+                                      winName,
+                                      numLines,
+                                      numCols,
+                                      startY,
+                                      startX);
     }
   else
     {
-      // if for any reason _SAVEDFILESWIN isnt allocated and an arrow is, delete it
-      if(wins.at(win)->getWindow() != nullptr)
+      // if for any reason the mainWin isnt allocated and an arrow is, delete it
+      if(wins.at(arrowWin)->getWindow() != nullptr)
         {
-          wins.at(win)->deleteWindow();
-          wins.at(win)->setWindow(nullptr);
+          wins.at(arrowWin)->deleteWindow();
+          wins.at(arrowWin)->setWindow(nullptr);
         }
     }
 } // end of "defineArrowWin"
@@ -411,6 +412,7 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
 
       // create the new _LARROWSAVEDFILESWIN
       defineArrowWin(wins,
+                     _SAVEDFILESWIN,
                      _LARROWSAVEDFILESWIN,
                      sfLeftArrow,
                      _SAVEDFILESWINSTARTY + 2,
@@ -421,6 +423,7 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
 
       // create the new _RARROWSAVEDFILESWIN
       defineArrowWin(wins,
+                     _SAVEDFILESWIN,
                      _RARROWSAVEDFILESWIN,
                      sfRightArrow,
                      _SAVEDFILESWINSTARTY + 2,
@@ -546,7 +549,8 @@ void defineSFStringWins(const std::unordered_map<int, CursesWindow*>& wins,
 */
 void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
                           const int& maxLines,
-                          const int& maxCols)
+                          const int& maxCols,
+                          std::ofstream& log)
 {
   const int colOffset = 9;
   const int lineOffset = 9;
@@ -592,6 +596,28 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
                                         numCols,
                                         startY,
                                         startX);
+
+
+      defineArrowWin(wins,
+                     _SAVEDTHEMESWIN,
+                     _LARROWSAVEDTHEMESWIN,
+                     stLeftArrow,
+                     wins.at(_SAVEDTHEMESWIN)->getStartY() + 2,
+                     wins.at(_SAVEDTHEMESWIN)->getStartX() + stTitle.length() + 8,
+                     1,
+                     3,
+                     log);
+
+      // create the new _RARROWSAVEDFILESWIN
+      defineArrowWin(wins,
+                     _SAVEDTHEMESWIN,
+                     _RARROWSAVEDTHEMESWIN,
+                     stRightArrow,
+                     wins.at(_SAVEDTHEMESWIN)->getStartY() + 2,
+                     wins.at(_LARROWSAVEDTHEMESWIN)->getStartX() + leftArrow.length() + 1,
+                     1,
+                     3,
+                     log);
     }
   // the window has been resized to a bad dimension. delete it
   else
@@ -656,7 +682,6 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
       numLines = maxLines - _HELPWINLINEOFFSET - startY;
       linesCheck = true;
     }
-
 
   if(maxCols > _HELPWINMINCOLS + _HELPWINCOLOFFSET)
     {
@@ -744,6 +769,9 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins,
                                   numCols,
                                   startY,
                                   startX);
+  defineHelpWin(wins,
+                numLines,
+                numCols);
   definePromptWin(wins,
                   numLines,
                   numCols);
@@ -753,10 +781,8 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins,
                       log);
   defineSavedThemesWin(wins,
                        numLines,
-                       numCols);
-  defineHelpWin(wins,
-                numLines,
-                numCols);
+                       numCols,
+                       log);
 } // end of "defineWins"
 
 
@@ -1036,17 +1062,17 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                 outString.c_str());
 
       // print the arrow windows for _SAVEDFILESWIN
-      printSFWinArrow(wins,
-                      _LARROWSAVEDFILESWIN,
-                      leftArrow,
-                      _BLACK_TEXT,
-                      log);
+      printArrowWin(wins,
+                    _LARROWSAVEDFILESWIN,
+                    leftArrow,
+                    _BLACK_TEXT,
+                    log);
 
-      printSFWinArrow(wins,
-                      _RARROWSAVEDFILESWIN,
-                      rightArrow,
-                      _BLACK_TEXT,
-                      log);
+      printArrowWin(wins,
+                    _RARROWSAVEDFILESWIN,
+                    rightArrow,
+                    _BLACK_TEXT,
+                    log);
 
       // print the file paths and current theme
       printNumberedStrings(wins,
@@ -1284,23 +1310,35 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                 colMinOffset,
                 outString.c_str());
 
-      for(int i = 0; i < savedThemesStrings.size(); i++)
-        {
-          if(i == colMaxOffset - maxStringSize)
-            {
-              break;
-            }
+      // for(int i = 0; i < savedThemesStrings.size(); i++)
+      //   {
+      //     if(i == colMaxOffset - maxStringSize)
+      //       {
+      //         break;
+      //       }
 
-          printSavedThemesStrings(wins,
-                                  savedThemesStrings,
-                                  lineMaxOffset,
-                                  colMaxOffset,
-                                  lineMinOffset,
-                                  colMinOffset,
-                                  mouseLine,
-                                  mouseCol,
-                                  log);
-        }
+      //     printSavedThemesStrings(wins,
+      //                             savedThemesStrings,
+      //                             lineMaxOffset,
+      //                             colMaxOffset,
+      //                             lineMinOffset,
+      //                             colMinOffset,
+      //                             mouseLine,
+      //                             mouseCol,
+      //                             log);
+      //   }
+
+      printArrowWin(wins,
+                    _LARROWSAVEDTHEMESWIN,
+                    leftArrow,
+                    _BLACK_TEXT,
+                    log);
+
+      printArrowWin(wins,
+                    _RARROWSAVEDTHEMESWIN,
+                    rightArrow,
+                    _BLACK_TEXT,
+                    log);
     }
 } // end of "printSavedThemesWin"
 
@@ -1379,7 +1417,7 @@ void shiftFilesLeft(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-void printSFWinArrow(const std::unordered_map<int, CursesWindow*>& wins,
+void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
                      const int win,
                      std::string outString,
                      const int colorPair,
@@ -1390,7 +1428,7 @@ void printSFWinArrow(const std::unordered_map<int, CursesWindow*>& wins,
             0,
             0,
             outString.c_str());
-} // end of "printSFWinArrow"
+} // end of "printArrowWin"
 
 
 
@@ -1448,9 +1486,8 @@ void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
          (mouseCol >= wins.at(win)->getStartX() &&
           mouseCol <= wins.at(win)->getStartX() + outString.length() - 1))
         {
-
           // give the arrow button that was clicked the 'click effect'
-          printSFWinArrow(wins,
+          printArrowWin(wins,
                           win,
                           outString,
                           _WHITE_TEXT,
@@ -1478,11 +1515,11 @@ void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
                               log);
             }
 
-          printSFWinArrow(wins,
-                          win,
-                          outString,
-                          _BLACK_TEXT,
-                          log);
+          printArrowWin(wins,
+                        win,
+                        outString,
+                        _BLACK_TEXT,
+                        log);
         }
     }
 } // end of "checkArrowClick"
@@ -1685,6 +1722,8 @@ void clearSFStringWins(const std::vector<CursesWindow*>& sfStringWins)
     }
 } // end of "clearWins"
 
+
+
 /*
   Function:
    drawBoxes
@@ -1718,7 +1757,9 @@ void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins,
       if((it->second->getWindowName() != "SAVEDFILE") &&
          (it->second->getWindowName() != "_PROMPTWIN")&&
          (it->second->getWindowName() != "_LARROWSAVEDFILESWIN") &&
-         (it->second->getWindowName() != "_RARROWSAVEDFILESWIN"))
+         (it->second->getWindowName() != "_RARROWSAVEDFILESWIN") &&
+         (it->second->getWindowName() != "_LARROWSAVEDTHEMESWIN") &&
+         (it->second->getWindowName() != "_RARROWSAVEDTHEMESWIN"))
         {
           if(val == '[')
             {
@@ -1734,6 +1775,8 @@ void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins,
       }
     }
 } // end of "drawBoxes"
+
+
 
 void drawSFStringBoxes(const std::unordered_map<int, CursesWindow*>& wins,
                        const std::vector<CursesWindow*> & sfStringWins,
