@@ -1084,7 +1084,7 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
 
 /*
   Function:
-   printSavedFilesWin
+   printSavedFilesStrings
 
   Description:
    Prints the saved files data to the buffer for the _SAVEDFILESWIN window.
@@ -1294,11 +1294,6 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                maxWinLines,
                maxWinCols);
 
-      const int lineMinOffset = 2;
-      const int colMinOffset = 3;
-      const int lineMaxOffset = 4;
-      const int colMaxOffset = colMinOffset + 3;
-
       int linePosition = wins.at(_SAVEDTHEMESWIN)->getStartY() + 2;
 
       std::vector<std::string>::const_iterator it;
@@ -1306,27 +1301,27 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
 
       outString = stTitle;
       mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
-                lineMinOffset,
-                colMinOffset,
+                _STWINMINLINEOFFSET,
+                _STWINMINCOLOFFSET,
                 outString.c_str());
 
-      // for(int i = 0; i < savedThemesStrings.size(); i++)
-      //   {
-      //     if(i == colMaxOffset - maxStringSize)
-      //       {
-      //         break;
-      //       }
+      for(int i = 0; i < savedThemesStrings.size(); i++)
+        {
+          if(i == _STWINMAXCOLOFFSET - maxStringSize)
+            {
+              break;
+            }
 
-      //     printSavedThemesStrings(wins,
-      //                             savedThemesStrings,
-      //                             lineMaxOffset,
-      //                             colMaxOffset,
-      //                             lineMinOffset,
-      //                             colMinOffset,
-      //                             mouseLine,
-      //                             mouseCol,
-      //                             log);
-      //   }
+          printSavedThemesStrings(wins,
+                                  savedThemesStrings,
+                                  _STWINMAXLINEOFFSET,
+                                  _STWINMAXCOLOFFSET,
+                                  _STWINMINLINEOFFSET,
+                                  _STWINMINCOLOFFSET,
+                                  mouseLine,
+                                  mouseCol,
+                                  log);
+        }
 
       printArrowWin(wins,
                     _LARROWSAVEDTHEMESWIN,
