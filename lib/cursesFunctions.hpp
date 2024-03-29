@@ -16,6 +16,8 @@ const std::string sfRightArrow = "_RARROWSAVEDFILESWIN";
 
 // _SAVEDTHEMESWIN
 const std::string stTitle = "SAVED THEMES:";
+const std::string stLeftArrow = "_LARROWSAVEDTHEMESWIN";
+const std::string stRightArrow = "_RARROWSAVEDTHEMESWIN";
 
 // arrows
 const std::string leftArrow = " < ";
