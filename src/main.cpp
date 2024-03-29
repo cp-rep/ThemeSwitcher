@@ -161,11 +161,11 @@ int main()
                            currStartWin,
                            highlightWinNum,
                            log);
-    // printSavedThemesWin(wins,
-    //                     savedThemesStrings,
-    //                     mouseLine,
-    //                     mouseCol,
-    //                     log);
+    printSavedThemesWin(wins,
+                        savedThemesStrings,
+                        mouseLine,
+                        mouseCol,
+                        log);
     refreshWins(wins);
     refreshSFStringWins(sfStringWins,
                         log);
@@ -251,11 +251,11 @@ int main()
                                  currStartWin,
                                  highlightWinNum,
                                  log);
-          // printSavedThemesWin(wins,
-          //                     savedThemesStrings,
-          //                     mouseLine,
-          //                     mouseCol,
-          //                     log);
+          printSavedThemesWin(wins,
+                              savedThemesStrings,
+                              mouseLine,
+                              mouseCol,
+                              log);
           refreshWins(wins);
           refreshSFStringWins(sfStringWins,
                               log);
