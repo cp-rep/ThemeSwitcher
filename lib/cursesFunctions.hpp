@@ -91,10 +91,6 @@ void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
                             std::ofstream& log);
 void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
                              const std::vector<std::string>& strings,
-                             const int& lineMaxOffset,
-                             const int& colMaxOffset,
-                             const int& lineMinOffset,
-                             const int& colMinOffset,
                              const int& mouseLine,
                              const int& mouseCol,
                              std::ofstream& log);
