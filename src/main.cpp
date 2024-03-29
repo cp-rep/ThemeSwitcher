@@ -300,7 +300,7 @@ int main()
           refreshWins(wins);
           refreshSFStringWins(sfStringWins,
                               log);
-                doupdate();
+          doupdate();
         }
       // drawSFStringBoxes(wins,
       //                   sfStringWins,
@@ -319,7 +319,19 @@ int main()
       it->second->deleteWindow();
       it->second->setWindow(nullptr);
     }
+
   wins.clear();
+
+  for(int i = 0; i < sfStringWins.size(); i++)
+    {
+      if(sfStringWins.at(i)->getWindow() != nullptr)
+        {
+          sfStringWins.at(i)->deleteWindow();
+          sfStringWins.at(i)->setWindow(nullptr);
+        }
+    }
+
+  sfStringWins.clear();
 #endif // _CURSES
 
   return 0;
