@@ -11,6 +11,7 @@
 #include <unistd.h>
 
 
+
 /*
   Function:
    initializeCurses
@@ -204,15 +205,13 @@ void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
                      const int& maxLines,
                      const int& maxCols)
 {
-  const int colOffset = 9;
-  const int lineOffset = 2;
   int numLines = _PROMPTWINMAXLINES;
-  int numCols = maxCols - _HELPWINMINCOLS - colOffset;;
+  int numCols = maxCols - _HELPWINMINCOLS - _PROMPTWINCOLOFFSET;
   int startY = _PROMPTWINSTARTY;
   int startX = _PROMPTWINSTARTX;
   bool define = true;
 
-  if(maxLines - lineOffset <= _PROMPTWINMAXLINES)
+  if(maxLines - _PROMPTWINLINEOFFSET <= _PROMPTWINMAXLINES)
     {
       define = false;
     }
@@ -1574,7 +1573,7 @@ void refreshSFStringWins(const std::vector<CursesWindow*>& sfStringWins,
           wnoutrefresh(sfStringWins.at(i)->getWindow());
         }
     }
-}
+} // end of "refreshSFStringWins"
 
 
 
