@@ -80,5 +80,9 @@ const unsigned int _SAVEDTHEMESWINMINLINES = 10;
 const unsigned int _SAVEDTHEMESWINMAXLINES = 24;
 const unsigned int _SAVEDTHEMESWINMINCOLS = 60;
 const unsigned int _SAVEDTHEMESWINMAXCOLS = 140;
+const unsigned int _STWINMINLINEOFFSET = 2;
+const unsigned int _STWINMAXLINEOFFSET = 4;
+const unsigned int _STWINMINCOLOFFSET = 3;
+const unsigned int _STWINMAXCOLOFFSET = 3;
 
 #endif // _CURSESWINCONSTS_HPP
