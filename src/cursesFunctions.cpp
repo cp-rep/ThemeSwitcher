@@ -1137,7 +1137,7 @@ void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
             }
         }
     }
-} // end of "printSFStringWins"
+} // end of "printSavedFilesStrings"
 
 
 
@@ -1188,10 +1188,6 @@ void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
 */
 void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
                              const std::vector<std::string>& strings,
-                             const int& lineMaxOffset,
-                             const int& colMaxOffset,
-                             const int& lineMinOffset,
-                             const int& colMinOffset,
                              const int& mouseLine,
                              const int& mouseCol,
                              std::ofstream& log)
@@ -1207,7 +1203,7 @@ void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
       int currLine = 0;
       std::string themeCount;
       std::string outString;
-      int maxPrintableLines = maxWinLines - lineMinOffset - lineMaxOffset - 1;
+      int maxPrintableLines = maxWinLines - _STWINMINLINEOFFSET - _STWINMAXLINEOFFSET - 1;
       int printColOffset = 0;
 
       // loop and print to _SAVEDTHEMESWIN
@@ -1234,7 +1230,7 @@ void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
 
           // make sure it stops printing before the columns print outside the window
           if((themeCount.length() + 3 + printColOffset + outString.length()) >
-             (maxWinCols - colMaxOffset))
+             (maxWinCols - _STWINMAXCOLOFFSET))
             {
               break;
             }
@@ -1314,10 +1310,6 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
 
           printSavedThemesStrings(wins,
                                   savedThemesStrings,
-                                  _STWINMAXLINEOFFSET,
-                                  _STWINMAXCOLOFFSET,
-                                  _STWINMINLINEOFFSET,
-                                  _STWINMINCOLOFFSET,
                                   mouseLine,
                                   mouseCol,
                                   log);
