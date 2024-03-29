@@ -1469,8 +1469,9 @@ void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
    NONE
 */
 void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
-                     std::vector<CursesWindow*>& sfStringWins,
-                     const int win,
+                     std::vector<CursesWindow*>& stringWins,
+                     const int mainWin,
+                     const int arrowWin,
                      const std::vector<std::string>& outputStrings,
                      int& outputStringPos,
                      const int& mouseLine,
@@ -1478,45 +1479,53 @@ void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
                      std::string outString,
                      std::ofstream& log)
 {
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
-     wins.at(win)->getWindow() != nullptr)
+  if(wins.at(mainWin)->getWindow() != nullptr &&
+     wins.at(arrowWin)->getWindow() != nullptr)
     {
       // flash window if mouse click deteceted in range
-      if((mouseLine == wins.at(win)->getStartY()) &&
-         (mouseCol >= wins.at(win)->getStartX() &&
-          mouseCol <= wins.at(win)->getStartX() + outString.length() - 1))
+      if((mouseLine == wins.at(arrowWin)->getStartY()) &&
+         (mouseCol >= wins.at(arrowWin)->getStartX() &&
+          mouseCol <= wins.at(arrowWin)->getStartX() + outString.length() - 1))
         {
           // give the arrow button that was clicked the 'click effect'
           printArrowWin(wins,
-                          win,
-                          outString,
-                          _WHITE_TEXT,
-                          log);
-          wnoutrefresh(wins.at(win)->getWindow());
+                        arrowWin,
+                        outString,
+                        _WHITE_TEXT,
+                        log);
+          wnoutrefresh(wins.at(arrowWin)->getWindow());
           doupdate();
           usleep(40000);
 
-          // 'shift' list left
-          if(win == _LARROWSAVEDFILESWIN)
+          // 'shift'  saved file win list left
+          if(arrowWin == _LARROWSAVEDFILESWIN)
             {
               shiftFilesLeft(wins,
-                             sfStringWins,
+                             stringWins,
                              outputStrings,
                              outputStringPos,
                              log);
             }
-          // 'shift' list right
-          else
+          // 'shift' saved file win list right
+          else if (arrowWin == _RARROWSAVEDFILESWIN)
             {
               shiftFilesRight(wins,
-                              sfStringWins,
+                              stringWins,
                               outputStrings,
                               outputStringPos,
                               log);
             }
+          else if (arrowWin == _LARROWSAVEDTHEMESWIN)
+            {
+
+            }
+          else if(arrowWin == _RARROWSAVEDTHEMESWIN)
+            {
+
+            }
 
           printArrowWin(wins,
-                        win,
+                        arrowWin,
                         outString,
                         _BLACK_TEXT,
                         log);
