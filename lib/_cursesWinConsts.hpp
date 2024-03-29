@@ -48,6 +48,8 @@ const unsigned int _PROMPTWINSTARTY = 2;
 const unsigned int _PROMPTWINSTARTX = 3;
 const unsigned int _PROMPTWINMINLINES = 6;
 const unsigned int _PROMPTWINMAXLINES = 6;
+const unsigned int _PROMPTWINCOLOFFSET = 9;
+const unsigned int _PROMPTWINLINEOFFSET = 2;
 const unsigned int _PROMPTWINMINCOLS = 60;
 const unsigned int _PROMPTWINMAXCOLS = 140;
 
