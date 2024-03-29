@@ -32,7 +32,8 @@ void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
                      const int& maxLines,
                      const int& maxCols);
 void defineArrowWin(std::unordered_map<int, CursesWindow*>& wins,
-                    const int win,
+                    const int mainWin,
+                    const int arrowWin,
                     const std::string winName,
                     const int startY,
                     const int startX,
@@ -50,7 +51,8 @@ void defineSFStringWins(const std::unordered_map<int, CursesWindow*>& wins,
                         std::ofstream& log);
 void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
                           const int& maxLines,
-                          const int& maxCols);
+                          const int& maxCols,
+                          std::ofstream& log);
 void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                    const int& maxLines,
                    const int& maxCols);
@@ -71,11 +73,11 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
                     std::ofstream& log);
 void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
                           std::ofstream& log);
-void printSFWinArrow(const std::unordered_map<int, CursesWindow*>& wins,
-                     const int win,
-                     std::string outString,
-                     const int colorPair,
-                     std::ofstream& log);
+void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
+                   const int win,
+                   std::string outString,
+                   const int colorPair,
+                   std::ofstream& log);
 void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                         const int& mouseLine,
                         const int& mouseCol,
