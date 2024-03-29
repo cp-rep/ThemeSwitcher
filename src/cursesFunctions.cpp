@@ -644,23 +644,21 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                    const int& maxLines,
                    const int& maxCols)
 {
-  const int colOffset = 3;
-  const int lineOffset = 2;
-  int numLines = (maxLines - _HELPWINSTARTY) - lineOffset;
+  int numLines = (maxLines - _HELPWINSTARTY) - _HELPWINLINEOFFSET;
   int numCols = _HELPWINMINCOLS;
   int startY = _HELPWINSTARTY;
-  int startX =  maxCols - _HELPWINMINCOLS - 3;
+  int startX =  maxCols - _HELPWINMINCOLS - _HELPWINCOLOFFSET;
   bool colsCheck = false;
   bool linesCheck = false;
 
-  if(_HELPWINSTARTY + _HELPWINMINLINES < maxLines - lineOffset)
+  if(_HELPWINSTARTY + _HELPWINMINLINES < maxLines - _HELPWINLINEOFFSET)
     {
-      numLines = maxLines - lineOffset - startY;
+      numLines = maxLines - _HELPWINLINEOFFSET - startY;
       linesCheck = true;
     }
 
 
-  if(maxCols > _HELPWINMINCOLS + colOffset)
+  if(maxCols > _HELPWINMINCOLS + _HELPWINCOLOFFSET)
     {
       colsCheck = true;
     }
@@ -1055,7 +1053,6 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                            log);
     }
 } // end of "printSavedFilesWin"
-
 
 
 
