@@ -126,7 +126,6 @@ int main()
 
   // run once, defining the windows and printing initial starting data
   {
-    // init the text display string vector with THEME SWITCHER for _PROMPTWIN
     definePromptTitle(promptStrings);
     defineWins(wins,
                outputStringPos,
@@ -214,7 +213,7 @@ int main()
           wins.at(_MAINWIN)->setNumLines(currLines);
           wins.at(_MAINWIN)->setNumCols(currCols);
 
-          // ##handle resizing in define functions
+          // redefine windows
           defineWins(wins,
                      outputStringPos,
                      log);
@@ -232,7 +231,7 @@ int main()
           drawBoxes(wins,
                     log);
 
-          // begin printing windows to buffer
+          // print the window data
           printPromptWin(wins,
                          promptStrings,
                          currLines,
@@ -265,6 +264,7 @@ int main()
       // check for a mouse click and operate on the line/col values
       if(mouseLine != -1 || mouseCol != -1)
         {
+          // check _SAVEDFILESWIN arrows
           checkArrowClick(wins,
                           sfStringWins,
                           _SAVEDFILESWIN,
@@ -285,6 +285,7 @@ int main()
                           mouseCol,
                           rightArrow,
                           log);
+          // check _SAVEDTHEMESWIN arrows
           checkArrowClick(wins,
                           sfStringWins,
                           _SAVEDTHEMESWIN,
@@ -324,9 +325,6 @@ int main()
                               log);
           doupdate();
         }
-      // drawSFStringBoxes(wins,
-      //                   sfStringWins,
-      //                   log);
 #endif // _CURSES
 
       usleep(15000);
