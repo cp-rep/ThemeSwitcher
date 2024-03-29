@@ -31,12 +31,15 @@ enum _WINS {
   _TEXTWIN
 };
 
+// _HELPWIN
 const unsigned int _HELPWINSTARTY = 2;
 const unsigned int _HELPWINSTARTX = 0;
 const unsigned int _HELPWINMINCOLS = 50;
 const unsigned int _HELPWINMAXCOLS = 60;
 const unsigned int _HELPWINMINLINES = 4;
 const unsigned int _HELPWINMAXLINES = 40;
+const unsigned int _HELPWINCOLOFFSET = 3;
+const unsigned int _HELPWINLINEOFFSET = 2;
 
 // _PROGRAMSWIN DIMENSIONS
 const unsigned int _PROGRAMSWINSTARTCOLS = 60;//
