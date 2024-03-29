@@ -26,9 +26,6 @@ enum _WINS {
   // SECONDARY WINS
   _LARROWSAVEDFILESWIN,
   _RARROWSAVEDFILESWIN,
-
-  // TEXT WIN
-  _TEXTWIN
 };
 
 // _HELPWIN
@@ -81,11 +78,5 @@ const unsigned int _SAVEDTHEMESWINMINLINES = 10;
 const unsigned int _SAVEDTHEMESWINMAXLINES = 24;
 const unsigned int _SAVEDTHEMESWINMINCOLS = 60;
 const unsigned int _SAVEDTHEMESWINMAXCOLS = 140;
-
-// _TEXTWIN DIMENSIONS
-const unsigned int _TEXTWINSTARTY = 0;
-const unsigned int _TEXTWINSTARTX = 0;
-const unsigned int _TEXTWINLINES = 1;
-const unsigned int _TEXTWINCOLS = 60;
 
 #endif // _CURSESWINCONSTS_HPP
