@@ -201,8 +201,9 @@ int main()
 #if _CURSES
       // get user input from mouse or keyboard
       input = wgetch(wins.at(_MAINWIN)->getWindow());
+      input = toupper(input);
 
-      if(input == 'q')
+      if(input == 'Q')
         {
           break;
         }
