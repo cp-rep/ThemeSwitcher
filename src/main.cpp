@@ -94,8 +94,6 @@ int main()
   int sfHighlightNum = -1;
   int stHighlightNum = -1;
   int currStartWin = 0;
-  const int numStrings = 200;
-  const int stringLength = 30;
   std::vector<std::string> promptStrings;
   // saved file variables
   std::vector<std::string> sfStrings;
@@ -108,16 +106,18 @@ int main()
   int stStringPos = 0;
 
   // init the temporary testing string vectors
+  const int numStrings = 200;
+  const int stringLength = 30;
   initTestFilesStringVector(sfStrings,
                             numStrings,
                             log);
   initTestCurrThemesStringVector(sfThemes,
                                  numStrings,
                                  log);
-  initTestStringVector(stStrings,
-                       numStrings,
-                       stringLength,
-                       log);
+  initSTStrings(stStrings,
+                numStrings,
+                stringLength,
+                log);
 
   // ## initialize curses and starting windows ##
 #if _CURSES
@@ -333,7 +333,7 @@ int main()
                           stStringWins,
                           _SAVEDTHEMESWIN,
                           _LARROWSAVEDTHEMESWIN,
-                          sfOutput,
+                          stOutput,
                           stStringPos,
                           mouseLine,
                           mouseCol,
@@ -343,7 +343,7 @@ int main()
                           stStringWins,
                           _SAVEDTHEMESWIN,
                           _RARROWSAVEDTHEMESWIN,
-                          sfOutput,
+                          stOutput,
                           stStringPos,
                           mouseLine,
                           mouseCol,
