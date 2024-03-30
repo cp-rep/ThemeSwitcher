@@ -705,8 +705,9 @@ void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
               printLineOffset = 0;
             }
 
-          // make sure not to print out of the max window range
-          if(printColOffset + numCols + 1 > maxCols  - _STWINMAXCOLOFFSET)
+          // make sure not to print or create windows out of the max window range
+          if(printColOffset > maxCols  - _STWINMAXCOLOFFSET - _STWINMINCOLOFFSET - numCols -
+             fileCount.length())
             {
               break;
             }
