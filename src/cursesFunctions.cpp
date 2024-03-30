@@ -600,7 +600,7 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
                                         startY,
                                         startX);
 
-
+      // create the new _LARROWSAVEDFILESWIN
       defineArrowWin(wins,
                      _SAVEDTHEMESWIN,
                      _LARROWSAVEDTHEMESWIN,
@@ -633,6 +633,18 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
         {
           wins.at(_SAVEDTHEMESWIN)->deleteWindow();
           wins.at(_SAVEDTHEMESWIN)->setWindow(nullptr);
+        }
+
+      if(wins.at(_LARROWSAVEDTHEMESWIN)->getWindow() != nullptr)
+        {
+          wins.at(_LARROWSAVEDTHEMESWIN)->deleteWindow();
+          wins.at(_LARROWSAVEDTHEMESWIN)->setWindow(nullptr);
+        }
+
+      if(wins.at(_RARROWSAVEDTHEMESWIN)->getWindow() != nullptr)
+        {
+          wins.at(_RARROWSAVEDTHEMESWIN)->deleteWindow();
+          wins.at(_RARROWSAVEDTHEMESWIN)->setWindow(nullptr);
         }
     }
 } // end of "defineSavedThemesWin"
@@ -1819,6 +1831,20 @@ void clearSFStringWins(const std::vector<CursesWindow*>& sfStringWins)
       if(sfStringWins.at(i)->getWindow() != nullptr)
         {
           werase(sfStringWins.at(i)->getWindow());
+        }
+    }
+} // end of "clearWins"
+
+
+
+
+void clearSTStringWins(const std::vector<CursesWindow*>& stStringWins)
+{
+  for(int i = 0; i < stStringWins.size(); i++)
+    {
+      if(stStringWins.at(i)->getWindow() != nullptr)
+        {
+          werase(stStringWins.at(i)->getWindow());
         }
     }
 } // end of "clearWins"
