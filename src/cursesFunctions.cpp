@@ -982,6 +982,54 @@ std::vector<std::string> createSFOutputStrings(const std::unordered_map<int, Cur
 
 
 
+
+std::vector<std::string> createSTOutputStrings(const std::unordered_map<int, CursesWindow*>& wins,
+                                               std::vector<CursesWindow*>& stStringWins,
+                                               const std::vector<std::string>& stStrings,
+                                               const int& stStringPos,
+                                               std::ofstream& log)
+{
+  std::vector<std::string> outputStrings;
+
+  if(stStrings.empty())
+    {
+      return outputStrings;
+    }
+
+  std::string dots = "...";
+  int maxLines = 0;
+  int maxCols = 0;
+
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+    {
+      std::string tempString;
+      std::string fileString;
+      int i = 0;
+      int j = 0;
+      for(i = 0, j = stStringPos; i < stStringWins.size() &&
+            j < stStrings.size(); i++, j++)
+        {
+          getmaxyx(stStringWins.at(i)->getWindow(), maxLines, maxCols);
+          fileString.clear();
+          tempString.clear();
+          fileString = stStrings.at(j);
+
+          if(maxCols < fileString.length())
+            {
+              while( (maxCols - fileString.length()) != 3)
+                {
+                  fileString.pop_back();
+                }
+              fileString.append(dots);
+            }
+          outputStrings.push_back(fileString);
+        }
+    }
+  return outputStrings;
+} // end of "createSTOutputStrings"
+
+
+
 /*
   Function:
    printPromptWin
