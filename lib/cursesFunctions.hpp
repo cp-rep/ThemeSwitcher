@@ -51,7 +51,7 @@ void defineSFStringWins(const std::unordered_map<int, CursesWindow*>& wins,
                         std::ofstream& log);
 void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
                         std::vector<CursesWindow*>& stStringWins,
-                        const std::vector<std::string>& savedThemesStrings,
+                        const std::vector<std::string>& savedSTStrings,
                         const int& stStringPos,
                         std::ofstream& log);
 void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
@@ -110,16 +110,26 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          const int& mouseLine,
                          const int& mouseCol,
                          std::ofstream& log);
-void shiftFilesRight(const std::unordered_map<int, CursesWindow*>& wins,
-                     std::vector<CursesWindow*>& sfStringWins,
+void shiftSFRight(const std::unordered_map<int, CursesWindow*>& wins,
+                  std::vector<CursesWindow*>& sfStringWins,
+                  const std::vector<std::string>& outputStrings,
+                  int& sfStringPos,
+                  std::ofstream& log);
+// void shiftSFLeft(const std::unordered_map<int, CursesWindow*>& wins,
+//                  std::vector<CursesWindow*>& sfStringWins,
+//                  const std::vector<std::string>& outputStrings,
+//                  int& sfStringPos,
+//                  std::ofstream& log);
+void shiftSTLeft(const std::unordered_map<int, CursesWindow*>& wins,
+                 std::vector<CursesWindow*>& stStringWins,
+                 const std::vector<std::string>& outputStrings,
+                 int& stStringPos,
+                 std::ofstream& log);
+void shiftSTRight(const std::unordered_map<int, CursesWindow*>& wins,
+                     std::vector<CursesWindow*>& stStringWins,
                      const std::vector<std::string>& outputStrings,
-                     int& sfStringPos,
+                     int& outputStringPos,
                      std::ofstream& log);
-void shiftFilesLeft(const std::unordered_map<int, CursesWindow*>& wins,
-                    std::vector<CursesWindow*>& sfStringWins,
-                    const std::vector<std::string>& outputStrings,
-                    int& sfStringPos,
-                    std::ofstream& log);
 void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
                      std::vector<CursesWindow*>& stringWins,
                      const int mainWin,
