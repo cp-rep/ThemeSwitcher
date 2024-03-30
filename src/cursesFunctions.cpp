@@ -665,6 +665,7 @@ void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
       if(stStringWins.at(i)->getWindow() != nullptr)
         {
           werase(stStringWins.at(i)->getWindow());
+          wrefresh(stStringWins.at(i)->getWindow());
           stStringWins.at(i)->deleteWindow();
           stStringWins.at(i)->setWindow(nullptr);
           delete stStringWins.at(i);
@@ -696,27 +697,10 @@ void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
         {
           int numCols = stStrings.at(j).length();
 
-          // create the file count string
-          fileCount = intToStr(j + 1);
-          fileCount.append(". ");
-
-          if(i == 9)
-            {
-              numCols--;
-            }
-          else if(i == 99)
-            {
-              numCols--;
-            }
-          else if(i == 999)
-            {
-              numCols--;
-            }
-
           // reset the output line position if max printable line is reached
           if(printLineOffset == printableLines)
             {
-              printColOffset += numMaxCols + fileCount.length() + 2;
+              printColOffset += numMaxCols + 2;
               printLineOffset = 0;
             }
 
@@ -727,17 +711,11 @@ void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
               break;
             }
 
-          // print the file count string
-          mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
-                    titleLineOffset + printLineOffset,
-                    _STWINMINCOLOFFSET + printColOffset,
-                    fileCount.c_str());
-
           // create the window
           const int startY = wins.at(_SAVEDTHEMESWIN)->getStartY() + titleLineOffset +
             printLineOffset;
           const int startX = wins.at(_SAVEDTHEMESWIN)->getStartX() + printColOffset +
-            _STWINMINCOLOFFSET + fileCount.length();
+            _STWINMINCOLOFFSET;// + fileCount.length();
 
           CursesWindow* newWindow = new CursesWindow();
 
@@ -757,86 +735,6 @@ void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
                                            startX);
         }
     }
-
-    // if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
-    // {
-    //   int maxLines;
-    //   int maxCols;
-
-    //   getmaxyx(wins.at(_SAVEDTHEMESWIN)->getWindow(),
-    //            maxLines,
-    //            maxCols);
-
-    //   std::string fileCount;
-    //   int printableLines = maxLines - _STWINMINLINEOFFSET - _STWINMAXLINEOFFSET;
-    //   int numLines = 1;
-    //   int numCols = 30;
-    //   int printColOffset = 0;
-    //   int printLineOffset = 0;
-    //   //int startX = wins.at(_SAVEDTHEMESWIN)->getStartX() +
-    //   const int titleLineOffset = 4;
-    //   int j = 0;
-
-    //   for(int i = 0, j = stStringPos; j < stStrings.size(); i++, j++, printLineOffset++)
-    //     {
-    //       // create the file count string
-    //       fileCount = intToStr(j + 1);
-    //       fileCount.append(". ");
-
-    //       // account for the number place changes
-    //       if(i == 9)
-    //         {
-    //           numCols--;
-    //         }
-    //       else if(i == 99)
-    //         {
-    //           numCols--;
-    //         }
-    //       else if(i == 999)
-    //         {
-    //           numCols--;
-    //         }
-
-    //       // reset the output line position if max printable line is reached
-    //       if(printLineOffset == printableLines)
-    //         {
-    //           printColOffset += numCols + fileCount.length() + 2;
-    //           printLineOffset = 0;
-    //         }
-
-    //       // make sure not to print or create windows out of the max window range
-    //       if(printColOffset > maxCols  - _STWINMAXCOLOFFSET - _STWINMINCOLOFFSET - numCols -
-    //          fileCount.length())
-    //         {
-    //           break;
-    //         }
-
-    //       // print the file count string
-    //       mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
-    //                 titleLineOffset + printLineOffset,
-    //                 _STWINMINCOLOFFSET + printColOffset,
-    //                 fileCount.c_str());
-
-    //       // create the window
-    //       const int startY = wins.at(_SAVEDTHEMESWIN)->getStartY() + titleLineOffset +
-    //         printLineOffset;
-    //       const int startX = wins.at(_SAVEDTHEMESWIN)->getStartX() + printColOffset +
-    //         _STWINMINCOLOFFSET + fileCount.length();
-
-    //       CursesWindow* newWindow = new CursesWindow();
-
-    //       stStringWins.push_back(newWindow);
-    //       stStringWins.at(i)->defineWindow(newwin(numLines,
-    //                                               numCols,
-    //                                               startY,
-    //                                               startX),
-    //                                        "SAVEDTHEME",
-    //                                        numLines,
-    //                                        numCols,
-    //                                        startY,
-    //                                        startX);
-    //     }
-    // }
 } // end of "defineSTStringWins"
 
 
@@ -984,10 +882,10 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins,
                       numLines,
                       numCols,
                       log);
-  defineSavedThemesWin(wins,
-                       numLines,
-                       numCols,
-                       log);
+  // defineSavedThemesWin(wins,
+  //                      numLines,
+  //                      numCols,
+  //                      log);
 } // end of "defineWins"
 
 
@@ -1069,7 +967,6 @@ std::vector<std::string> createSFOutputStrings(const std::unordered_map<int, Cur
 
 
 std::vector<std::string> createSTOutputStrings(const std::unordered_map<int, CursesWindow*>& wins,
-                                               std::vector<CursesWindow*>& stStringWins,
                                                const std::vector<std::string>& stStrings,
                                                const int& stStringPos,
                                                std::ofstream& log)
@@ -1083,33 +980,31 @@ std::vector<std::string> createSTOutputStrings(const std::unordered_map<int, Cur
 
   std::string dots = "...";
   int maxLines = 0;
-  int maxCols = 0;
+  int maxCols = 30;
 
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+  std::string tempString;
+  std::string fileString;
+  int i = 0;
+  int j = 0;
+  for(i = 0, j = stStringPos; j < stStrings.size(); i++, j++)
     {
-      std::string tempString;
-      std::string fileString;
-      int i = 0;
-      int j = 0;
-      for(i = 0, j = stStringPos; i < stStringWins.size() &&
-            j < stStrings.size(); i++, j++)
-        {
-          getmaxyx(stStringWins.at(i)->getWindow(), maxLines, maxCols);
-          fileString.clear();
-          tempString.clear();
-          fileString = stStrings.at(j);
+      fileString.clear();
+      tempString.clear();
+      fileString = intToStr(j+1);
+      fileString.append(". ");
+      fileString.append(stStrings.at(j));
 
-          if(maxCols < fileString.length())
+      if(maxCols < fileString.length())
+        {
+          while( (maxCols - fileString.length()) != 3)
             {
-              while( (maxCols - fileString.length()) != 3)
-                {
-                  fileString.pop_back();
-                }
-              fileString.append(dots);
+              fileString.pop_back();
             }
-          outputStrings.push_back(fileString);
+          fileString.append(dots);
         }
+      outputStrings.push_back(fileString);
     }
+
   return outputStrings;
 } // end of "createSTOutputStrings"
 
@@ -1612,10 +1507,10 @@ void shiftSFLeft(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 void shiftSTRight(const std::unordered_map<int, CursesWindow*>& wins,
-                     std::vector<CursesWindow*>& stStringWins,
-                     const std::vector<std::string>& outputStrings,
-                     int& outputStringPos,
-                     std::ofstream& log)
+                  std::vector<CursesWindow*>& stStringWins,
+                  const std::vector<std::string>& outputStrings,
+                  int& outputStringPos,
+                  std::ofstream& log)
 {
   if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr &&
      !outputStrings.empty())
@@ -1628,18 +1523,18 @@ void shiftSTRight(const std::unordered_map<int, CursesWindow*>& wins,
       // get number of printable file windows
       int val = maxLines - _STWINMINLINEOFFSET - _STWINMAXLINEOFFSET;
 
-      log << "val" << val << std::endl;
+      log << "val: " << val << std::endl;
 
 
       // check if there is another list to 'scroll' to
       if(outputStringPos + val < outputStrings.size())
         {
+          outputStringPos += val;
           defineSTStringWins(wins,
                              stStringWins,
                              outputStrings,
                              outputStringPos,
                              log);
-          outputStringPos += val;
         }
     }
 } // end of "shiftSTRight"

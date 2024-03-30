@@ -70,7 +70,6 @@ std::vector<std::string> createSFOutputStrings(const std::unordered_map<int, Cur
                                                const std::vector<std::string>& currThemes,
                                                std::ofstream& log);
 std::vector<std::string> createSTOutputStrings(const std::unordered_map<int, CursesWindow*>& wins,
-                                               std::vector<CursesWindow*>& stStringWins,
                                                const std::vector<std::string>& stStrings,
                                                const int& stStringPos,
                                                std::ofstream& log);
@@ -126,10 +125,10 @@ void shiftSTLeft(const std::unordered_map<int, CursesWindow*>& wins,
                  int& stStringPos,
                  std::ofstream& log);
 void shiftSTRight(const std::unordered_map<int, CursesWindow*>& wins,
-                     std::vector<CursesWindow*>& stStringWins,
-                     const std::vector<std::string>& outputStrings,
-                     int& outputStringPos,
-                     std::ofstream& log);
+                  std::vector<CursesWindow*>& stStringWins,
+                  const std::vector<std::string>& outputStrings,
+                  int& outputStringPos,
+                  std::ofstream& log);
 void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
                      std::vector<CursesWindow*>& stringWins,
                      const int mainWin,
