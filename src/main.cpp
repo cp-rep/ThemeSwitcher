@@ -96,10 +96,11 @@ int main()
   std::vector<std::string> promptStrings;
   std::vector<std::string> savedFileStrings;
   std::vector<std::string> currThemes;
-  std::vector<std::string> savedThemesStrings;
+  std::vector<std::string> savedThemeStrings;
   std::vector<std::string> outputStrings;
-  int outputStringPos = 0;
-  const int numStrings = 100;
+  int sfStringPos = 0;
+  int stStringPos = 0;
+  const int numStrings = 200;
   const int stringLength = 30;
 
   // init the temporary testing string vectors
@@ -109,7 +110,7 @@ int main()
   initTestCurrThemesStringVector(currThemes,
                                  numStrings,
                                  log);
-  initTestStringVector(savedThemesStrings,
+  initTestStringVector(savedThemeStrings,
                        numStrings,
                        stringLength,
                        log);
@@ -118,6 +119,7 @@ int main()
 #if _CURSES
   std::unordered_map<int, CursesWindow*> wins;
   std::vector<CursesWindow*> sfStringWins;
+  std::vector<CursesWindow*> stStringWins;
   MEVENT mouse;
   initializeCurses();
   initializeWins(wins,
@@ -128,12 +130,17 @@ int main()
   {
     definePromptTitle(promptStrings);
     defineWins(wins,
-               outputStringPos,
+               sfStringPos,
                log);
     defineSFStringWins(wins,
                        sfStringWins,
                        savedFileStrings,
-                       outputStringPos,
+                       sfStringPos,
+                       log);
+    defineSTStringWins(wins,
+                       stStringWins,
+                       savedThemeStrings,
+                       stStringPos,
                        log);
     outputStrings = createSFOutputStrings(wins,
                                           sfStringWins,
@@ -156,17 +163,23 @@ int main()
     printSavedFilesStrings(wins,
                            sfStringWins,
                            outputStrings,
-                           outputStringPos,
+                           sfStringPos,
                            currStartWin,
                            highlightWinNum,
                            log);
     printSavedThemesWin(wins,
-                        savedThemesStrings,
+                        savedThemeStrings,
                         mouseLine,
                         mouseCol,
                         log);
+
+    drawSTStringBoxes(wins,
+                      stStringWins,
+                      log);
     refreshWins(wins);
     refreshSFStringWins(sfStringWins,
+                        log);
+    refreshSTStringWins(stStringWins,
                         log);
     doupdate();
   }
@@ -215,12 +228,12 @@ int main()
 
           // redefine windows
           defineWins(wins,
-                     outputStringPos,
+                     sfStringPos,
                      log);
           defineSFStringWins(wins,
                              sfStringWins,
                              savedFileStrings,
-                             outputStringPos,
+                             sfStringPos,
                              log);
           outputStrings.clear();
           outputStrings = createSFOutputStrings(wins,
@@ -246,12 +259,12 @@ int main()
           printSavedFilesStrings(wins,
                                  sfStringWins,
                                  outputStrings,
-                                 outputStringPos,
+                                 sfStringPos,
                                  currStartWin,
                                  highlightWinNum,
                                  log);
           printSavedThemesWin(wins,
-                              savedThemesStrings,
+                              savedThemeStrings,
                               mouseLine,
                               mouseCol,
                               log);
@@ -270,7 +283,7 @@ int main()
                           _SAVEDFILESWIN,
                           _LARROWSAVEDFILESWIN,
                           outputStrings,
-                          outputStringPos,
+                          sfStringPos,
                           mouseLine,
                           mouseCol,
                           leftArrow,
@@ -280,7 +293,7 @@ int main()
                           _SAVEDFILESWIN,
                           _RARROWSAVEDFILESWIN,
                           outputStrings,
-                          outputStringPos,
+                          sfStringPos,
                           mouseLine,
                           mouseCol,
                           rightArrow,
@@ -291,7 +304,7 @@ int main()
                           _SAVEDTHEMESWIN,
                           _LARROWSAVEDTHEMESWIN,
                           outputStrings,
-                          outputStringPos,
+                          sfStringPos,
                           mouseLine,
                           mouseCol,
                           leftArrow,
@@ -301,14 +314,14 @@ int main()
                           _SAVEDTHEMESWIN,
                           _RARROWSAVEDTHEMESWIN,
                           outputStrings,
-                          outputStringPos,
+                          sfStringPos,
                           mouseLine,
                           mouseCol,
                           rightArrow,
                           log);
           checkFileClick(wins,
                          outputStrings,
-                         outputStringPos,
+                         sfStringPos,
                          mouseLine,
                          mouseCol,
                          highlightWinNum,
@@ -316,7 +329,7 @@ int main()
           printSavedFilesStrings(wins,
                                  sfStringWins,
                                  outputStrings,
-                                 outputStringPos,
+                                 sfStringPos,
                                  currStartWin,
                                  highlightWinNum,
                                  log);
