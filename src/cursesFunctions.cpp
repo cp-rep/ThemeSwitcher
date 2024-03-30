@@ -112,6 +112,7 @@ void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
 */
 void definePromptTitle(std::vector<std::string>& promptStrings)
 {
+  promptStrings.clear();
   std::string line0;
   std::string line1;
   std::string line2;
@@ -474,9 +475,10 @@ void defineSFStringWins(const std::unordered_map<int, CursesWindow*>& wins,
           werase(sfStringWins.at(i)->getWindow());
           sfStringWins.at(i)->deleteWindow();
           sfStringWins.at(i)->setWindow(nullptr);
+          delete sfStringWins.at(i);
         }
-
     }
+
   sfStringWins.clear();
 
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
@@ -665,8 +667,8 @@ void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
           werase(stStringWins.at(i)->getWindow());
           stStringWins.at(i)->deleteWindow();
           stStringWins.at(i)->setWindow(nullptr);
+          delete stStringWins.at(i);
         }
-
     }
 
   stStringWins.clear();
@@ -924,6 +926,7 @@ std::vector<std::string> createSFOutputStrings(const std::unordered_map<int, Cur
 
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
     {
+      outputStrings.clear();
       if(sfStringWins.at(0)->getWindow() != nullptr)
         {
           int maxPossible = maxCols - 6;
