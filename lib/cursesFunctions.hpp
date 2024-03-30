@@ -95,9 +95,10 @@ void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
                             const int& highlightWinNum,
                             std::ofstream& log);
 void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
-                             const std::vector<std::string>& strings,
-                             const int& mouseLine,
-                             const int& mouseCol,
+                             std::vector<CursesWindow*>& stStringWins,
+                             const std::vector<std::string>& stStrings,
+                             const int& stStringPos,
+                             const int& stHighlightNum,
                              std::ofstream& log);
 void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          const std::vector<std::string>& savedThemesStrings,
