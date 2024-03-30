@@ -235,6 +235,11 @@ int main()
                              savedFileStrings,
                              sfStringPos,
                              log);
+          defineSTStringWins(wins,
+                             stStringWins,
+                             savedThemeStrings,
+                             stStringPos,
+                             log);
           outputStrings.clear();
           outputStrings = createSFOutputStrings(wins,
                                                 sfStringWins,
@@ -268,8 +273,13 @@ int main()
                               mouseLine,
                               mouseCol,
                               log);
+          drawSTStringBoxes(wins,
+                            stStringWins,
+                            log);
           refreshWins(wins);
           refreshSFStringWins(sfStringWins,
+                              log);
+          refreshSTStringWins(stStringWins,
                               log);
           doupdate();
         }
