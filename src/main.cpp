@@ -348,7 +348,7 @@ int main()
                           mouseCol,
                           rightArrow,
                           log);
-          checkFileClick(wins,
+          checkSFClick(wins,
                          sfOutput,
                          sfStringPos,
                          mouseLine,
@@ -362,8 +362,22 @@ int main()
                                  currStartWin,
                                  sfHighlightNum,
                                  log);
+          checkSTClick(wins,
+                       stStringWins,
+                       mouseLine,
+                       mouseCol,
+                       stHighlightNum,
+                       log);
+          printSavedThemesStrings(wins,
+                                  stStringWins,
+                                  stOutput,
+                                  stStringPos,
+                                  stHighlightNum,
+                                  log);
           refreshWins(wins);
           refreshSFStringWins(sfStringWins,
+                              log);
+          refreshSTStringWins(stStringWins,
                               log);
           doupdate();
         }
