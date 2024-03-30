@@ -172,7 +172,6 @@ int main()
                         mouseLine,
                         mouseCol,
                         log);
-
     drawSTStringBoxes(wins,
                       stStringWins,
                       log);
@@ -384,6 +383,8 @@ int main()
           stStringWins.at(i)->setWindow(nullptr);
         }
     }
+  endwin();
+#endif // _CURSES
 
   stStringWins.clear();
   promptStrings;
@@ -391,8 +392,6 @@ int main()
   currThemes.clear();
   savedThemeStrings.clear();
   outputStrings.clear();
-
-#endif // _CURSES
 
   return 0;
 } // end of "main"
