@@ -394,6 +394,7 @@ int main()
     {
       it->second->deleteWindow();
       it->second->setWindow(nullptr);
+      delete it->second;
     }
 
   wins.clear();
@@ -404,6 +405,7 @@ int main()
         {
           sfStringWins.at(i)->deleteWindow();
           sfStringWins.at(i)->setWindow(nullptr);
+          delete sfStringWins.at(i);
         }
     }
 
@@ -415,6 +417,7 @@ int main()
         {
           stStringWins.at(i)->deleteWindow();
           stStringWins.at(i)->setWindow(nullptr);
+          delete stStringWins.at(i);
         }
     }
   endwin();
