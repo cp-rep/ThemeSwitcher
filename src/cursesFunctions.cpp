@@ -1678,7 +1678,7 @@ void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
+void checkSFClick(const std::unordered_map<int, CursesWindow*>& wins,
                     const std::vector<std::string>& outputStrings,
                     const int& outputStringPos,
                     const int& mouseLine,
@@ -1708,10 +1708,44 @@ void checkFileClick(const std::unordered_map<int, CursesWindow*>& wins,
           highlightWinNum = -1;
         }
     }
-
 } // end of "checkFileClick"
 
 
+
+void checkSTClick(const std::unordered_map<int, CursesWindow*>& wins,
+                  const std::vector<CursesWindow*>& stStringWins,
+                  const int& mouseLine,
+                  const int& mouseCol,
+                  int& highlightWinNum,
+                  std::ofstream& log)
+{
+  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr && !stStringWins.empty())
+    {
+      for(int i = 0; i < stStringWins.size(); i ++)
+        {
+          int maxLines = stStringWins.at(i)->getNumLines();
+          int maxCols = stStringWins.at(i)->getNumCols();
+          getmaxyx(stStringWins.at(i)->getWindow(), maxLines, maxCols);
+          const int startY = stStringWins.at(i)->getStartY();
+          const int startX = stStringWins.at(i)->getStartX();
+
+          if((mouseLine == startY) && ((mouseCol >= startX) &&
+                                       (mouseCol < startX + maxCols)))
+            {
+              highlightWinNum = i;
+            }
+          else
+            {
+              highlightWinNum = -1;
+            }
+
+          if(highlightWinNum != -1)
+            {
+              break;
+            }
+        }
+    }
+} // end of "checkFileClick"
 
 
 
