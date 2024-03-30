@@ -15,7 +15,7 @@ void initSTStrings(std::vector<std::string>& testStrings,
   std::string theme3 = "low_contrast.theme";
   std::string theme4 = "high_contrast.theme";
   std::string theme5 = "this_is_very_high_contrast.theme";
-  std::string theme6 = "this_is_very_low_contrast.theme";
+  std::string theme6 = "this_is_very_very_very_low_contrast.theme";
 
   for(int i = 0; i < numStrings; i++)
     {
