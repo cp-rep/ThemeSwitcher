@@ -10,18 +10,42 @@ void initSTStrings(std::vector<std::string>& testStrings,
     {
       return;
     }
-
-  std::string tempString;
-  std::string extension = ".theme";
+  std::string theme1 = "dracula.theme";
+  std::string theme2 = "doom_one.theme";
+  std::string theme3 = "low_contrast.theme";
+  std::string theme4 = "high_contrast.theme";
+  std::string theme5 = "this_is_very_high_contrast.theme";
+  std::string theme6 = "this_is_very_low_contrast.theme";
 
   for(int i = 0; i < numStrings; i++)
-  {
-    tempString = "file";
-    tempString.append(intToStr(i + 1));
-    tempString.append(extension);
-    testStrings.push_back(tempString);
-    tempString.clear();
-  }
+    {
+
+      int switchVal = random() % 6;
+
+      switch(switchVal)
+        {
+        case 0:
+          testStrings.push_back(theme1);
+          break;
+        case 1:
+          testStrings.push_back(theme2);
+          break;
+        case 2:
+          testStrings.push_back(theme3);
+          break;
+        case 3:
+          testStrings.push_back(theme4);
+          break;
+        case 4:
+          testStrings.push_back(theme5);
+          break;
+        case 5:
+          testStrings.push_back(theme6);
+          break;
+        default:
+          break;
+        }
+    }
 } // end of "initTestStringVector"
 
 
@@ -100,7 +124,6 @@ void initTestCurrThemesStringVector(std::vector<std::string>& testStrings,
 
   for(int i = 0; i < numStrings; i++)
   {
-    char temp = 'a';
     int switchVal = random() % 6;
 
     switch(switchVal)
