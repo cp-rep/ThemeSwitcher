@@ -94,15 +94,18 @@ int main()
   int sfHighlightNum = -1;
   int stHighlightNum = -1;
   int currStartWin = 0;
+  const int numStrings = 200;
+  const int stringLength = 30;
   std::vector<std::string> promptStrings;
+  // saved file variables
   std::vector<std::string> sfStrings;
   std::vector<std::string> sfThemes;
   std::vector<std::string> sfOutput;
-  std::vector<std::string> stStrings;
   int sfStringPos = 0;
+  // saved theme variables
+  std::vector<std::string> stStrings;
+  std::vector<std::string> stOutput;
   int stStringPos = 0;
-  const int numStrings = 200;
-  const int stringLength = 30;
 
   // init the temporary testing string vectors
   initTestFilesStringVector(sfStrings,
@@ -148,6 +151,11 @@ int main()
                                           sfStrings,
                                           sfThemes,
                                           log);
+    stOutput = createSTOutputStrings(wins,
+                                     stStringWins,
+                                     stStrings,
+                                     stStringPos,
+                                     log);
     drawBoxes(wins,
               log);
     printPromptWin(wins,
@@ -175,7 +183,7 @@ int main()
                         log);
     printSavedThemesStrings(wins,
                             stStringWins,
-                            stStrings,
+                            stOutput,
                             stStringPos,
                             stHighlightNum,
                             log);
@@ -250,9 +258,13 @@ int main()
                                                 sfStrings,
                                                 sfThemes,
                                                 log);
+          stOutput = createSTOutputStrings(wins,
+                                           stStringWins,
+                                           stStrings,
+                                           stStringPos,
+                                           log);
           drawBoxes(wins,
                     log);
-
           // print the window data
           printPromptWin(wins,
                          promptStrings,
@@ -279,7 +291,7 @@ int main()
                               log);
           printSavedThemesStrings(wins,
                                   stStringWins,
-                                  stStrings,
+                                  stOutput,
                                   stStringPos,
                                   stHighlightNum,
                                   log);
