@@ -517,6 +517,9 @@ void defineSFStringWins(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 
+
+
+
 /*
   Function:
    defineSavedThemesWin
@@ -633,6 +636,100 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
         }
     }
 } // end of "defineSavedThemesWin"
+
+
+
+void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
+                        std::vector<CursesWindow*>& stStringWins,
+                        const std::vector<std::string>& savedThemeStrings,
+                        const int& stStringPos,
+                        std::ofstream& log)
+{
+  // delete any stStringWins if they exist
+  for(int i = 0; i < stStringWins.size(); i++)
+    {
+      if(stStringWins.at(i)->getWindow() != nullptr)
+        {
+          werase(stStringWins.at(i)->getWindow());
+          stStringWins.at(i)->deleteWindow();
+          stStringWins.at(i)->setWindow(nullptr);
+        }
+
+    }
+
+  stStringWins.clear();
+
+  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
+    {
+      int maxWinLines;
+      int maxWinCols;
+
+      getmaxyx(wins.at(_SAVEDTHEMESWIN)->getWindow(),
+               maxWinLines,
+               maxWinCols);
+
+      int currLine = 0;
+      std::string themeCount;
+      std::string outString;
+      int maxPrintableLines = maxWinLines - _STWINMINLINEOFFSET - _STWINMAXLINEOFFSET - 1;
+      int printColOffset = 0;
+
+      // loop and print to _SAVEDTHEMESWIN
+      for(int i = stStringPos; i <= savedThemeStrings.size(); i++, currLine++)
+        {
+          if((i % (maxPrintableLines + 1)) == 0 && i >= 9)
+            {
+              printColOffset += 36;
+              currLine = 0;
+            }
+
+          themeCount = intToStr(i + 1);
+          outString = savedThemeStrings.at(i);
+
+          // append an extra space to the line number for values under 10
+          if(i < 9)
+            {
+              themeCount.append(".  ");
+            }
+          else
+            {
+              themeCount.append(". ");
+            }
+
+          // make sure it stops printing before the columns print outside the window
+          if((themeCount.length() + 3 + printColOffset + outString.length()) >
+             (maxWinCols - _STWINMAXCOLOFFSET))
+            {
+              break;
+            }
+
+          // print the count
+          mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
+                    currLine + 4,
+                    3 + printColOffset,
+                    themeCount.c_str());
+
+          const int startY = wins.at(_SAVEDTHEMESWIN)->getStartY() + currLine + 4;
+          const int startX = wins.at(_SAVEDTHEMESWIN)->getStartX() +
+            printColOffset + 3 + themeCount.length();
+
+          CursesWindow* newWindow = new CursesWindow();
+          stStringWins.push_back(newWindow);
+
+          int numLines = 1;
+          int numCols = 30;
+          stStringWins.at(i)->defineWindow(newwin(numLines,
+                                                  numCols,
+                                                  startY,
+                                                  startX),
+                                           "SAVEDFILE",
+                                           numLines,
+                                           numCols,
+                                           startY,
+                                           startX);
+        }
+    }
+} // end of "defineSTStringWins"
 
 
 
@@ -1200,53 +1297,53 @@ void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
                maxWinLines,
                maxWinCols);
 
-      int currLine = 0;
-      std::string themeCount;
-      std::string outString;
-      int maxPrintableLines = maxWinLines - _STWINMINLINEOFFSET - _STWINMAXLINEOFFSET - 1;
-      int printColOffset = 0;
+      // int currLine = 0;
+      // std::string themeCount;
+      // std::string outString;
+      // int maxPrintableLines = maxWinLines - _STWINMINLINEOFFSET - _STWINMAXLINEOFFSET - 1;
+      // int printColOffset = 0;
 
       // loop and print to _SAVEDTHEMESWIN
-      for(int i = 1; i < strings.size(); i++, currLine++)
-        {
-          if((i % (maxPrintableLines + 1)) == 0)
-            {
-              printColOffset += 36;
-              currLine = 0;
-            }
+      // for(int i = 0; i <= strings.size(); i++, currLine++)
+      //   {
+        //   if((i % (maxPrintableLines + 1)) == 0)
+        //     {
+        //       printColOffset += 36;
+        //       currLine = 0;
+        //     }
 
-          themeCount = intToStr(i);
-          outString = strings.at(i);
+        //   themeCount = intToStr(i);
+        //   outString = strings.at(i);
 
-          // append an extra space to the line number for values under 10
-          if(i < 10)
-            {
-              themeCount.append(".  ");
-            }
-          else
-            {
-              themeCount.append(". ");
-            }
+        //   // append an extra space to the line number for values under 10
+        //   if(i < 10)
+        //     {
+        //       themeCount.append(".  ");
+        //     }
+        //   else
+        //     {
+        //       themeCount.append(". ");
+        //     }
 
-          // make sure it stops printing before the columns print outside the window
-          if((themeCount.length() + 3 + printColOffset + outString.length()) >
-             (maxWinCols - _STWINMAXCOLOFFSET))
-            {
-              break;
-            }
+        //   // make sure it stops printing before the columns print outside the window
+        //   if((themeCount.length() + 3 + printColOffset + outString.length()) >
+        //      (maxWinCols - _STWINMAXCOLOFFSET))
+        //     {
+        //       break;
+        //     }
 
-          // print the count
-          mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
-                    currLine + 4,
-                    3 + printColOffset,
-                    themeCount.c_str());
+        //   // print the count
+        //   mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
+        //             currLine + 4,
+        //             3 + printColOffset,
+        //             themeCount.c_str());
 
-          // print the saved theme
-          mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
-                    currLine + 4,
-                    themeCount.length() + 3 + printColOffset,
-                    outString.c_str());
-        }
+        //   // print the saved theme
+        //   mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
+        //             currLine + 4,
+        //             themeCount.length() + 3 + printColOffset,
+        //             outString.c_str());
+        // }
     }
 } // end of "printSavedThemesStrings"
 
@@ -1281,17 +1378,17 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          const int& mouseCol,
                          std::ofstream& log)
 {
-  const int maxStringSize = 31;
   if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
     {
+      const int maxStringSize = 31;
+      const int lineCount = 0;
       int maxWinLines;
       int maxWinCols;
       getmaxyx(wins.at(_SAVEDTHEMESWIN)->getWindow(),
                maxWinLines,
                maxWinCols);
 
-      int linePosition = wins.at(_SAVEDTHEMESWIN)->getStartY() + 2;
-
+      int linePosition = wins.at(_SAVEDTHEMESWIN)->getStartY() + 2 + lineCount;
       std::vector<std::string>::const_iterator it;
       std::string outString;
 
@@ -1300,21 +1397,6 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                 _STWINMINLINEOFFSET,
                 _STWINMINCOLOFFSET,
                 outString.c_str());
-
-      for(int i = 0; i < savedThemesStrings.size(); i++)
-        {
-          if(i == _STWINMAXCOLOFFSET - maxStringSize)
-            {
-              break;
-            }
-
-          printSavedThemesStrings(wins,
-                                  savedThemesStrings,
-                                  mouseLine,
-                                  mouseCol,
-                                  log);
-        }
-
       printArrowWin(wins,
                     _LARROWSAVEDTHEMESWIN,
                     leftArrow,
@@ -1607,6 +1689,20 @@ void refreshSFStringWins(const std::vector<CursesWindow*>& sfStringWins,
 
 
 
+void refreshSTStringWins(const std::vector<CursesWindow*>& stStringWins,
+                         std::ofstream& log)
+{
+  for(int i = 0; i < stStringWins.size(); i++)
+    {
+      if(stStringWins.at(i)->getWindow() != nullptr)
+        {
+          wnoutrefresh(stStringWins.at(i)->getWindow());
+        }
+    }
+} // end of "refreshSFStringWins"
+
+
+
 /*
   Function:
    refreshWins
@@ -1787,6 +1883,26 @@ void drawSFStringBoxes(const std::unordered_map<int, CursesWindow*>& wins,
           if(sfStringWins.at(i)->getWindow() != nullptr)
             {
               box(sfStringWins.at(i)->getWindow(), val, val);
+            }
+        }
+    }
+} // end of "drawBoxes"
+
+
+
+void drawSTStringBoxes(const std::unordered_map<int, CursesWindow*>& wins,
+                       const std::vector<CursesWindow*> & stStringWins,
+                       std::ofstream& log)
+{
+  char val = '.';
+
+  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
+    {
+      for(int i = 0; i < stStringWins.size(); i++)
+        {
+          if(stStringWins.at(i)->getWindow() != nullptr)
+            {
+              box(stStringWins.at(i)->getWindow(), val, val);
             }
         }
     }
