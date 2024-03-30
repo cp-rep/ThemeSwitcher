@@ -1,10 +1,10 @@
 #include "testingInterface.hpp"
 
 
-void initTestStringVector(std::vector<std::string>& testStrings,
-                          const int numStrings,
-                          const int numChars,
-                          std::ofstream& log)
+void initSTStrings(std::vector<std::string>& testStrings,
+                   const int numStrings,
+                   const int numChars,
+                   std::ofstream& log)
 {
   if(numStrings == 0)
     {
@@ -12,24 +12,12 @@ void initTestStringVector(std::vector<std::string>& testStrings,
     }
 
   std::string tempString;
-  std::string extension = ".ext";
-  bool appendedExt = false;
+  std::string extension = ".theme";
 
   for(int i = 0; i < numStrings; i++)
   {
-    char temp = 'a';
-
-    for(int j = 0; j < numChars - extension.length(); j++)
-      {
-        tempString.push_back(temp);
-        temp++;
-
-        if(temp == 'z')
-          {
-            temp = 'a';
-          }
-      }
-
+    tempString = "file";
+    tempString.append(intToStr(i + 1));
     tempString.append(extension);
     testStrings.push_back(tempString);
     tempString.clear();

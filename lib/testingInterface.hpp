@@ -4,10 +4,10 @@
 #include "log.hpp"
 #include "typeConversions.hpp"
 
-void initTestStringVector(std::vector<std::string>& testStrings,
-                          const int numStrings,
-                          const int numChars,
-                          std::ofstream& log);
+void initSTStrings(std::vector<std::string>& testStrings,
+                   const int numStrings,
+                   const int numChars,
+                   std::ofstream& log);
 void initTestFilesStringVector(std::vector<std::string>& testStrings,
                                const int numStrings,
                                std::ofstream& log);
