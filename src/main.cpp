@@ -220,6 +220,7 @@ int main()
           arrowClickVal = 0;
           clearWins(wins);
           clearSFStringWins(sfStringWins);
+          clearSFStringWins(stStringWins);
           outputStrings.clear();
 
           // the window size has changed. update window dimensions
@@ -240,7 +241,6 @@ int main()
                              savedThemeStrings,
                              stStringPos,
                              log);
-          outputStrings.clear();
           outputStrings = createSFOutputStrings(wins,
                                                 sfStringWins,
                                                 savedFileStrings,
@@ -375,6 +375,23 @@ int main()
     }
 
   sfStringWins.clear();
+
+  for(int i = 0; i < stStringWins.size(); i++)
+    {
+      if(stStringWins.at(i)->getWindow() != nullptr)
+        {
+          stStringWins.at(i)->deleteWindow();
+          stStringWins.at(i)->setWindow(nullptr);
+        }
+    }
+
+  stStringWins.clear();
+  promptStrings;
+  savedFileStrings.clear();
+  currThemes.clear();
+  savedThemeStrings.clear();
+  outputStrings.clear();
+
 #endif // _CURSES
 
   return 0;
