@@ -661,68 +661,76 @@ void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
 
   if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
     {
-      int maxWinLines;
-      int maxWinCols;
+      int maxLines;
+      int maxCols;
 
       getmaxyx(wins.at(_SAVEDTHEMESWIN)->getWindow(),
-               maxWinLines,
-               maxWinCols);
+               maxLines,
+               maxCols);
 
-      int currLine = 0;
-      std::string themeCount;
-      std::string outString;
-      int maxPrintableLines = maxWinLines - _STWINMINLINEOFFSET - _STWINMAXLINEOFFSET - 1;
+      std::string fileCount;
+      int printableLines = maxLines - _STWINMINLINEOFFSET - _STWINMAXLINEOFFSET;
+      int numLines = 1;
+      int numCols = 30;
       int printColOffset = 0;
+      int printLineOffset = 0;
+      //int startX = wins.at(_SAVEDTHEMESWIN)->getStartX() +
+      const int titleLineOffset = 4;
+      int j = 0;
 
-      // loop and print to _SAVEDTHEMESWIN
-      for(int i = stStringPos; i <= savedThemeStrings.size(); i++, currLine++)
+      for(int i = 0, j = stStringPos; j < savedThemeStrings.size(); i++, j++, printLineOffset++)
         {
-          if((i % (maxPrintableLines + 1)) == 0 && i >= 9)
+          // create the file count string
+          fileCount = intToStr(j + 1);
+          fileCount.append(". ");
+
+          // account for the number place changes
+          if(i == 9)
             {
-              printColOffset += 36;
-              currLine = 0;
+              numCols--;
+            }
+          else if(i == 99)
+            {
+              numCols--;
+            }
+          else if(i == 999)
+            {
+              numCols--;
             }
 
-          themeCount = intToStr(i + 1);
-          outString = savedThemeStrings.at(i);
-
-          // append an extra space to the line number for values under 10
-          if(i < 9)
+          // reset the output line position if max printable line is reached
+          if(printLineOffset == printableLines)
             {
-              themeCount.append(".  ");
-            }
-          else
-            {
-              themeCount.append(". ");
+              printColOffset += numCols + fileCount.length() + 2;
+              printLineOffset = 0;
             }
 
-          // make sure it stops printing before the columns print outside the window
-          if((themeCount.length() + 3 + printColOffset + outString.length()) >
-             (maxWinCols - _STWINMAXCOLOFFSET))
+          // make sure not to print out of the max window range
+          if(printColOffset + numCols + 1 > maxCols  - _STWINMAXCOLOFFSET)
             {
               break;
             }
 
-          // print the count
+          // print the file count string
           mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
-                    currLine + 4,
-                    3 + printColOffset,
-                    themeCount.c_str());
+                    titleLineOffset + printLineOffset,
+                    _STWINMINCOLOFFSET + printColOffset,
+                    fileCount.c_str());
 
-          const int startY = wins.at(_SAVEDTHEMESWIN)->getStartY() + currLine + 4;
-          const int startX = wins.at(_SAVEDTHEMESWIN)->getStartX() +
-            printColOffset + 3 + themeCount.length();
+          // create the window
+          const int startY = wins.at(_SAVEDTHEMESWIN)->getStartY() + titleLineOffset +
+            printLineOffset;
+          const int startX = wins.at(_SAVEDTHEMESWIN)->getStartX() + printColOffset +
+            _STWINMINCOLOFFSET + fileCount.length();
 
           CursesWindow* newWindow = new CursesWindow();
-          stStringWins.push_back(newWindow);
 
-          int numLines = 1;
-          int numCols = 30;
+          stStringWins.push_back(newWindow);
           stStringWins.at(i)->defineWindow(newwin(numLines,
                                                   numCols,
                                                   startY,
                                                   startX),
-                                           "SAVEDFILE",
+                                           "SAVEDTHEME",
                                            numLines,
                                            numCols,
                                            startY,
