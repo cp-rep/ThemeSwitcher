@@ -1513,7 +1513,7 @@ void shiftSTLeft(std::unordered_map<int, CursesWindow*>& wins,
                            wins.at(_MAINWIN)->getNumLines(),
                            wins.at(_MAINWIN)->getNumCols(),
                            log);
-      box(wins.at(_SAVEDTHEMESWIN)->getWindow(), 'D', 'D');
+      box(wins.at(_SAVEDTHEMESWIN)->getWindow(), ' ', ' ');
       printSavedThemesWin(wins,
                           log);
 
@@ -1564,7 +1564,7 @@ void shiftSTRight(std::unordered_map<int, CursesWindow*>& wins,
                                wins.at(_MAINWIN)->getNumLines(),
                                wins.at(_MAINWIN)->getNumCols(),
                                log);
-          box(wins.at(_SAVEDTHEMESWIN)->getWindow(), 'D', 'D');
+          box(wins.at(_SAVEDTHEMESWIN)->getWindow(), ' ', ' ');
           printSavedThemesWin(wins,
                               log);
           outputStringPos += val;
