@@ -84,5 +84,6 @@ const unsigned int _STWINMINLINEOFFSET = 2;
 const unsigned int _STWINMAXLINEOFFSET = 4;
 const unsigned int _STWINMINCOLOFFSET = 3;
 const unsigned int _STWINMAXCOLOFFSET = 3;
+const unsigned int _STWINMAXCOLS = 30;
 
 #endif // _CURSESWINCONSTS_HPP
