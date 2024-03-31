@@ -578,6 +578,11 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
         {
           linesCheck = true;
           numLines = halfedLines;
+          if(numLines + startY == maxLines - 1)
+            {
+              endwin();
+              numLines--;
+            }
         }
     }
 
