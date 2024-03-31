@@ -349,11 +349,11 @@ void defineArrowWin(std::unordered_map<int, CursesWindow*>& wins,
                           that can be indexed by key values in the file
                           _cursesWinConsts.hpp.
   Input:
-   numLines             - a reference to a constant integer containing the current
-                          maximum number of lines of the main curses window.
+   maxLines             - a reference to a constant integer containing the current
+                          maximum number of lines of the main curses window STDSCR.
 
-   numCols              - a reference to a constant integer containing the current
-                          maximum number of columns of the main curses window.
+   maxCols              - a reference to a constant integer containing the current
+                          maximum number of columns of the main curses window STDSCR.
 
   Output:
    NONE
@@ -540,11 +540,11 @@ void defineSFStringWins(const std::unordered_map<int, CursesWindow*>& wins,
                           that can be indexed by key values in the file
                           _cursesWinConsts.hpp.
   Input:
-   numLines             - a reference to a constant integer containing the current
-                          maximum number of lines of the main curses window.
+   maxLines             - a reference to a constant integer containing the current
+                          maximum number of lines of the main curses window STDSCR.
 
-   numCols              - a reference to a constant integer containing the current
-                          maximum number of columns of the main curses window.
+   maxCols              - a reference to a constant integer containing the current
+                          maximum number of columns of the main curses window STDSCR.
 
   Output:
    NONE
@@ -752,11 +752,11 @@ void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
                           that can be indexed by key values in the file
                           _cursesWinConsts.hpp.
   Input:
-   numLines             - a reference to a constant integer containing the current
-                          maximum number of lines of the main curses window.
+   maxLines             - a reference to a constant integer containing the current
+                          maximum number of lines of the main curses window STDSCR.
 
-   numCols              - a reference to a constant integer containing the current
-                          maximum number of columns of the main curses window.
+   maxCols              - a reference to a constant integer containing the current
+                          maximum number of columns of the main curses STDSCR.
 
   Output:
    NONE
