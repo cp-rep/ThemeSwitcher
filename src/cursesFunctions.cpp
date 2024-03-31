@@ -500,9 +500,9 @@ void defineSFStringWins(const std::unordered_map<int, CursesWindow*>& wins,
           sfStringWins.push_back(newWindow);
 
           int numLines = 1;
-          int numCols = maxCols - _SFSWINMINCOLOFFSET - _SFSWINMAXCOLOFFSET;
+          int numCols = maxCols - _SFWINMINCOLOFFSET - _SFWINMAXCOLOFFSET;
           int startY = i + wins.at(_SAVEDFILESWIN)->getStartY() + _SFSWINMINLINEOFFSET;
-          int startX = wins.at(_SAVEDFILESWIN)->getStartX() + _SFSWINMINCOLOFFSET;
+          int startX = wins.at(_SAVEDFILESWIN)->getStartX() + _SFWINMINCOLOFFSET;
 
           sfStringWins.at(i)->defineWindow(newwin(numLines,
                                                   numCols,
@@ -884,13 +884,13 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins,
 
 std::vector<std::string> createSFOutputStrings(const std::unordered_map<int, CursesWindow*>& wins,
                                                std::vector<CursesWindow*>& sfStringWins,
-                                               const std::vector<std::string>& savedFileStrings,
+                                               const std::vector<std::string>& sfStrings,
                                                const std::vector<std::string>& currThemes,
                                                std::ofstream& log)
 {
   std::vector<std::string> outputStrings;
 
-  if(savedFileStrings.empty() || currThemes.empty())
+  if(sfStrings.empty() || currThemes.empty())
     {
       return outputStrings;
     }
@@ -908,19 +908,23 @@ std::vector<std::string> createSFOutputStrings(const std::unordered_map<int, Cur
           std::string tempString;
           std::string fileString;
           std::string themeString;
+          std::string countString;
 
           getmaxyx(sfStringWins.at(0)->getWindow(), maxLines, maxCols);
           int i = 0;
 
-          for(i = 0; i < savedFileStrings.size(); i++)
+          for(i = 0; i < sfStrings.size(); i++)
             {
+              countString.clear();
               fileString.clear();
               themeString.clear();
               tempString.clear();
-              fileString = savedFileStrings.at(i);
+              countString = intToStr(i+1);
+              countString.append(". ");
+              fileString = sfStrings.at(i);
               themeString = currThemes.at(i);
-              int totalFileLength = fileString.length() + dots.length() + themeString.length();
-
+              int totalFileLength = fileString.length() + dots.length() +
+                themeString.length() + countString.length();
 
               if(totalFileLength > maxCols)
                 {
@@ -941,17 +945,19 @@ std::vector<std::string> createSFOutputStrings(const std::unordered_map<int, Cur
                 {
                   int dotCount = fileString.length();
 
-                  while(dotCount < maxCols - themeString.length())
+                  while(dotCount < maxCols - themeString.length() - countString.length())
                     {
                       fileString.push_back('.');
                       dotCount++;
                     }
                   fileString.append(themeString);
                 }
-              outputStrings.push_back(fileString);
+              countString.append(fileString);
+              outputStrings.push_back(countString);
             }
         }
     }
+
   return outputStrings;
 } // end of "createSFOutputStrings"
 
@@ -1214,10 +1220,6 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                     rightArrow,
                     _BLACK_TEXT,
                     log);
-
-      // print the file paths and current theme
-      printNumberedStrings(wins,
-                           log);
     }
 } // end of "printSavedFilesWin"
 
