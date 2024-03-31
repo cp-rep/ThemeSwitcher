@@ -1710,8 +1710,8 @@ void checkSFClick(const std::unordered_map<int, CursesWindow*>& wins,
       // enter iff the mouse click is in file clicking range offsets
       if(((mouseLine >= startY + _SFSWINMINLINEOFFSET) &&
                         (mouseLine < startY + maxLines - _SFSWINMAXLINEOFFSET)) &&
-         ((mouseCol >= startX + _SFSWINMINCOLOFFSET) &&
-          (mouseCol < startX + maxCols - _SFSWINMAXCOLOFFSET)))
+         ((mouseCol >= startX + _SFWINMINCOLOFFSET) &&
+          (mouseCol < startX + maxCols - _SFWINMAXCOLOFFSET)))
         {
           highlightWinNum = mouseLine - (wins.at(_SAVEDFILESWIN)->getStartY()
                                        + _SFSWINMINLINEOFFSET);
