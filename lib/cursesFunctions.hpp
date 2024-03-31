@@ -18,6 +18,7 @@ const std::string sfRightArrow = "_RARROWSAVEDFILESWIN";
 const std::string stTitle = "SAVED THEMES:";
 const std::string stLeftArrow = "_LARROWSAVEDTHEMESWIN";
 const std::string stRightArrow = "_RARROWSAVEDTHEMESWIN";
+const std::string emptySTString = "                              ";
 
 // arrows
 const std::string leftArrow = " < ";
@@ -87,8 +88,6 @@ void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
                    const int colorPair,
                    std::ofstream& log);
 void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
-                        const int& mouseLine,
-                        const int& mouseCol,
                         std::ofstream& log);
 void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
                             std::vector<CursesWindow*>& sfStringWins,
@@ -104,30 +103,28 @@ void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
                              const int& stHighlightNum,
                              std::ofstream& log);
 void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
-                         const int& mouseLine,
-                         const int& mouseCol,
                          std::ofstream& log);
 void shiftSFRight(const std::unordered_map<int, CursesWindow*>& wins,
                   std::vector<CursesWindow*>& sfStringWins,
                   const std::vector<std::string>& outputStrings,
                   int& sfStringPos,
                   std::ofstream& log);
-// void shiftSFLeft(const std::unordered_map<int, CursesWindow*>& wins,
-//                  std::vector<CursesWindow*>& sfStringWins,
-//                  const std::vector<std::string>& outputStrings,
-//                  int& sfStringPos,
-//                  std::ofstream& log);
-void shiftSTLeft(const std::unordered_map<int, CursesWindow*>& wins,
+void shiftSFLeft(const std::unordered_map<int, CursesWindow*>& wins,
+                 std::vector<CursesWindow*>& sfStringWins,
+                 const std::vector<std::string>& outputStrings,
+                 int& sfStringPos,
+                 std::ofstream& log);
+void shiftSTLeft(std::unordered_map<int, CursesWindow*>& wins,
                  std::vector<CursesWindow*>& stStringWins,
                  const std::vector<std::string>& outputStrings,
                  int& stStringPos,
                  std::ofstream& log);
-void shiftSTRight(const std::unordered_map<int, CursesWindow*>& wins,
+void shiftSTRight(std::unordered_map<int, CursesWindow*>& wins,
                   std::vector<CursesWindow*>& stStringWins,
                   const std::vector<std::string>& outputStrings,
                   int& outputStringPos,
                   std::ofstream& log);
-void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
+void checkArrowClick(std::unordered_map<int, CursesWindow*>& wins,
                      std::vector<CursesWindow*>& stringWins,
                      const int mainWin,
                      const int arrowWin,
