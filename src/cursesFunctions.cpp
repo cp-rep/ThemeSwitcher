@@ -665,7 +665,6 @@ void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
       if(stStringWins.at(i)->getWindow() != nullptr)
         {
           werase(stStringWins.at(i)->getWindow());
-          wrefresh(stStringWins.at(i)->getWindow());
           stStringWins.at(i)->deleteWindow();
           stStringWins.at(i)->setWindow(nullptr);
           delete stStringWins.at(i);
@@ -963,7 +962,6 @@ std::vector<std::string> createSFOutputStrings(const std::unordered_map<int, Cur
 
 
 
-
 std::vector<std::string> createSTOutputStrings(const std::unordered_map<int, CursesWindow*>& wins,
                                                const std::vector<std::string>& stStrings,
                                                const int& stStringPos,
@@ -1171,8 +1169,6 @@ void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
    NONE
 */
 void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
-                        const int& mouseLine,
-                        const int& mouseCol,
                         std::ofstream& log)
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
@@ -1387,8 +1383,6 @@ void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
    NONE
 */
 void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
-                         const int& mouseLine,
-                         const int& mouseCol,
                          std::ofstream& log)
 {
   if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
@@ -1499,7 +1493,55 @@ void shiftSFLeft(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-void shiftSTRight(const std::unordered_map<int, CursesWindow*>& wins,
+void shiftSTLeft(std::unordered_map<int, CursesWindow*>& wins,
+                 std::vector<CursesWindow*>& stStringWins,
+                 const std::vector<std::string>& outputStrings,
+                 int& stStringPos,
+                 std::ofstream& log)
+{
+  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr &&
+     !outputStrings.empty())
+    {
+      int maxLines = wins.at(_SAVEDTHEMESWIN)->getNumLines();
+      int maxCols = wins.at(_SAVEDTHEMESWIN)->getNumCols();
+      const int startY = wins.at(_SAVEDTHEMESWIN)->getStartY();
+      const int startX = wins.at(_SAVEDTHEMESWIN)->getStartX();
+
+      // get number of printable file windows
+      int val = maxLines - _STWINMINLINEOFFSET - _STWINMAXLINEOFFSET;
+
+      defineSavedThemesWin(wins,
+                           wins.at(_MAINWIN)->getNumLines(),
+                           wins.at(_MAINWIN)->getNumCols(),
+                           log);
+      box(wins.at(_SAVEDTHEMESWIN)->getWindow(), 'D', 'D');
+      printSavedThemesWin(wins,
+                          log);
+
+      // check if there is another list to 'scroll' to
+      if(stStringPos - val >= 0)
+        {
+          stStringPos -= val;
+          defineSTStringWins(wins,
+                             stStringWins,
+                             outputStrings,
+                             stStringPos,
+                             log);
+        }
+      else
+        {
+          stStringPos = 0;
+          defineSTStringWins(wins,
+                             stStringWins,
+                             outputStrings,
+                             stStringPos,
+                             log);
+        }
+    }
+}// end of "shiftSFLeft"
+
+
+void shiftSTRight(std::unordered_map<int, CursesWindow*>& wins,
                   std::vector<CursesWindow*>& stStringWins,
                   const std::vector<std::string>& outputStrings,
                   int& outputStringPos,
@@ -1519,6 +1561,13 @@ void shiftSTRight(const std::unordered_map<int, CursesWindow*>& wins,
       // check if there is another list to 'scroll' to
       if(outputStringPos + val < outputStrings.size())
         {
+          defineSavedThemesWin(wins,
+                               wins.at(_MAINWIN)->getNumLines(),
+                               wins.at(_MAINWIN)->getNumCols(),
+                               log);
+          box(wins.at(_SAVEDTHEMESWIN)->getWindow(), 'D', 'D');
+          printSavedThemesWin(wins,
+                              log);
           outputStringPos += val;
           defineSTStringWins(wins,
                              stStringWins,
@@ -1582,7 +1631,7 @@ void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
+void checkArrowClick(std::unordered_map<int, CursesWindow*>& wins,
                      std::vector<CursesWindow*>& stringWins,
                      const int mainWin,
                      const int arrowWin,
@@ -1631,11 +1680,11 @@ void checkArrowClick(const std::unordered_map<int, CursesWindow*>& wins,
             }
           else if (arrowWin == _LARROWSAVEDTHEMESWIN)
             {
-              // shiftSTLeft(wins,
-              //              stringWins,
-              //              outputStrings,
-              //              outputStringPos,
-              //              log);
+              shiftSTLeft(wins,
+                          stringWins,
+                          outputStrings,
+                          outputStringPos,
+                          log);
             }
           else if(arrowWin == _RARROWSAVEDTHEMESWIN)
             {
