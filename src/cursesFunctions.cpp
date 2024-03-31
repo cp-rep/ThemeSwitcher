@@ -682,7 +682,6 @@ void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
                maxLines,
                maxCols);
 
-      std::string fileCount;
       int printableLines = maxLines - _STWINMINLINEOFFSET - _STWINMAXLINEOFFSET;
       int numLines = 1;
       int numMaxCols = _STWINMAXCOLS;
@@ -1996,6 +1995,7 @@ void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins,
 
   for(it = wins.begin(); it != wins.end(); it++)
     {
+      wattron(it->second->getWindow(), COLOR_PAIR(_BLACK_TEXT));
       if((it->second->getWindowName() != "SAVEDFILE") &&
          (it->second->getWindowName() != "_PROMPTWIN")&&
          (it->second->getWindowName() != "_LARROWSAVEDFILESWIN") &&
@@ -2003,18 +2003,19 @@ void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins,
          (it->second->getWindowName() != "_LARROWSAVEDTHEMESWIN") &&
          (it->second->getWindowName() != "_RARROWSAVEDTHEMESWIN"))
         {
-          if(val == '[')
-            {
-              val = 'A';
-            }
+          // if(val == '[')
+          //   {
+          //     val = 'A';
+          //   }
 
           val++;
 
           if(it->second->getWindow() != nullptr)
             {
-              box(it->second->getWindow(), val, val);
+              box(it->second->getWindow(), ' ', ' ');
             }
       }
+      wattron(it->second->getWindow(), COLOR_PAIR(_WHITE_TEXT));
     }
 } // end of "drawBoxes"
 
@@ -2045,6 +2046,7 @@ void drawSTStringBoxes(const std::unordered_map<int, CursesWindow*>& wins,
                        std::ofstream& log)
 {
   char val = '.';
+
 
   if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
     {
