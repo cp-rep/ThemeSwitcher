@@ -572,9 +572,9 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
       colsCheck= true;
     }
 
-  if(_SAVEDTHEMESWINMINLINES < numLines + 1)
+  if(_SAVEDTHEMESWINMINLINES < numLines)
     {
-      if(halfedLines > _SAVEDFILESWINMINLINES)
+      if(halfedLines > _SAVEDFILESWINMINLINES - 1)
         {
           linesCheck = true;
           numLines = halfedLines;
@@ -1517,7 +1517,9 @@ void shiftSTLeft(std::unordered_map<int, CursesWindow*>& wins,
                            wins.at(_MAINWIN)->getNumLines(),
                            wins.at(_MAINWIN)->getNumCols(),
                            log);
+      wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
       box(wins.at(_SAVEDTHEMESWIN)->getWindow(), ' ', ' ');
+      wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
       printSavedThemesWin(wins,
                           log);
 
@@ -1568,7 +1570,9 @@ void shiftSTRight(std::unordered_map<int, CursesWindow*>& wins,
                                wins.at(_MAINWIN)->getNumLines(),
                                wins.at(_MAINWIN)->getNumCols(),
                                log);
+          wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
           box(wins.at(_SAVEDTHEMESWIN)->getWindow(), ' ', ' ');
+          wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
           printSavedThemesWin(wins,
                               log);
           outputStringPos += val;
