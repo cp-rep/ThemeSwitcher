@@ -8,6 +8,10 @@
 #include "log.hpp"
 #include "typeConversions.hpp"
 
+// helpwin
+const std::string hwAddFile = " Add File ";
+
+
 // _SAVEDFILESWIN
 const std::string sfTitle = "SAVED FILES:";
 const std::string sfThemeTitle = "CURRENT THEME:";
@@ -80,6 +84,8 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
                     const int& mouseLine,
                     const int& mouseCol,
                     std::ofstream& log);
+void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
+                  std::ofstream& log);
 void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
                           std::ofstream& log);
 void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
