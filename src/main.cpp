@@ -107,7 +107,7 @@ int main()
 
   // init the temporary testing string vectors
   const int numStrings = 200;
-  const int stringLength = 30;
+
   initTestFilesStringVector(sfStrings,
                             numStrings,
                             log);
@@ -116,7 +116,7 @@ int main()
                                  log);
   initSTStrings(stStrings,
                 numStrings,
-                stringLength,
+                _STWINMAXCOLS,
                 log);
 
   // ## initialize curses and starting windows ##
@@ -134,73 +134,62 @@ int main()
                                    stStringPos,
                                    log);
 
-  for(int i = 0; i < stOutput.size(); i++)
-  {
-    log << stOutput.at(i) << std::endl;
-  }
-
   // run once, defining the windows and printing initial starting data
   {
     definePromptTitle(promptStrings);
     defineWins(wins,
-               sfStringPos,
                log);
-    // defineSFStringWins(wins,
-    //                    sfStringWins,
-    //                    stOutput,
-    //                    sfStringPos,
-    //                    log);
-    // defineSTStringWins(wins,
-    //                    stStringWins,
-    //                    stStrings,
-    //                    stStringPos,
-    //                    log);
-    // sfOutput = createSFOutputStrings(wins,
-    //                                  sfStringWins,
-    //                                  sfStrings,
-    //                                  sfThemes,
-    //                                  log);
-    // drawBoxes(wins,
-    //           log);
-    // printPromptWin(wins,
-    //                promptStrings,
-    //                currLines,
-    //                currCols,
-    //                mouseLine,
-    //                mouseCol,
-    //                log);
-    // printSavedFilesWin(wins,
-    //                    mouseLine,
-    //                    mouseCol,
-    //                    log);
-    // printSavedFilesStrings(wins,
-    //                        sfStringWins,
-    //                        sfOutput,
-    //                        sfStringPos,
-    //                        currStartWin,
-    //                        sfHighlightNum,
-    //                        log);
-    // printSavedThemesWin(wins,
-    //                     stStrings,
-    //                     mouseLine,
-    //                     mouseCol,
-    //                     log);
-    // // printSavedThemesStrings(wins,
-    // //                         stStringWins,
-    // //                         stOutput,
-    // //                         stStringPos,
-    // //                         stHighlightNum,
-    // //                         log);
-
-    // drawSTStringBoxes(wins,
-    //                   stStringWins,
-    //                   log);
-    // refreshWins(wins);
-    // refreshSFStringWins(sfStringWins,
-    //                     log);
-    // refreshSTStringWins(stStringWins,
-    //                     log);
-    // doupdate();
+    defineSFStringWins(wins,
+                       sfStringWins,
+                       stOutput,
+                       sfStringPos,
+                       log);
+    defineSTStringWins(wins,
+                       stStringWins,
+                       stOutput,
+                       stStringPos,
+                       log);
+    sfOutput = createSFOutputStrings(wins,
+                                     sfStringWins,
+                                     sfStrings,
+                                     sfThemes,
+                                     log);
+    drawBoxes(wins,
+              log);
+    printPromptWin(wins,
+                   promptStrings,
+                   currLines,
+                   currCols,
+                   mouseLine,
+                   mouseCol,
+                   log);
+    printSavedFilesWin(wins,
+                       mouseLine,
+                       mouseCol,
+                       log);
+    printSavedFilesStrings(wins,
+                           sfStringWins,
+                           sfOutput,
+                           sfStringPos,
+                           currStartWin,
+                           sfHighlightNum,
+                           log);
+    printSavedThemesWin(wins,
+                        mouseLine,
+                        mouseCol,
+                        log);
+    printSavedThemesStrings(wins,
+                            stStringWins,
+                            stOutput,
+                            stStringPos,
+                            stHighlightNum,
+                            log);
+    refreshWins(wins);
+    refreshSFStringWins(sfStringWins,
+                        log);
+    refreshSTStringWins(stStringWins,
+                        log);
+    doupdate();
   }
 #endif // _CURSES
 
@@ -249,7 +238,6 @@ int main()
 
           // redefine windows
           defineWins(wins,
-                     sfStringPos,
                      log);
           defineSFStringWins(wins,
                              sfStringWins,
@@ -288,7 +276,6 @@ int main()
                                  sfHighlightNum,
                                  log);
           printSavedThemesWin(wins,
-                              stStrings,
                               mouseLine,
                               mouseCol,
                               log);
@@ -298,9 +285,6 @@ int main()
                                   stStringPos,
                                   stHighlightNum,
                                   log);
-          // drawSTStringBoxes(wins,
-          //                   stStringWins,
-          //                   log);
           refreshWins(wins);
           refreshSFStringWins(sfStringWins,
                               log);
@@ -380,9 +364,6 @@ int main()
                                   stStringPos,
                                   stHighlightNum,
                                   log);
-          // drawSTStringBoxes(wins,
-          //                   stStringWins,
-          //                   log);
           refreshWins(wins);
           refreshSFStringWins(sfStringWins,
                               log);
