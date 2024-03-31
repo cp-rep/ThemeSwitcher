@@ -163,6 +163,8 @@ int main()
                    mouseLine,
                    mouseCol,
                    log);
+    printHelpWin(wins,
+                 log);
     printSavedFilesWin(wins,
                        log);
     printSavedFilesStrings(wins,
@@ -260,6 +262,8 @@ int main()
                          mouseLine,
                          mouseCol,
                          log);
+          printHelpWin(wins,
+                       log);
           printSavedFilesWin(wins,
                              log);
           printSavedFilesStrings(wins,
@@ -337,6 +341,8 @@ int main()
                          mouseCol,
                          sfHighlightNum,
                          log);
+          printHelpWin(wins,
+                       log);
           printSavedFilesStrings(wins,
                                  sfStringWins,
                                  sfOutput,
