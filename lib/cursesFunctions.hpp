@@ -62,7 +62,6 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                    const int& maxLines,
                    const int& maxCols);
 void defineWins(std::unordered_map<int, CursesWindow*>& wins,
-                const int& sfStringPos,
                 std::ofstream& log);
 std::vector<std::string> createSFOutputStrings(const std::unordered_map<int, CursesWindow*>& wins,
                                                std::vector<CursesWindow*>& sfStringWins,
@@ -105,7 +104,6 @@ void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
                              const int& stHighlightNum,
                              std::ofstream& log);
 void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
-                         const std::vector<std::string>& savedThemesStrings,
                          const int& mouseLine,
                          const int& mouseCol,
                          std::ofstream& log);
