@@ -376,7 +376,7 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
   bool colsCheck = false;
   bool linesCheck = false;
 
-  if(numCols > _PROMPTWINMINCOLS)
+  if(numCols > _SAVEDFILESWINMINCOLS)
     {
       colsCheck= true;
     }
@@ -567,7 +567,7 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
   bool colsCheck = false;
   bool linesCheck = false;
 
-  if(numCols > _PROMPTWINMINCOLS)
+  if(numCols > _SAVEDTHEMESWINMINCOLS)
     {
       colsCheck= true;
     }
