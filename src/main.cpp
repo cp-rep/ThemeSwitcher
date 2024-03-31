@@ -139,23 +139,23 @@ int main()
     definePromptTitle(promptStrings);
     defineWins(wins,
                log);
+    drawBoxes(wins,
+              log);
     defineSFStringWins(wins,
                        sfStringWins,
                        stOutput,
                        sfStringPos,
-                       log);
-    defineSTStringWins(wins,
-                       stStringWins,
-                       stOutput,
-                       stStringPos,
                        log);
     sfOutput = createSFOutputStrings(wins,
                                      sfStringWins,
                                      sfStrings,
                                      sfThemes,
                                      log);
-    drawBoxes(wins,
-              log);
+    defineSTStringWins(wins,
+                       stStringWins,
+                       stOutput,
+                       stStringPos,
+                       log);
     printPromptWin(wins,
                    promptStrings,
                    currLines,
