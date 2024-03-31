@@ -1147,6 +1147,46 @@ void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
+
+void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
+                  std::ofstream& log)
+{
+  if(wins.at(_HELPWIN)->getWindow() != nullptr)
+    {
+      int maxWinLines;
+      int maxWinCols;
+      getmaxyx(wins.at(_HELPWIN)->getWindow(),
+               maxWinLines,
+               maxWinCols);
+
+      int printColPosition;
+      std::string filesCount;
+
+      int linePosition = wins.at(_HELPWIN)->getStartY() + 2;
+
+      std::vector<std::string>::const_iterator it;
+      std::string outString;
+      int i = 0;
+
+      // print win title
+      outString = sfTitle;
+      mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                2,
+                2,
+                outString.c_str());
+
+      wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+      outString = hwAddFile;
+      mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                4,
+                3,
+                outString.c_str());
+      wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+    }
+} // end of "printSavedFilesWin"
+
+
+
 /*
   Function:
    printSavedFilesWin
