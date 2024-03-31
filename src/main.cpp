@@ -164,8 +164,6 @@ int main()
                    mouseCol,
                    log);
     printSavedFilesWin(wins,
-                       mouseLine,
-                       mouseCol,
                        log);
     printSavedFilesStrings(wins,
                            sfStringWins,
@@ -175,8 +173,6 @@ int main()
                            sfHighlightNum,
                            log);
     printSavedThemesWin(wins,
-                        mouseLine,
-                        mouseCol,
                         log);
     printSavedThemesStrings(wins,
                             stStringWins,
@@ -246,7 +242,7 @@ int main()
                              log);
           defineSTStringWins(wins,
                              stStringWins,
-                             stStrings,
+                             stOutput,
                              stStringPos,
                              log);
           sfOutput = createSFOutputStrings(wins,
@@ -265,8 +261,6 @@ int main()
                          mouseCol,
                          log);
           printSavedFilesWin(wins,
-                             mouseLine,
-                             mouseCol,
                              log);
           printSavedFilesStrings(wins,
                                  sfStringWins,
@@ -276,8 +270,6 @@ int main()
                                  sfHighlightNum,
                                  log);
           printSavedThemesWin(wins,
-                              mouseLine,
-                              mouseCol,
                               log);
           printSavedThemesStrings(wins,
                                   stStringWins,
