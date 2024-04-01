@@ -1561,13 +1561,13 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
       wattroff(wins.at(_SAVEDFILESWIN)->getWindow(), A_BOLD);
 
       // print the arrow windows for _SAVEDFILESWIN
-      printArrowWin(wins,
+      printButtonWin(wins,
                     _LARROWSAVEDFILESWIN,
                     leftArrow,
                     _BLACK_TEXT,
                     log);
 
-      printArrowWin(wins,
+      printButtonWin(wins,
                     _RARROWSAVEDFILESWIN,
                     rightArrow,
                     _BLACK_TEXT,
@@ -1766,17 +1766,17 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                 _STWINMINCOLOFFSET,
                 outString.c_str());
       wattroff(wins.at(_SAVEDTHEMESWIN)->getWindow(), A_BOLD);
-      printArrowWin(wins,
-                    _LARROWSAVEDTHEMESWIN,
-                    leftArrow,
-                    _BLACK_TEXT,
-                    log);
+      printButtonWin(wins,
+                     _LARROWSAVEDTHEMESWIN,
+                     leftArrow,
+                     _BLACK_TEXT,
+                     log);
 
-      printArrowWin(wins,
-                    _RARROWSAVEDTHEMESWIN,
-                    rightArrow,
-                    _BLACK_TEXT,
-                    log);
+      printButtonWin(wins,
+                     _RARROWSAVEDTHEMESWIN,
+                     rightArrow,
+                     _BLACK_TEXT,
+                     log);
     }
 } // end of "printSavedThemesWin"
 
@@ -1946,18 +1946,18 @@ void shiftSTRight(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
-                     const int win,
-                     std::string outString,
-                     const int colorPair,
-                     std::ofstream& log)
+void printButtonWin(const std::unordered_map<int, CursesWindow*>& wins,
+                    const int win,
+                    std::string outString,
+                    const int colorPair,
+                    std::ofstream& log)
 {
   wattron(wins.at(win)->getWindow(), COLOR_PAIR(colorPair));
   mvwaddstr(wins.at(win)->getWindow(),
             0,
             0,
             outString.c_str());
-} // end of "printArrowWin"
+} // end of "printButtonWin"
 
 
 
@@ -2017,11 +2017,11 @@ void checkButtonClick(std::unordered_map<int, CursesWindow*>& wins,
           mouseCol <= wins.at(buttonWin)->getStartX() + outString.length() - 1))
         {
           // give the arrow button that was clicked the 'click effect'
-          printArrowWin(wins,
-                        buttonWin,
-                        outString,
-                        _WHITE_TEXT,
-                        log);
+          printButtonWin(wins,
+                         buttonWin,
+                         outString,
+                         _WHITE_TEXT,
+                         log);
           wnoutrefresh(wins.at(buttonWin)->getWindow());
           doupdate();
           usleep(40000);
@@ -2081,11 +2081,11 @@ void checkButtonClick(std::unordered_map<int, CursesWindow*>& wins,
             default:
               break;
             }
-          printArrowWin(wins,
-                        buttonWin,
-                        outString,
-                        _BLACK_TEXT,
-                        log);
+          printButtonWin(wins,
+                         buttonWin,
+                         outString,
+                         _BLACK_TEXT,
+                         log);
         }
     }
 } // end of "checkArrowClick"
