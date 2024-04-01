@@ -1370,9 +1370,10 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
 
           wattron(wins.at(_HELPWIN)->getWindow(), A_BOLD);
           outString = sfThemeTitle;
+          sfColOffset += _HWBUTTONCOLS + 2;
           mvwaddstr(wins.at(_HELPWIN)->getWindow(),
                     sfLineOffset,
-                    sfColOffset + 21,
+                    sfColOffset,
                     outString.c_str());
           wattroff(wins.at(_HELPWIN)->getWindow(), A_BOLD);
       }
