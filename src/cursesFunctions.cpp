@@ -1367,6 +1367,14 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                     sfColOffset,
                     outString.c_str());
           wattroff(wins.at(_HELPWIN)->getWindow(), A_BOLD);
+
+          wattron(wins.at(_HELPWIN)->getWindow(), A_BOLD);
+          outString = sfThemeTitle;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    sfLineOffset,
+                    sfColOffset + 21,
+                    outString.c_str());
+          wattroff(wins.at(_HELPWIN)->getWindow(), A_BOLD);
       }
 
       if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
