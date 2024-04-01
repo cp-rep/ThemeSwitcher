@@ -125,6 +125,7 @@ int main()
   std::vector<CursesWindow*> sfStringWins;
   std::vector<CursesWindow*> stStringWins;
   MEVENT mouse;
+
   initializeCurses();
   initializeWins(wins,
                  sfStrings.size(),
