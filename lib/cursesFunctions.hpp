@@ -9,8 +9,13 @@
 #include "typeConversions.hpp"
 
 // helpwin
-const std::string hwAddFile = " Add File ";
-
+const std::string hwSFAddFile = " Add File ";
+const std::string hwSFEditFilePath = " Edit File Path ";
+const std::string hwSFViewFilePath = " View File Path ";
+const std::string hwSFRemoveFile = " Remove File ";
+const std::string hwSFAddTheme = " Add File Theme ";
+const std::string hwSFEditTheme = " Edit File Theme ";
+const std::string hwSFRemoveTheme = " Remove File Theme ";
 
 // _SAVEDFILESWIN
 const std::string sfTitle = "SAVED FILES:";
