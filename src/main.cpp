@@ -141,6 +141,7 @@ int main()
                log);
     drawBoxes(wins,
               log);
+    getmaxyx(wins.at(_MAINWIN)->getWindow(), currLines, currCols);
     defineSFStringWins(wins,
                        sfStringWins,
                        stOutput,
