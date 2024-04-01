@@ -981,7 +981,7 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                                       startY,
                                       startX);
 
-      defineHWSFButtons(wins);
+      defineHWButtons(wins);
     }
   // the window has been resized to a bad dimension. delete it
   else
