@@ -57,12 +57,13 @@ const unsigned int _PROMPTWINMAXCOLS = 140;
 // _HELPWIN
 const unsigned int _HELPWINSTARTY = _PROMPTWINSTARTY + _PROMPTWINMAXLINES + 1;
 const unsigned int _HELPWINSTARTX = 0;
-const unsigned int _HELPWINMINCOLS = 45;
+const unsigned int _HELPWINMINCOLS = 47;
 const unsigned int _HELPWINMAXCOLS = 60;
 const unsigned int _HELPWINMINLINES = 4;
 const unsigned int _HELPWINMAXLINES = 40;
 const unsigned int _HELPWINCOLOFFSET = 3;
 const unsigned int _HELPWINLINEOFFSET = 2;
+const unsigned int _HWBUTTONCOLS = 19;
 
 // _SAVEDFILESWIN DIMENSIONS
 const unsigned int _SAVEDFILESWINSTARTY = _PROMPTWINSTARTY + _PROMPTWINMAXLINES + 1;
