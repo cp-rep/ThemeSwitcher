@@ -97,11 +97,11 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                   std::ofstream& log);
 void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
                           std::ofstream& log);
-void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
-                   const int win,
-                   std::string outString,
-                   const int colorPair,
-                   std::ofstream& log);
+void printButtonWin(const std::unordered_map<int, CursesWindow*>& wins,
+                    const int win,
+                    std::string outString,
+                    const int colorPair,
+                    std::ofstream& log);
 void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                         std::ofstream& log);
 void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
