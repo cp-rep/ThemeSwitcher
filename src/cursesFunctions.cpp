@@ -1997,10 +1997,10 @@ void printArrowWin(const std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-void checkArrowClick(std::unordered_map<int, CursesWindow*>& wins,
+void checkButtonClick(std::unordered_map<int, CursesWindow*>& wins,
                      std::vector<CursesWindow*>& stringWins,
                      const int mainWin,
-                     const int arrowWin,
+                     const int buttonWin,
                      const std::vector<std::string>& outputStrings,
                      int& outputStringPos,
                      const int& mouseLine,
@@ -2009,60 +2009,80 @@ void checkArrowClick(std::unordered_map<int, CursesWindow*>& wins,
                      std::ofstream& log)
 {
   if(wins.at(mainWin)->getWindow() != nullptr &&
-     wins.at(arrowWin)->getWindow() != nullptr)
+     wins.at(buttonWin)->getWindow() != nullptr)
     {
       // flash window if mouse click deteceted in range
-      if((mouseLine == wins.at(arrowWin)->getStartY()) &&
-         (mouseCol >= wins.at(arrowWin)->getStartX() &&
-          mouseCol <= wins.at(arrowWin)->getStartX() + outString.length() - 1))
+      if((mouseLine == wins.at(buttonWin)->getStartY()) &&
+         (mouseCol >= wins.at(buttonWin)->getStartX() &&
+          mouseCol <= wins.at(buttonWin)->getStartX() + outString.length() - 1))
         {
           // give the arrow button that was clicked the 'click effect'
           printArrowWin(wins,
-                        arrowWin,
+                        buttonWin,
                         outString,
                         _WHITE_TEXT,
                         log);
-          wnoutrefresh(wins.at(arrowWin)->getWindow());
+          wnoutrefresh(wins.at(buttonWin)->getWindow());
           doupdate();
           usleep(40000);
 
-          // 'shift'  saved file win list left
-          if(arrowWin == _LARROWSAVEDFILESWIN)
+          switch(buttonWin)
             {
+            case _LARROWSAVEDFILESWIN:
               shiftSFLeft(wins,
-                             stringWins,
-                             outputStrings,
-                             outputStringPos,
-                             log);
-            }
-          // 'shift' saved file win list right
-          else if (arrowWin == _RARROWSAVEDFILESWIN)
-            {
+                          stringWins,
+                          outputStrings,
+                          outputStringPos,
+                          log);
+              break;
+            case _RARROWSAVEDFILESWIN:
               shiftSFRight(wins,
                            stringWins,
                            outputStrings,
                            outputStringPos,
                            log);
-            }
-          else if (arrowWin == _LARROWSAVEDTHEMESWIN)
-            {
+              break;
+            case _LARROWSAVEDTHEMESWIN:
               shiftSTLeft(wins,
                           stringWins,
                           outputStrings,
                           outputStringPos,
                           log);
-            }
-          else if(arrowWin == _RARROWSAVEDTHEMESWIN)
-            {
+              break;
+            case _RARROWSAVEDTHEMESWIN:
               shiftSTRight(wins,
                            stringWins,
                            outputStrings,
                            outputStringPos,
                            log);
+              break;
+            case _HWSFADDFILE:
+              break;
+            case _HWSFEDITFILEPATH:
+              break;
+            case _HWSFVIEWFILEPATH:
+              break;
+            case _HWSFREMOVEFILE:
+              break;
+            case _HWSFADDTHEME:
+              break;
+            case _HWSFEDITTHEME:
+              break;
+            case _HWSFREMOVETHEME:
+              break;
+            case _HWSTADDTHEME:
+              break;
+            case _HWSTREMOVETHEME:
+              break;
+            case _HWSTEDITTHEME:
+              break;
+            case _HWSTVIEWTHEME:
+              break;
+            default:
+              break;
             }
-
           printArrowWin(wins,
-                        arrowWin,
+                        buttonWin,
                         outString,
                         _BLACK_TEXT,
                         log);
