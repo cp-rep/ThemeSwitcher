@@ -1298,6 +1298,8 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
       int i = 0;
 
       // print win title
+      wattron(wins.at(_SAVEDFILESWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+      wattron(wins.at(_SAVEDFILESWIN)->getWindow(), A_BOLD);
       outString = sfTitle;
       mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
                 i + _SFWINMINLINEOFFSET,
@@ -1305,13 +1307,13 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                 outString.c_str());
 
       // print current theme title
-      wattron(wins.at(_SAVEDFILESWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
       outString = sfThemeTitle;
       printColPosition = maxWinCols - outString.length() - _SFWINMINCOLOFFSET;
       mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
                 i + _SFWINMINLINEOFFSET,
                 maxWinCols - outString.length() - _SFWINMINCOLOFFSET,
                 outString.c_str());
+      wattroff(wins.at(_SAVEDFILESWIN)->getWindow(), A_BOLD);
 
       // print the arrow windows for _SAVEDFILESWIN
       printArrowWin(wins,
@@ -1508,11 +1510,13 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
       std::vector<std::string>::const_iterator it;
       std::string outString;
 
+      wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), A_BOLD);
       outString = stTitle;
       mvwaddstr(wins.at(_SAVEDTHEMESWIN)->getWindow(),
                 _STWINMINLINEOFFSET,
                 _STWINMINCOLOFFSET,
                 outString.c_str());
+      wattroff(wins.at(_SAVEDTHEMESWIN)->getWindow(), A_BOLD);
       printArrowWin(wins,
                     _LARROWSAVEDTHEMESWIN,
                     leftArrow,
