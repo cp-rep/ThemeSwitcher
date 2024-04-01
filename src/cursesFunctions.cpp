@@ -207,11 +207,12 @@ void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
                      const int& maxCols)
 {
   int numLines = _PROMPTWINMAXLINES;
-  int numCols = maxCols - _HELPWINMINCOLS - _PROMPTWINCOLOFFSET;
+  int numCols = maxCols - _PROMPTWINCOLOFFSET + 3;
   int startY = _PROMPTWINSTARTY;
   int startX = _PROMPTWINSTARTX;
   bool define = true;
 
+  //if(maxLines - _PROMPTWINLINEOFFSET <= _PROMPTWINMAXLINES)
   if(maxLines - _PROMPTWINLINEOFFSET <= _PROMPTWINMAXLINES)
     {
       define = false;
@@ -1053,17 +1054,19 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
       int i = 0;
       std::vector<std::string>::const_iterator it;
       std::string outString;
+      //const int offset = 6;
       const int offset = 6;
 
       wattron(wins.at(_PROMPTWIN)->getWindow(), A_BOLD);
+      log << "currCols: " << currCols << std::endl;
       for(it = promptStrings.begin(); it != promptStrings.end(); i++, it++)
         {
           outString = *it;
-          const int temp = wins.at(_HELPWIN)->getStartX();
+          const int temp = wins.at(_MAINWIN)->getStartX();
 
-          if(outString.length() >= temp - offset)
+          if(outString.length() >= currCols - offset)
             {
-              outString.resize(temp - offset);
+              outString.resize(currCols - offset);
             }
 
           mvwaddstr(wins.at(_PROMPTWIN)->getWindow(),
