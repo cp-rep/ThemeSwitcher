@@ -764,8 +764,6 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                           numCols,
                                           startY,
                                           startX);
-      box(wins.at(_HWSFADDFILE)->getWindow(), 'a', 'a');
-
       // edd file path
       startY += 2;
       wins.at(_HWSFEDITFILEPATH)->defineWindow(newwin(numLines,
@@ -777,8 +775,6 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                                numCols,
                                                startY,
                                                startX);
-      box(wins.at(_HWSFEDITFILEPATH)->getWindow(), 'b', 'b');
-
       // view file path
       startY +=2;
       wins.at(_HWSFVIEWFILEPATH)->defineWindow(newwin(numLines,
@@ -790,8 +786,6 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                              numCols,
                                              startY,
                                              startX);
-      box(wins.at(_HWSFVIEWFILEPATH)->getWindow(), 'c', 'c');
-
       // remove file
       startY +=2;
       wins.at(_HWSFREMOVEFILE)->defineWindow(newwin(numLines,
@@ -803,8 +797,6 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                              numCols,
                                              startY,
                                              startX);
-      box(wins.at(_HWSFREMOVEFILE)->getWindow(), 'd', 'd');
-
       // add theme
       startY = wins.at(_HELPWIN)->getStartY() + 4;
       startX = wins.at(_HWSFADDFILE)->getStartX() + wins.at(_HWSFADDFILE)->getNumCols() + 2;
@@ -817,8 +809,6 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                              numCols,
                                              startY,
                                              startX);
-      box(wins.at(_HWSFADDTHEME)->getWindow(), 'e', 'e');
-
       // edit theme
       startY += 2;
       wins.at(_HWSFEDITTHEME)->defineWindow(newwin(numLines,
@@ -830,8 +820,6 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                            numCols,
                                            startY,
                                            startX);
-      box(wins.at(_HWSFEDITTHEME)->getWindow(), 'f', 'f');
-
       // remove theme
       startY += 2;
       wins.at(_HWSFREMOVETHEME)->defineWindow(newwin(numLines,
@@ -843,8 +831,6 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                             numCols,
                                             startY,
                                             startX);
-      box(wins.at(_HWSFREMOVETHEME)->getWindow(), 'g', 'g');
-
       // curr theme buttons
       // add theme
       startY = wins.at(_SAVEDTHEMESWIN)->getStartY() + 4;
@@ -858,8 +844,6 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                            numCols,
                                            startY,
                                            startX);
-      box(wins.at(_HWSTADDTHEME)->getWindow(), 'h', 'h');
-
       // edit theme
       startY += 2;
       wins.at(_HWSTEDITTHEME)->defineWindow(newwin(numLines,
@@ -871,8 +855,6 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                            numCols,
                                            startY,
                                            startX);
-      box(wins.at(_HWSTEDITTHEME)->getWindow(), 'i', 'i');
-
       // remove theme
       startY = wins.at(_SAVEDTHEMESWIN)->getStartY() + 4;
       startX = wins.at(_HWSFADDFILE)->getStartX() + wins.at(_HWSFADDFILE)->getNumCols() + 2;
@@ -885,8 +867,6 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                               numCols,
                                               startY,
                                               startX);
-      box(wins.at(_HWSTREMOVETHEME)->getWindow(), 'j', 'j');
-
       // view theme
       startY += 2;
       wins.at(_HWSTVIEWTHEME)->defineWindow(newwin(numLines,
@@ -898,9 +878,8 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                               numCols,
                                               startY,
                                               startX);
-      box(wins.at(_HWSTVIEWTHEME)->getWindow(), 'k', 'k');
   }
-}
+} // end of "defineHWButtons"
 
 
 
