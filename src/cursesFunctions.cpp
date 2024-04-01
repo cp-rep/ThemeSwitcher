@@ -212,7 +212,6 @@ void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
   int startX = _PROMPTWINSTARTX;
   bool define = true;
 
-  //if(maxLines - _PROMPTWINLINEOFFSET <= _PROMPTWINMAXLINES)
   if(maxLines - _PROMPTWINLINEOFFSET <= _PROMPTWINMAXLINES)
     {
       define = false;
@@ -1054,7 +1053,6 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
       int i = 0;
       std::vector<std::string>::const_iterator it;
       std::string outString;
-      //const int offset = 6;
       const int offset = 6;
 
       wattron(wins.at(_PROMPTWIN)->getWindow(), A_BOLD);
