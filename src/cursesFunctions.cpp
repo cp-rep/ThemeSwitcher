@@ -381,10 +381,10 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
       colsCheck= true;
     }
 
-  if(_SAVEDFILESWINMINLINES < numLines)
+  if(_SAVEDFILESWINMINLINES < numLines - 1)
     {
       linesCheck = true;
-      if(halfedLines > _SAVEDFILESWINMINLINES)
+      if(halfedLines - 1 > _SAVEDFILESWINMINLINES)
         {
           numLines = halfedLines;
         }
@@ -572,7 +572,7 @@ void defineSavedThemesWin(std::unordered_map<int, CursesWindow*>& wins,
       colsCheck= true;
     }
 
-  if(_SAVEDTHEMESWINMINLINES < numLines)
+  if(_SAVEDTHEMESWINMINLINES < numLines - 1)
     {
       if(halfedLines > _SAVEDFILESWINMINLINES - 1)
         {
