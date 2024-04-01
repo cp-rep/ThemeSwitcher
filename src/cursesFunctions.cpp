@@ -734,7 +734,7 @@ void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-void defineHWSFButtons(std::unordered_map<int, CursesWindow*>& wins)
+void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
 {
   // delete any button windows if they exist
   for(int i = _HWSFADDFILE; i < _HWSTVIEWTHEME; i++)
@@ -904,14 +904,6 @@ void defineHWSFButtons(std::unordered_map<int, CursesWindow*>& wins)
 
 
 
-void defineHWSTButtons()
-{
-
-}
-
-
-
-
 /*
   Function:
    defineHelpWin
@@ -990,8 +982,6 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                                       startX);
 
       defineHWSFButtons(wins);
-
-      defineHWSTButtons();
     }
   // the window has been resized to a bad dimension. delete it
   else
