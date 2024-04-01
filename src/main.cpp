@@ -291,7 +291,7 @@ int main()
       if(mouseLine != -1 || mouseCol != -1)
         {
           // check _SAVEDFILESWIN arrows
-          checkArrowClick(wins,
+          checkButtonClick(wins,
                           sfStringWins,
                           _SAVEDFILESWIN,
                           _LARROWSAVEDFILESWIN,
@@ -301,7 +301,7 @@ int main()
                           mouseCol,
                           leftArrow,
                           log);
-          checkArrowClick(wins,
+          checkButtonClick(wins,
                           sfStringWins,
                           _SAVEDFILESWIN,
                           _RARROWSAVEDFILESWIN,
@@ -312,7 +312,7 @@ int main()
                           rightArrow,
                           log);
           // check _SAVEDTHEMESWIN arrows
-          checkArrowClick(wins,
+          checkButtonClick(wins,
                           stStringWins,
                           _SAVEDTHEMESWIN,
                           _LARROWSAVEDTHEMESWIN,
@@ -322,7 +322,7 @@ int main()
                           mouseCol,
                           leftArrow,
                           log);
-          checkArrowClick(wins,
+          checkButtonClick(wins,
                           stStringWins,
                           _SAVEDTHEMESWIN,
                           _RARROWSAVEDTHEMESWIN,
