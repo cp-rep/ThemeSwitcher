@@ -749,8 +749,8 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
 
   if(wins.at(_HELPWIN)->getWindow() != nullptr)
     {
-      int numLines = 1;
-      int numCols = 19;
+      int numLines = _HWBUTTONLINES;
+      int numCols = _HWBUTTONCOLS;
       int startY = wins.at(_HELPWIN)->getStartY() + 4;
       int startX = wins.at(_HELPWIN)->getStartX() + 4;
 
@@ -960,12 +960,13 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                                       startY,
                                       startX);
 
+      // create the window buttons
       defineHWButtons(wins);
     }
   // the window has been resized to a bad dimension. delete it
   else
     {
-      // update the new start positions anyway so other functions can utilize them
+      // update _HELPWIN start positions so other functions can utilize them
       wins.at(_HELPWIN)->setStartX(startX);
       wins.at(_HELPWIN)->setStartY(startY);
 
@@ -973,6 +974,61 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
         {
           wins.at(_HELPWIN)->deleteWindow();
           wins.at(_HELPWIN)->setWindow(nullptr);
+        }
+      if(wins.at(_HWSFADDFILE)->getWindow() != nullptr)
+        {
+          wins.at(_HWSFADDFILE)->deleteWindow();
+          wins.at(_HWSFADDFILE)->setWindow(nullptr);
+        }
+      if(wins.at(_HWSFEDITFILEPATH)->getWindow() != nullptr)
+        {
+          wins.at(_HWSFEDITFILEPATH)->deleteWindow();
+          wins.at(_HWSFEDITFILEPATH)->setWindow(nullptr);
+        }
+      if(wins.at(_HWSFVIEWFILEPATH)->getWindow() != nullptr)
+        {
+          wins.at(_HWSFVIEWFILEPATH)->deleteWindow();
+          wins.at(_HWSFVIEWFILEPATH)->setWindow(nullptr);
+        }
+      if(wins.at(_HWSFREMOVEFILE)->getWindow() != nullptr)
+        {
+          wins.at(_HWSFREMOVEFILE)->deleteWindow();
+          wins.at(_HWSFREMOVEFILE)->setWindow(nullptr);
+        }
+      if(wins.at(_HWSFADDTHEME)->getWindow() != nullptr)
+        {
+          wins.at(_HWSFADDTHEME)->deleteWindow();
+          wins.at(_HWSFADDTHEME)->setWindow(nullptr);
+        }
+      if(wins.at(_HWSFEDITTHEME)->getWindow() != nullptr)
+        {
+          wins.at(_HWSFEDITTHEME)->deleteWindow();
+          wins.at(_HWSFEDITTHEME)->setWindow(nullptr);
+        }
+      if(wins.at(_HWSFREMOVETHEME)->getWindow() != nullptr)
+        {
+          wins.at(_HWSFREMOVETHEME)->deleteWindow();
+          wins.at(_HWSFREMOVETHEME)->setWindow(nullptr);
+        }
+      if(wins.at(_HWSTADDTHEME)->getWindow() != nullptr)
+        {
+          wins.at(_HWSTADDTHEME)->deleteWindow();
+          wins.at(_HWSTADDTHEME)->setWindow(nullptr);
+        }
+      if(wins.at(_HWSTREMOVETHEME)->getWindow() != nullptr)
+        {
+          wins.at(_HWSTREMOVETHEME)->deleteWindow();
+          wins.at(_HWSTREMOVETHEME)->setWindow(nullptr);
+        }
+      if(wins.at(_HWSTEDITTHEME)->getWindow() != nullptr)
+        {
+          wins.at(_HWSTEDITTHEME)->deleteWindow();
+          wins.at(_HWSTEDITTHEME)->setWindow(nullptr);
+        }
+      if(wins.at(_HWSTVIEWTHEME)->getWindow() != nullptr)
+        {
+          wins.at(_HWSTVIEWTHEME)->deleteWindow();
+          wins.at(_HWSTVIEWTHEME)->setWindow(nullptr);
         }
     }
 } // end of "defineHelpWin"
