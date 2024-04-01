@@ -1171,7 +1171,6 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
       int i = 0;
 
       // print win title
-      //
       if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
         {
           int sfLineOffset = 2;
@@ -1219,8 +1218,8 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
           // current theme
           wattron(wins.at(_HELPWIN)->getWindow(), A_BOLD);
           wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-          sfLineOffset += 2;
-          sfColOffset = 3;
+          sfLineOffset = 2;
+          sfColOffset = hwSFEditFilePath.length() + 5;
           outString = sfThemeTitle;
           mvwaddstr(wins.at(_HELPWIN)->getWindow(),
                     sfLineOffset,
@@ -1250,7 +1249,57 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                     sfLineOffset,
                     sfColOffset,
                     outString.c_str());
+          wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+
+
       }
+
+      if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
+        {
+          int stLineOffset = wins.at(_SAVEDTHEMESWIN)->getStartY() - _HELPWINSTARTY + 2;
+          int stColOffset = 3;
+          // saved theme
+          wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+          wattron(wins.at(_HELPWIN)->getWindow(), A_BOLD);
+          outString = stTitle;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    stLineOffset,
+                    stColOffset,
+                    outString.c_str());
+          wattroff(wins.at(_HELPWIN)->getWindow(), A_BOLD);
+
+          wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+          stColOffset++;
+          stLineOffset += 2;
+          outString = hwSTAddTheme;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    stLineOffset,
+                    stColOffset,
+                    outString.c_str());
+
+          stLineOffset += 2;
+          outString = hwSTEditTheme;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    stLineOffset,
+                    stColOffset,
+                    outString.c_str());
+
+          stLineOffset = wins.at(_SAVEDTHEMESWIN)->getStartY() - _HELPWINSTARTY + 4;
+          stColOffset = hwSFEditFilePath.length() + 6;
+          outString = hwSTRemoveTheme;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    stLineOffset,
+                    stColOffset,
+                    outString.c_str());
+
+          stLineOffset += 2;
+          outString = hwSTViewTheme;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    stLineOffset,
+                    stColOffset,
+                    outString.c_str());
+          wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+        }
     }
 } // end of "printSavedFilesWin"
 
