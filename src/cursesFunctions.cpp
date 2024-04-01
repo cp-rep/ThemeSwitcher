@@ -1409,47 +1409,43 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
           wattroff(wins.at(_HELPWIN)->getWindow(), A_BOLD);
 
           // sf buttons
-          wattron(wins.at(_HWSFADDFILE)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-          mvwaddstr(wins.at(_HWSFADDFILE)->getWindow(),
-                    0,
-                    0,
-                    hwSFAddFile.c_str());
+          printButtonWin(wins,
+                         _HWSFADDFILE,
+                         hwSFAddFile,
+                         _BLACK_TEXT,
+                         log);
 
-          wattron(wins.at(_HWSFEDITFILEPATH)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-          mvwaddstr(wins.at(_HWSFEDITFILEPATH)->getWindow(),
-                    0,
-                    0,
-                    hwSFEditFilePath.c_str());
+          printButtonWin(wins,
+                         _HWSFEDITFILEPATH,
+                         hwSFEditFilePath,
+                         _BLACK_TEXT,
+                         log);
+          printButtonWin(wins,
+                         _HWSFVIEWFILEPATH,
+                         hwSFViewFilePath,
+                         _BLACK_TEXT,
+                         log);
+          printButtonWin(wins,
+                         _HWSFREMOVEFILE,
+                         hwSFRemoveFile,
+                         _BLACK_TEXT,
+                         log);
 
-          wattron(wins.at(_HWSFVIEWFILEPATH)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-          mvwaddstr(wins.at(_HWSFVIEWFILEPATH)->getWindow(),
-                    0,
-                    0,
-                    hwSFViewFilePath.c_str());
-
-          wattron(wins.at(_HWSFREMOVEFILE)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-          mvwaddstr(wins.at(_HWSFREMOVEFILE)->getWindow(),
-                    0,
-                    0,
-                    hwSFRemoveFile.c_str());
-
-          wattron(wins.at(_HWSFADDTHEME)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-          mvwaddstr(wins.at(_HWSFADDTHEME)->getWindow(),
-                    0,
-                    0,
-                    hwSFAddTheme.c_str());
-
-          wattron(wins.at(_HWSFEDITTHEME)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-          mvwaddstr(wins.at(_HWSFEDITTHEME)->getWindow(),
-                    0,
-                    0,
-                    hwSFEditTheme.c_str());
-
-          wattron(wins.at(_HWSFREMOVETHEME)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-          mvwaddstr(wins.at(_HWSFREMOVETHEME)->getWindow(),
-                    0,
-                    0,
-                    hwSFRemoveTheme.c_str());
+          printButtonWin(wins,
+                         _HWSFADDTHEME,
+                         hwSFAddTheme,
+                         _BLACK_TEXT,
+                         log);
+          printButtonWin(wins,
+                         _HWSFEDITTHEME,
+                         hwSFEditTheme,
+                         _BLACK_TEXT,
+                         log);
+          printButtonWin(wins,
+                         _HWSFREMOVETHEME,
+                         hwSFRemoveTheme,
+                         _BLACK_TEXT,
+                         log);
       }
 
       if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
@@ -1465,30 +1461,26 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                     stColOffset,
                     outString.c_str());
           wattroff(wins.at(_HELPWIN)->getWindow(), A_BOLD);
-
-          wattron(wins.at(_HWSTADDTHEME)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-          mvwaddstr(wins.at(_HWSTADDTHEME)->getWindow(),
-                    0,
-                    0,
-                    hwSTAddTheme.c_str());
-
-          wattron(wins.at(_HWSTREMOVETHEME)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-          mvwaddstr(wins.at(_HWSTREMOVETHEME)->getWindow(),
-                    0,
-                    0,
-                    hwSTRemoveTheme.c_str());
-
-          wattron(wins.at(_HWSTEDITTHEME)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-          mvwaddstr(wins.at(_HWSTEDITTHEME)->getWindow(),
-                    0,
-                    0,
-                    hwSTEditTheme.c_str());
-
-          wattron(wins.at(_HWSTVIEWTHEME)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-          mvwaddstr(wins.at(_HWSTVIEWTHEME)->getWindow(),
-                    0,
-                    0,
-                    hwSTViewTheme.c_str());
+          printButtonWin(wins,
+                         _HWSTADDTHEME,
+                         hwSTAddTheme,
+                         _BLACK_TEXT,
+                         log);
+          printButtonWin(wins,
+                         _HWSTREMOVETHEME,
+                         hwSTRemoveTheme,
+                         _BLACK_TEXT,
+                         log);
+          printButtonWin(wins,
+                         _HWSTEDITTHEME,
+                         hwSTEditTheme,
+                         _BLACK_TEXT,
+                         log);
+          printButtonWin(wins,
+                         _HWSTVIEWTHEME,
+                         hwSTViewTheme,
+                         _BLACK_TEXT,
+                         log);
         }
     }
 } // end of "printSavedFilesWin"
