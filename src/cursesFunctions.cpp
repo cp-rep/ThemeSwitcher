@@ -1055,6 +1055,7 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
       std::string outString;
       const int offset = 6;
 
+      wattron(wins.at(_PROMPTWIN)->getWindow(), A_BOLD);
       for(it = promptStrings.begin(); it != promptStrings.end(); i++, it++)
         {
           outString = *it;
@@ -1070,6 +1071,7 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
                     0,
                     outString.c_str());
         }
+      wattroff(wins.at(_PROMPTWIN)->getWindow(), A_BOLD);
     }
 } // end of "printPromptWin"
 
