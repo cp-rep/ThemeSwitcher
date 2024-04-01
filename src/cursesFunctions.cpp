@@ -82,7 +82,7 @@ void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
                     const int& numSavedFileWins,
                     std::ofstream& log)
 {
-  for(int i = _MAINWIN; i <= _RARROWSAVEDTHEMESWIN; i++)
+  for(int i = _MAINWIN; i <= _HWSTVIEWTHEME; i++)
     {
       CursesWindow* newWindow = new CursesWindow();
       wins.insert(std::make_pair(i, newWindow));
@@ -733,6 +733,128 @@ void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
 } // end of "defineSTStringWins"
 
 
+void defineHWSFButtons(std::unordered_map<int, CursesWindow*>& wins)
+{
+  // delete any button windows if they exist
+  for(int i = _HWSFADDFILE; i < _HWSTVIEWTHEME; i++)
+    {
+      if(wins.at(i)->getWindow() != nullptr)
+        {
+          werase(wins.at(i)->getWindow());
+          wins.at(i)->deleteWindow();
+          wins.at(i)->setWindow(nullptr);
+        }
+    }
+
+  if(wins.at(_HELPWIN)->getWindow() != nullptr)
+    {
+      int numLines = 1;
+      int numCols = 19;
+      int startY = wins.at(_HELPWIN)->getStartY() + 4;
+      int startX = wins.at(_HELPWIN)->getStartX() + 4;
+
+      // add file
+      wins.at(_HWSFADDFILE)->defineWindow(newwin(numLines,
+                                             numCols,
+                                             startY,
+                                             startX),
+                                          hwSFAddFile,
+                                          numLines,
+                                          numCols,
+                                          startY,
+                                          startX);
+      box(wins.at(_HWSFADDFILE)->getWindow(), 'a', 'a');
+
+      // edd file path
+      startY += 2;
+      wins.at(_HWSFEDITFILEPATH)->defineWindow(newwin(numLines,
+                                                      numCols,
+                                                      startY,
+                                                      startX),
+                                               hwSFEditFilePath,
+                                               numLines,
+                                               numCols,
+                                               startY,
+                                               startX);
+      box(wins.at(_HWSFEDITFILEPATH)->getWindow(), 'b', 'b');
+
+      // view file path
+      startY +=2;
+      wins.at(_HWSFVIEWFILEPATH)->defineWindow(newwin(numLines,
+                                                      numCols,
+                                                      startY,
+                                                      startX),
+                                             hwSFViewFilePath,
+                                             numLines,
+                                             numCols,
+                                             startY,
+                                             startX);
+      box(wins.at(_HWSFVIEWFILEPATH)->getWindow(), 'c', 'c');
+
+      // remove file
+      startY +=2;
+      wins.at(_HWSFREMOVEFILE)->defineWindow(newwin(numLines,
+                                                      numCols,
+                                                      startY,
+                                                      startX),
+                                             hwSFRemoveFile,
+                                             numLines,
+                                             numCols,
+                                             startY,
+                                             startX);
+      box(wins.at(_HWSFREMOVEFILE)->getWindow(), 'd', 'd');
+
+      // add theme
+      startY = wins.at(_HELPWIN)->getStartY() + 4;
+      startX = wins.at(_HWSFADDFILE)->getStartX() + wins.at(_HWSFADDFILE)->getNumCols() + 2;
+      wins.at(_HWSFADDTHEME)->defineWindow(newwin(numLines,
+                                                      numCols,
+                                                      startY,
+                                                      startX),
+                                             hwSFAddTheme,
+                                             numLines,
+                                             numCols,
+                                             startY,
+                                             startX);
+      box(wins.at(_HWSFADDTHEME)->getWindow(), 'e', 'e');
+
+      // edit theme
+      startY += 2;
+      wins.at(_HWSFEDITTHEME)->defineWindow(newwin(numLines,
+                                                  numCols,
+                                                  startY,
+                                                  startX),
+                                           hwSFAddTheme,
+                                           numLines,
+                                           numCols,
+                                           startY,
+                                           startX);
+      box(wins.at(_HWSFEDITTHEME)->getWindow(), 'f', 'f');
+
+      // remove theme
+      startY += 2;
+      wins.at(_HWSFREMOVETHEME)->defineWindow(newwin(numLines,
+                                                   numCols,
+                                                   startY,
+                                                   startX),
+                                            hwSFAddTheme,
+                                            numLines,
+                                            numCols,
+                                            startY,
+                                            startX);
+      box(wins.at(_HWSFREMOVETHEME)->getWindow(), 'g', 'g');
+  }
+}
+
+
+
+void defineHWSTButtons()
+{
+
+}
+
+
+
 
 /*
   Function:
@@ -810,6 +932,10 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                                       numCols,
                                       startY,
                                       startX);
+
+      defineHWSFButtons(wins);
+
+      defineHWSTButtons();
     }
   // the window has been resized to a bad dimension. delete it
   else
@@ -1199,38 +1325,38 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
           wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
           sfColOffset++;
           sfLineOffset += 2;
-          outString = hwSFAddFile;
-          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
-                    sfLineOffset,
-                    sfColOffset,
-                    outString.c_str());
+          // outString = hwSFAddFile;
+          // mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+          //           sfLineOffset,
+          //           sfColOffset,
+          //           outString.c_str());
 
           sfLineOffset += 2;
-          outString = hwSFViewFilePath;
-          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
-                    sfLineOffset,
-                    sfColOffset,
-                    outString.c_str());
+          // outString = hwSFViewFilePath;
+          // mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+          //           sfLineOffset,
+          //           sfColOffset,
+          //           outString.c_str());
 
           sfLineOffset += 2;
-          outString = hwSFEditFilePath;
-          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
-                    sfLineOffset,
-                    sfColOffset,
-                    outString.c_str());
+          // outString = hwSFEditFilePath;
+          // mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+          //           sfLineOffset,
+          //           sfColOffset,
+          //           outString.c_str());
 
           sfLineOffset += 2;
-          outString = hwSFRemoveFile;
-          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
-                    sfLineOffset,
-                    sfColOffset,
-                    outString.c_str());
+          // outString = hwSFRemoveFile;
+          // mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+          //           sfLineOffset,
+          //           sfColOffset,
+          //           outString.c_str());
 
           // current theme
           wattron(wins.at(_HELPWIN)->getWindow(), A_BOLD);
           wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
           sfLineOffset = 2;
-          sfColOffset = hwSFEditFilePath.length() + 5;
+          sfColOffset = _HWBUTTONCOLS + 5;
           outString = sfThemeTitle;
           mvwaddstr(wins.at(_HELPWIN)->getWindow(),
                     sfLineOffset,
@@ -1241,11 +1367,11 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
 
           sfLineOffset += 2;
           sfColOffset++;
-          outString = hwSFAddTheme;
-          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
-                    sfLineOffset,
-                    sfColOffset,
-                    outString.c_str());
+          // outString = hwSFAddTheme;
+          // mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+          //           sfLineOffset,
+          //           sfColOffset,
+          //           outString.c_str());
 
           sfLineOffset += 2;
           outString = hwSFEditTheme;
@@ -1261,8 +1387,6 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                     sfColOffset,
                     outString.c_str());
           wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-
-
       }
 
       if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
