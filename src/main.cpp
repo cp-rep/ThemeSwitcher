@@ -139,8 +139,6 @@ int main()
     definePromptTitle(promptStrings);
     defineWins(wins,
                log);
-    drawBoxes(wins,
-              log);
     getmaxyx(wins.at(_MAINWIN)->getWindow(), currLines, currCols);
     defineSFStringWins(wins,
                        sfStringWins,
@@ -249,12 +247,10 @@ int main()
                              stStringPos,
                              log);
           sfOutput = createSFOutputStrings(wins,
-                                                sfStringWins,
-                                                sfStrings,
-                                                sfThemes,
-                                                log);
-          drawBoxes(wins,
-                    log);
+                                           sfStringWins,
+                                           sfStrings,
+                                           sfThemes,
+                                           log);
           // print the window data
           printPromptWin(wins,
                          promptStrings,
@@ -336,12 +332,12 @@ int main()
                           rightArrow,
                           log);
           checkSFClick(wins,
-                         sfOutput,
-                         sfStringPos,
-                         mouseLine,
-                         mouseCol,
-                         sfHighlightNum,
-                         log);
+                       sfOutput,
+                       sfStringPos,
+                       mouseLine,
+                       mouseCol,
+                       sfHighlightNum,
+                       log);
           printHelpWin(wins,
                        log);
           printSavedFilesStrings(wins,
