@@ -21,7 +21,6 @@ enum _WINS {
   _SAVEDFILESWIN,
   _SAVEDTHEMESWIN,
   _HELPWIN,
-  _PROGRAMSWIN,
 
   // SECONDARY WINS
   _LARROWSAVEDFILESWIN,
@@ -29,21 +28,6 @@ enum _WINS {
   _LARROWSAVEDTHEMESWIN,
   _RARROWSAVEDTHEMESWIN
 };
-
-// _HELPWIN
-const unsigned int _HELPWINSTARTY = 2;
-const unsigned int _HELPWINSTARTX = 0;
-const unsigned int _HELPWINMINCOLS = 50;
-const unsigned int _HELPWINMAXCOLS = 60;
-const unsigned int _HELPWINMINLINES = 4;
-const unsigned int _HELPWINMAXLINES = 40;
-const unsigned int _HELPWINCOLOFFSET = 3;
-const unsigned int _HELPWINLINEOFFSET = 2;
-
-// _PROGRAMSWIN DIMENSIONS
-const unsigned int _PROGRAMSWINSTARTCOLS = 60;//
-const unsigned int _PROGRAMSWINMINLINES = 10;//
-const unsigned int _PROGRAMSWINMINCOLS = 40;
 
 // _PROMPTWIN DIMENSIONS
 const unsigned int _PROMPTWINSTARTY = 2;
@@ -54,6 +38,16 @@ const unsigned int _PROMPTWINCOLOFFSET = 9;
 const unsigned int _PROMPTWINLINEOFFSET = 2;
 const unsigned int _PROMPTWINMINCOLS = 60;
 const unsigned int _PROMPTWINMAXCOLS = 140;
+
+// _HELPWIN
+const unsigned int _HELPWINSTARTY = _PROMPTWINSTARTY + _PROMPTWINMAXLINES + 1;
+const unsigned int _HELPWINSTARTX = 0;
+const unsigned int _HELPWINMINCOLS = 50;
+const unsigned int _HELPWINMAXCOLS = 60;
+const unsigned int _HELPWINMINLINES = 4;
+const unsigned int _HELPWINMAXLINES = 40;
+const unsigned int _HELPWINCOLOFFSET = 3;
+const unsigned int _HELPWINLINEOFFSET = 2;
 
 // _SAVEDFILESWIN DIMENSIONS
 const unsigned int _SAVEDFILESWINSTARTY = _PROMPTWINSTARTY + _PROMPTWINMAXLINES + 1;
