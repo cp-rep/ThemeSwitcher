@@ -1147,7 +1147,6 @@ void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-
 void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                   std::ofstream& log)
 {
@@ -1169,19 +1168,86 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
       int i = 0;
 
       // print win title
-      outString = sfTitle;
-      mvwaddstr(wins.at(_HELPWIN)->getWindow(),
-                2,
-                2,
-                outString.c_str());
+      //
+      if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+        {
+          int sfLineOffset = 2;
+          int sfColOffset = 3;
 
-      wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-      outString = hwAddFile;
-      mvwaddstr(wins.at(_HELPWIN)->getWindow(),
-                4,
-                3,
-                outString.c_str());
-      wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+          // saved file
+          wattron(wins.at(_HELPWIN)->getWindow(), A_BOLD);
+          outString = sfTitle;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    sfLineOffset,
+                    sfColOffset,
+                    outString.c_str());
+          wattroff(wins.at(_HELPWIN)->getWindow(), A_BOLD);
+
+          wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+          sfColOffset++;
+          sfLineOffset += 2;
+          outString = hwSFAddFile;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    sfLineOffset,
+                    sfColOffset,
+                    outString.c_str());
+
+          sfLineOffset += 2;
+          outString = hwSFViewFilePath;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    sfLineOffset,
+                    sfColOffset,
+                    outString.c_str());
+
+          sfLineOffset += 2;
+          outString = hwSFEditFilePath;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    sfLineOffset,
+                    sfColOffset,
+                    outString.c_str());
+
+          sfLineOffset += 2;
+          outString = hwSFRemoveFile;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    sfLineOffset,
+                    sfColOffset,
+                    outString.c_str());
+
+          // current theme
+          wattron(wins.at(_HELPWIN)->getWindow(), A_BOLD);
+          wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+          sfLineOffset += 2;
+          sfColOffset = 3;
+          outString = sfThemeTitle;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    sfLineOffset,
+                    sfColOffset,
+                    outString.c_str());
+          wattroff(wins.at(_HELPWIN)->getWindow(), A_BOLD);
+          wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+
+          sfLineOffset += 2;
+          sfColOffset++;
+          outString = hwSFAddTheme;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    sfLineOffset,
+                    sfColOffset,
+                    outString.c_str());
+
+          sfLineOffset += 2;
+          outString = hwSFEditTheme;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    sfLineOffset,
+                    sfColOffset,
+                    outString.c_str());
+
+          sfLineOffset += 2;
+          outString = hwSFRemoveTheme;
+          mvwaddstr(wins.at(_HELPWIN)->getWindow(),
+                    sfLineOffset,
+                    sfColOffset,
+                    outString.c_str());
+      }
     }
 } // end of "printSavedFilesWin"
 
