@@ -383,9 +383,9 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
 
   if(_SAVEDFILESWINMINLINES < numLines - 1)
     {
-      linesCheck = true;
       if(halfedLines - 1 > _SAVEDFILESWINMINLINES)
         {
+          linesCheck = true;
           numLines = halfedLines;
         }
     }
@@ -775,15 +775,19 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
   bool colsCheck = false;
   bool linesCheck = false;
 
-  if(_HELPWINSTARTY + _HELPWINMINLINES < maxLines - _HELPWINLINEOFFSET)
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
+     wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
     {
-      numLines = maxLines - _HELPWINLINEOFFSET - startY;
-      linesCheck = true;
-    }
+      if(_HELPWINSTARTY + _HELPWINMINLINES < maxLines - _HELPWINLINEOFFSET)
+        {
+          numLines = maxLines - _HELPWINLINEOFFSET - startY;
+          linesCheck = true;
+        }
 
-  if(maxCols > _HELPWINMINCOLS + _HELPWINCOLOFFSET)
-    {
-      colsCheck = true;
+      if(maxCols > _HELPWINMINCOLS + _HELPWINCOLOFFSET)
+        {
+          colsCheck = true;
+        }
     }
 
   // the window is within desired dimensions. allocate it
@@ -866,9 +870,10 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins,
                                   numCols,
                                   startY,
                                   startX);
-  defineHelpWin(wins,
-                numLines,
-                numCols);
+  wattron(wins.at(_MAINWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+  box(wins.at(_MAINWIN)->getWindow(), ' ', ' ');
+  wattron(wins.at(_MAINWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+
   definePromptWin(wins,
                   numLines,
                   numCols);
@@ -880,7 +885,10 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins,
                        numLines,
                        numCols,
                        log);
-} // end of "defineWins"
+  defineHelpWin(wins,
+                numLines,
+                numCols);
+}  // end of "defineWins"
 
 
 
@@ -1155,6 +1163,9 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
 {
   if(wins.at(_HELPWIN)->getWindow() != nullptr)
     {
+      wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+      box(wins.at(_HELPWIN)->getWindow(), ' ', ' ');
+      wattron(wins.at(_HELPWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
       int maxWinLines;
       int maxWinCols;
       getmaxyx(wins.at(_HELPWIN)->getWindow(),
@@ -1334,6 +1345,9 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
     {
+      wattron(wins.at(_SAVEDFILESWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+      box(wins.at(_SAVEDFILESWIN)->getWindow(), ' ', ' ');
+      wattron(wins.at(_SAVEDFILESWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
       int maxWinLines;
       int maxWinCols;
       getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),
@@ -1550,6 +1564,10 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
 {
   if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
     {
+      wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+      box(wins.at(_SAVEDTHEMESWIN)->getWindow(), ' ', ' ');
+      wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+
       const int maxStringSize = 31;
       const int lineCount = 0;
       int maxWinLines;
