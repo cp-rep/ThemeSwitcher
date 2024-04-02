@@ -81,7 +81,7 @@ void initializeCurses()
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
                     std::ofstream& log)
 {
-  for(int i = _MAINWIN; i <= _HWSTVIEWTHEMEWIN; i++)
+  for(int i = _MAINWIN; i <= _STPROMPTWIN; i++)
     {
       CursesWindow* newWindow = new CursesWindow();
       wins.insert(std::make_pair(i, newWindow));
@@ -398,6 +398,11 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
           wins.at(_SAVEDFILESWIN)->deleteWindow();
           wins.at(_SAVEDFILESWIN)->setWindow(nullptr);
         }
+      if(wins.at(_SFPROMPTWIN)->getWindow() != nullptr)
+        {
+          wins.at(_SFPROMPTWIN)->deleteWindow();
+          wins.at(_SFPROMPTWIN)->setWindow(nullptr);
+        }
 
       // create the new window _SAVEDFILESWIN
       wins.at(_SAVEDFILESWIN)->defineWindow(newwin(numLines,
@@ -454,6 +459,11 @@ void defineSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
         {
           wins.at(_RARROWSAVEDFILESWIN)->deleteWindow();
           wins.at(_RARROWSAVEDFILESWIN)->setWindow(nullptr);
+        }
+      if(wins.at(_SFPROMPTWIN)->getWindow() != nullptr)
+        {
+          wins.at(_SFPROMPTWIN)->deleteWindow();
+          wins.at(_SFPROMPTWIN)->setWindow(nullptr);
         }
     }
 } // end of "defineSavedFilesWin"
@@ -1098,11 +1108,58 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-void defineHWSFAddFileWin(std::unordered_map<int, CursesWindow*>& wins,
-                          std::ofstream& log)
+void defineSFPromptWin(std::unordered_map<int, CursesWindow*>& wins,
+                       std::ofstream& log)
 {
-    
+  // check that the main windows are initialized
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
+     wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
+    {
+      int numLines = 4;
+      int numCols = wins.at(_SAVEDFILESWIN)->getNumCols() - 4;
+      int startY = wins.at(_SAVEDFILESWIN)->getStartY() + numLines;
+      int startX = _SAVEDFILESWINSTARTX + 2;
+      
+      wins.at(_SFPROMPTWIN)->defineWindow(newwin(numLines,
+                                                    numCols,
+                                                    startY,
+                                                    startX),
+                                             "_SFPROMPTWIN",
+                                             numLines,
+                                             numCols,
+                                             startY,
+                                             startX);
+    }
+  else 
+    {
+      // ensure the window doesn't exist if the main windows dont exist
+      if(wins.at(_SFPROMPTWIN)->getWindow() != nullptr)
+        {
+          wins.at(_SFPROMPTWIN)->deleteWindow();
+          wins.at(_SFPROMPTWIN)->setWindow(nullptr);
+        }
+    }
+
 } // end of "defineHWSFAddFileWin"
+
+
+
+void printPrompt(std::unordered_map<int, CursesWindow*>& wins,
+                 const int win,
+                 const std::string& prompt,
+                 std::ofstream& log)
+{
+  wattron(wins.at(win)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+  box(wins.at(win)->getWindow(), ' ', ' ');
+  wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+  
+  mvwaddstr(wins.at(win)->getWindow(),
+            1,
+            1,
+            prompt.c_str());
+  wrefresh(wins.at(win)->getWindow());
+  doupdate;
+}
 
 
 
