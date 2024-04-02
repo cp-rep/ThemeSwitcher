@@ -106,9 +106,9 @@ int main()
   std::vector<std::string> stOutput;
   int stStringPos = 0;
 
-  // init the temporary testing string vectors
-  const int numStrings = 0;
 
+  // for testing windows and visual button operations with dummy strings
+  // const int numStrings = 0;
   // initTestFilesStringVector(sfStrings,
   //                           numStrings,
   //                           log);
