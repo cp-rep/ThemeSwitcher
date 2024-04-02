@@ -39,7 +39,6 @@ const std::string rightArrow = " > ";
 
 void initializeCurses();
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
-                    const int& numSavedFileWins,
                     std::ofstream& log);
 void definePromptTitle(std::vector<std::string>& promptStrings);
 void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
@@ -93,15 +92,15 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
                     const int& mouseLine,
                     const int& mouseCol,
                     std::ofstream& log);
-void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
-                  std::ofstream& log);
-void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
-                          std::ofstream& log);
 void printButtonWin(const std::unordered_map<int, CursesWindow*>& wins,
                     const int win,
                     std::string outString,
                     const int colorPair,
                     std::ofstream& log);
+void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
+                  std::ofstream& log);
+void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
+                          std::ofstream& log);
 void flashButton(const std::unordered_map<int, CursesWindow*>& wins,
                  const int win,
                  std::string outString,
