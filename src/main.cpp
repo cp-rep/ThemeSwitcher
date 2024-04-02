@@ -28,6 +28,7 @@
 #include "_cursesWinConsts.hpp"
 #include "cursesFunctions.hpp"
 #include "cursesWindow.hpp"
+#include "fileOperations.hpp"
 #include "log.hpp"
 #include "testingInterface.hpp"
 
