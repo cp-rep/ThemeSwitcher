@@ -107,18 +107,18 @@ int main()
   int stStringPos = 0;
 
   // init the temporary testing string vectors
-  const int numStrings = 200;
+  const int numStrings = 0;
 
-  initTestFilesStringVector(sfStrings,
-                            numStrings,
-                            log);
-  initTestCurrThemesStringVector(sfThemes,
-                                 numStrings,
-                                 log);
-  initSTStrings(stStrings,
-                numStrings,
-                _STWINMAXCOLS,
-                log);
+  // initTestFilesStringVector(sfStrings,
+  //                           numStrings,
+  //                           log);
+  // initTestCurrThemesStringVector(sfThemes,
+  //                                numStrings,
+  //                                log);
+  // initSTStrings(stStrings,
+  //               numStrings,
+  //               _STWINMAXCOLS,
+  //               log);
 
   // ## initialize curses and starting windows ##
 #if _CURSES
@@ -129,7 +129,6 @@ int main()
 
   initializeCurses();
   initializeWins(wins,
-                 sfStrings.size(),
                  log);
   stOutput = createSTOutputStrings(wins,
                                    stStrings,
