@@ -76,6 +76,8 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                    const int& maxCols);
 void defineWins(std::unordered_map<int, CursesWindow*>& wins,
                 std::ofstream& log);
+void defineHWSFAddFileWin(std::unordered_map<int, CursesWindow*>& wins,
+                          std::ofstream& log);
 std::vector<std::string> createSFOutputStrings(const std::unordered_map<int, CursesWindow*>& wins,
                                                std::vector<CursesWindow*>& sfStringWins,
                                                const std::vector<std::string>& savedFileStrings,
