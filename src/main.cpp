@@ -191,6 +191,7 @@ int main()
   }
 #endif // _CURSES
 
+  // main program loop
   while(true)
     {
 #if _CURSES
@@ -290,56 +291,168 @@ int main()
       // check for a mouse click and operate on the line/col values
       if(mouseLine != -1 || mouseCol != -1)
         {
-          // check _SAVEDFILESWIN arrows
-          checkButtonClick(wins,
-                          sfStringWins,
-                          _SAVEDFILESWIN,
+          int buttonNum = -1;
+
+          // check if a button was clicked
+          buttonNum = checkButtonClick(wins,
+                                       mouseLine,
+                                       mouseCol,
+                                       log);
+
+          // switch to button that was clicked and do operation(s)
+          switch(buttonNum)
+            {
+            case _LARROWSAVEDFILESWIN:
+              flashButton(wins,
                           _LARROWSAVEDFILESWIN,
-                          sfOutput,
-                          sfStringPos,
-                          mouseLine,
-                          mouseCol,
                           leftArrow,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
                           log);
-          checkButtonClick(wins,
+              shiftSFLeft(wins,
                           sfStringWins,
-                          _SAVEDFILESWIN,
-                          _RARROWSAVEDFILESWIN,
                           sfOutput,
                           sfStringPos,
-                          mouseLine,
-                          mouseCol,
-                          rightArrow,
                           log);
-          // check _SAVEDTHEMESWIN arrows
-          checkButtonClick(wins,
-                          stStringWins,
-                          _SAVEDTHEMESWIN,
+              break;
+            case _RARROWSAVEDFILESWIN:
+              flashButton(wins,
+                          _RARROWSAVEDFILESWIN,
+                          rightArrow,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
+                          log);
+              shiftSFRight(wins,
+                           sfStringWins,
+                           sfOutput,
+                           sfStringPos,
+                           log);
+              break;
+            case _LARROWSAVEDTHEMESWIN:
+              flashButton(wins,
                           _LARROWSAVEDTHEMESWIN,
-                          stOutput,
-                          stStringPos,
-                          mouseLine,
-                          mouseCol,
                           leftArrow,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
                           log);
-          checkButtonClick(wins,
+              shiftSTLeft(wins,
                           stStringWins,
-                          _SAVEDTHEMESWIN,
-                          _RARROWSAVEDTHEMESWIN,
                           stOutput,
                           stStringPos,
-                          mouseLine,
-                          mouseCol,
-                          rightArrow,
                           log);
+              break;
+            case _RARROWSAVEDTHEMESWIN:
+              flashButton(wins,
+                          _RARROWSAVEDTHEMESWIN,
+                          rightArrow,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
+                          log);
+              shiftSTRight(wins,
+                           stStringWins,
+                           stOutput,
+                           stStringPos,
+                           log);
+              break;
+            case _HWSFADDFILE:
+              flashButton(wins,
+                          _HWSFADDFILE,
+                          hwSFAddFile,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
+                          log);
+              break;
+            case _HWSFEDITFILEPATH:
+              flashButton(wins,
+                          _HWSFEDITFILEPATH,
+                          hwSFEditFilePath,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
+                          log);
+              break;
+            case _HWSFVIEWFILEPATH:
+              flashButton(wins,
+                          _HWSFVIEWFILEPATH,
+                          hwSFViewFilePath,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
+                          log);
+              break;
+            case _HWSFREMOVEFILE:
+              flashButton(wins,
+                          _HWSFREMOVEFILE,
+                          hwSFRemoveFile,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
+                          log);
+              break;
+            case _HWSFADDTHEME:
+              flashButton(wins,
+                          _HWSFADDTHEME,
+                          hwSFAddTheme,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
+                          log);
+              break;
+            case _HWSFEDITTHEME:
+              flashButton(wins,
+                          _HWSFEDITTHEME,
+                          hwSFEditTheme,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
+                          log);
+              break;
+            case _HWSFREMOVETHEME:
+              flashButton(wins,
+                          _HWSFREMOVETHEME,
+                          hwSFRemoveTheme,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
+                          log);
+              break;
+            case _HWSTADDTHEME:
+              flashButton(wins,
+                          _HWSTADDTHEME,
+                          hwSTAddTheme,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
+                          log);
+              break;
+            case _HWSTREMOVETHEME:
+              flashButton(wins,
+                          _HWSTREMOVETHEME,
+                          hwSTRemoveTheme,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
+                          log);
+              break;
+            case _HWSTEDITTHEME:
+              flashButton(wins,
+                          _HWSTEDITTHEME,
+                          hwSTEditTheme,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
+                          log);
+              break;
+            case _HWSTVIEWTHEME:
+              flashButton(wins,
+                          _HWSTVIEWTHEME,
+                          hwSTViewTheme,
+                          _BLACK_TEXT,
+                          _WHITE_TEXT,
+                          log);
+              break;
+            default:
+              break;
+            }
+
+          // check if a _SAVEDFILESWIN file was clicked
           checkSFClick(wins,
                        sfOutput,
                        sfStringPos,
                        mouseLine,
                        mouseCol,
                        sfHighlightNum,
-                       log);
-          printHelpWin(wins,
                        log);
           printSavedFilesStrings(wins,
                                  sfStringWins,
@@ -348,6 +461,8 @@ int main()
                                  currStartWin,
                                  sfHighlightNum,
                                  log);
+
+          // check if a _SAVEDTHEMESWIN file was clicked
           checkSTClick(wins,
                        stStringWins,
                        mouseLine,
@@ -360,6 +475,10 @@ int main()
                                   stStringPos,
                                   stHighlightNum,
                                   log);
+          printHelpWin(wins,
+                       log);
+
+          // print any changes to the windows
           refreshWins(wins);
           refreshSFStringWins(sfStringWins,
                               log);
