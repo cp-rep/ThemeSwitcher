@@ -1098,6 +1098,14 @@ void defineWins(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
+void defineHWSFAddFileWin(std::unordered_map<int, CursesWindow*>& wins,
+                          std::ofstream& log)
+{
+    
+} // end of "defineHWSFAddFileWin"
+
+
+
 std::vector<std::string> createSFOutputStrings(const std::unordered_map<int, CursesWindow*>& wins,
                                                std::vector<CursesWindow*>& sfStringWins,
                                                const std::vector<std::string>& sfStrings,
