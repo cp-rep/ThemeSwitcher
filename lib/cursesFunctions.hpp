@@ -9,18 +9,18 @@
 #include "typeConversions.hpp"
 
 // helpwin
-const std::string hwSFAddFile = "     Add File      ";
-const std::string hwSFEditFilePath = "   Edit File Path  ";
-const std::string hwSFViewFilePath = "   View File Path  ";
-const std::string hwSFRemoveFile = "    Remove File    ";
-const std::string hwSFAddTheme = "  Add File Theme   ";
-const std::string hwSFEditTheme = "  Edit File Theme  ";
-const std::string hwSFRemoveTheme = " Remove File Theme ";
-const std::string hwSTAddTheme = "     Add Theme     ";
-const std::string hwSTARemoveTheme = "     Add Theme     ";
-const std::string hwSTRemoveTheme = "   Remove Theme    ";
-const std::string hwSTEditTheme =   "     Edit Theme    ";
-const std::string hwSTViewTheme = "    View Theme     ";
+const std::string _hwSFAddFile = "     Add File      ";
+const std::string _hwSFEditFilePath = "   Edit File Path  ";
+const std::string _hwSFViewFilePath = "   View File Path  ";
+const std::string _hwSFRemoveFile = "    Remove File    ";
+const std::string _hwSFAddTheme = "  Add File Theme   ";
+const std::string _hwSFEditTheme = "  Edit File Theme  ";
+const std::string _hwSFRemoveTheme = " Remove File Theme ";
+const std::string _hwSTAddTheme = "     Add Theme     ";
+const std::string _hwSTARemoveTheme = "     Add Theme     ";
+const std::string _hwSTRemoveTheme = "   Remove Theme    ";
+const std::string _hwSTEditTheme =   "     Edit Theme    ";
+const std::string _hwSTViewTheme = "    View Theme     ";
 
 // _SAVEDFILESWIN
 const std::string sfTitle = "SAVED FILES:";
@@ -162,7 +162,7 @@ void checkSTClick(const std::unordered_map<int, CursesWindow*>& wins,
                   const int& mouseCol,
                   int& highlightWinNum,
                   std::ofstream& log);
-void refreshWins(const std::unordered_map<int, CursesWindow*>& wins);
+void refreshwins(const std::unordered_map<int, CursesWindow*>& wins);
 void refreshSFStringWins(const std::vector<CursesWindow*>& sfStringWins,
                          std::ofstream& log);
 void refreshSTStringWins(const std::vector<CursesWindow*>& stStringWins,

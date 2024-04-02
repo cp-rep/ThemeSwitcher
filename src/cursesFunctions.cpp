@@ -734,7 +734,7 @@ void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
+void define_HWButtons(std::unordered_map<int, CursesWindow*>& wins)
 {
   // delete any button windows if they exist
   for(int i = _HWSFADDFILE; i <= _HWSTVIEWTHEME; i++)
@@ -759,7 +759,7 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                              numCols,
                                              startY,
                                              startX),
-                                          hwSFAddFile,
+                                          _hwSFAddFile,
                                           numLines,
                                           numCols,
                                           startY,
@@ -770,7 +770,7 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                                       numCols,
                                                       startY,
                                                       startX),
-                                               hwSFEditFilePath,
+                                               _hwSFEditFilePath,
                                                numLines,
                                                numCols,
                                                startY,
@@ -781,7 +781,7 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                                       numCols,
                                                       startY,
                                                       startX),
-                                             hwSFViewFilePath,
+                                             _hwSFViewFilePath,
                                              numLines,
                                              numCols,
                                              startY,
@@ -792,7 +792,7 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                                       numCols,
                                                       startY,
                                                       startX),
-                                             hwSFRemoveFile,
+                                             _hwSFRemoveFile,
                                              numLines,
                                              numCols,
                                              startY,
@@ -804,7 +804,7 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                                       numCols,
                                                       startY,
                                                       startX),
-                                             hwSFAddTheme,
+                                             _hwSFAddTheme,
                                              numLines,
                                              numCols,
                                              startY,
@@ -815,7 +815,7 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                                   numCols,
                                                   startY,
                                                   startX),
-                                           hwSFEditTheme,
+                                           _hwSFEditTheme,
                                            numLines,
                                            numCols,
                                            startY,
@@ -826,7 +826,7 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                                    numCols,
                                                    startY,
                                                    startX),
-                                            hwSFRemoveTheme,
+                                            _hwSFRemoveTheme,
                                             numLines,
                                             numCols,
                                             startY,
@@ -839,7 +839,7 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                                    numCols,
                                                    startY,
                                                    startX),
-                                           hwSTAddTheme,
+                                           _hwSTAddTheme,
                                            numLines,
                                            numCols,
                                            startY,
@@ -850,7 +850,7 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                                   numCols,
                                                   startY,
                                                   startX),
-                                           hwSTEditTheme,
+                                           _hwSTEditTheme,
                                            numLines,
                                            numCols,
                                            startY,
@@ -862,7 +862,7 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                                      numCols,
                                                      startY,
                                                      startX),
-                                              hwSTRemoveTheme,
+                                              _hwSTRemoveTheme,
                                               numLines,
                                               numCols,
                                               startY,
@@ -873,13 +873,13 @@ void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
                                                      numCols,
                                                      startY,
                                                      startX),
-                                              hwSTViewTheme,
+                                              _hwSTViewTheme,
                                               numLines,
                                               numCols,
                                               startY,
                                               startX);
   }
-} // end of "defineHWButtons"
+} // end of "define_HWButtons"
 
 
 
@@ -961,7 +961,7 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                                       startX);
 
       // create the window buttons
-      defineHWButtons(wins);
+      define_HWButtons(wins);
     }
   // the window has been resized to a bad dimension. delete it
   else
@@ -1411,39 +1411,39 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
           // sf buttons
           printButtonWin(wins,
                          _HWSFADDFILE,
-                         hwSFAddFile,
+                         _hwSFAddFile,
                          _BLACK_TEXT,
                          log);
 
           printButtonWin(wins,
                          _HWSFEDITFILEPATH,
-                         hwSFEditFilePath,
+                         _hwSFEditFilePath,
                          _BLACK_TEXT,
                          log);
           printButtonWin(wins,
                          _HWSFVIEWFILEPATH,
-                         hwSFViewFilePath,
+                         _hwSFViewFilePath,
                          _BLACK_TEXT,
                          log);
           printButtonWin(wins,
                          _HWSFREMOVEFILE,
-                         hwSFRemoveFile,
+                         _hwSFRemoveFile,
                          _BLACK_TEXT,
                          log);
 
           printButtonWin(wins,
                          _HWSFADDTHEME,
-                         hwSFAddTheme,
+                         _hwSFAddTheme,
                          _BLACK_TEXT,
                          log);
           printButtonWin(wins,
                          _HWSFEDITTHEME,
-                         hwSFEditTheme,
+                         _hwSFEditTheme,
                          _BLACK_TEXT,
                          log);
           printButtonWin(wins,
                          _HWSFREMOVETHEME,
-                         hwSFRemoveTheme,
+                         _hwSFRemoveTheme,
                          _BLACK_TEXT,
                          log);
       }
@@ -1463,22 +1463,22 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
           wattroff(wins.at(_HELPWIN)->getWindow(), A_BOLD);
           printButtonWin(wins,
                          _HWSTADDTHEME,
-                         hwSTAddTheme,
+                         _hwSTAddTheme,
                          _BLACK_TEXT,
                          log);
           printButtonWin(wins,
                          _HWSTREMOVETHEME,
-                         hwSTRemoveTheme,
+                         _hwSTRemoveTheme,
                          _BLACK_TEXT,
                          log);
           printButtonWin(wins,
                          _HWSTEDITTHEME,
-                         hwSTEditTheme,
+                         _hwSTEditTheme,
                          _BLACK_TEXT,
                          log);
           printButtonWin(wins,
                          _HWSTVIEWTHEME,
-                         hwSTViewTheme,
+                         _hwSTViewTheme,
                          _BLACK_TEXT,
                          log);
         }
@@ -2301,7 +2301,7 @@ void refreshSTStringWins(const std::vector<CursesWindow*>& stStringWins,
 
 /*
   Function:
-   refreshWins
+   refreshwins
 
   Description:
    Refreshes all CursesWindow objects member variables that point to a
@@ -2323,7 +2323,7 @@ void refreshSTStringWins(const std::vector<CursesWindow*>& stStringWins,
   Returns:
    NONE
 */
-void refreshWins(const std::unordered_map<int, CursesWindow*>& wins)
+void refreshwins(const std::unordered_map<int, CursesWindow*>& wins)
 {
 
   // ##
@@ -2360,7 +2360,7 @@ void refreshWins(const std::unordered_map<int, CursesWindow*>& wins)
   //       }
   //   }
 
-} // end of "refreshWins"
+} // end of "refreshwins"
 
 
 

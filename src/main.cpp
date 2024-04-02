@@ -182,7 +182,7 @@ int main()
                             stStringPos,
                             stHighlightNum,
                             log);
-    refreshWins(wins);
+    refreshwins(wins);
     refreshSFStringWins(sfStringWins,
                         log);
     refreshSTStringWins(stStringWins,
@@ -280,7 +280,7 @@ int main()
                                   stStringPos,
                                   stHighlightNum,
                                   log);
-          refreshWins(wins);
+          refreshwins(wins);
           refreshSFStringWins(sfStringWins,
                               log);
           refreshSTStringWins(stStringWins,
@@ -357,7 +357,7 @@ int main()
             case _HWSFADDFILE:
               flashButton(wins,
                           _HWSFADDFILE,
-                          hwSFAddFile,
+                          _hwSFAddFile,
                           _BLACK_TEXT,
                           _WHITE_TEXT,
                           log);
@@ -365,7 +365,7 @@ int main()
             case _HWSFEDITFILEPATH:
               flashButton(wins,
                           _HWSFEDITFILEPATH,
-                          hwSFEditFilePath,
+                          _hwSFEditFilePath,
                           _BLACK_TEXT,
                           _WHITE_TEXT,
                           log);
@@ -373,7 +373,7 @@ int main()
             case _HWSFVIEWFILEPATH:
               flashButton(wins,
                           _HWSFVIEWFILEPATH,
-                          hwSFViewFilePath,
+                          _hwSFViewFilePath,
                           _BLACK_TEXT,
                           _WHITE_TEXT,
                           log);
@@ -381,7 +381,7 @@ int main()
             case _HWSFREMOVEFILE:
               flashButton(wins,
                           _HWSFREMOVEFILE,
-                          hwSFRemoveFile,
+                          _hwSFRemoveFile,
                           _BLACK_TEXT,
                           _WHITE_TEXT,
                           log);
@@ -389,7 +389,7 @@ int main()
             case _HWSFADDTHEME:
               flashButton(wins,
                           _HWSFADDTHEME,
-                          hwSFAddTheme,
+                          _hwSFAddTheme,
                           _BLACK_TEXT,
                           _WHITE_TEXT,
                           log);
@@ -397,7 +397,7 @@ int main()
             case _HWSFEDITTHEME:
               flashButton(wins,
                           _HWSFEDITTHEME,
-                          hwSFEditTheme,
+                          _hwSFEditTheme,
                           _BLACK_TEXT,
                           _WHITE_TEXT,
                           log);
@@ -405,7 +405,7 @@ int main()
             case _HWSFREMOVETHEME:
               flashButton(wins,
                           _HWSFREMOVETHEME,
-                          hwSFRemoveTheme,
+                          _hwSFRemoveTheme,
                           _BLACK_TEXT,
                           _WHITE_TEXT,
                           log);
@@ -413,7 +413,7 @@ int main()
             case _HWSTADDTHEME:
               flashButton(wins,
                           _HWSTADDTHEME,
-                          hwSTAddTheme,
+                          _hwSTAddTheme,
                           _BLACK_TEXT,
                           _WHITE_TEXT,
                           log);
@@ -421,7 +421,7 @@ int main()
             case _HWSTREMOVETHEME:
               flashButton(wins,
                           _HWSTREMOVETHEME,
-                          hwSTRemoveTheme,
+                          _hwSTRemoveTheme,
                           _BLACK_TEXT,
                           _WHITE_TEXT,
                           log);
@@ -429,7 +429,7 @@ int main()
             case _HWSTEDITTHEME:
               flashButton(wins,
                           _HWSTEDITTHEME,
-                          hwSTEditTheme,
+                          _hwSTEditTheme,
                           _BLACK_TEXT,
                           _WHITE_TEXT,
                           log);
@@ -437,7 +437,7 @@ int main()
             case _HWSTVIEWTHEME:
               flashButton(wins,
                           _HWSTVIEWTHEME,
-                          hwSTViewTheme,
+                          _hwSTViewTheme,
                           _BLACK_TEXT,
                           _WHITE_TEXT,
                           log);
@@ -479,7 +479,7 @@ int main()
                        log);
 
           // print any changes to the windows
-          refreshWins(wins);
+          refreshwins(wins);
           refreshSFStringWins(sfStringWins,
                               log);
           refreshSTStringWins(stStringWins,
