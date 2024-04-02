@@ -79,10 +79,9 @@ void initializeCurses()
    NONE
 */
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
-                    const int& numSavedFileWins,
                     std::ofstream& log)
 {
-  for(int i = _MAINWIN; i <= _HWSTVIEWTHEME; i++)
+  for(int i = _MAINWIN; i <= _HWSTVIEWTHEMEWIN; i++)
     {
       CursesWindow* newWindow = new CursesWindow();
       wins.insert(std::make_pair(i, newWindow));
@@ -2199,12 +2198,12 @@ void flashButton(const std::unordered_map<int, CursesWindow*>& wins,
    NONE
 */
 void checkSFClick(const std::unordered_map<int, CursesWindow*>& wins,
-                    const std::vector<std::string>& outputStrings,
-                    const int& outputStringPos,
-                    const int& mouseLine,
-                    const int& mouseCol,
-                    int& highlightWinNum,
-                    std::ofstream& log)
+                  const std::vector<std::string>& outputStrings,
+                  const int& outputStringPos,
+                  const int& mouseLine,
+                  const int& mouseCol,
+                  int& highlightWinNum,
+                  std::ofstream& log)
 {
   if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
      !outputStrings.empty())
