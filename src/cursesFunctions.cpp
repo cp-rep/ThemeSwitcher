@@ -737,7 +737,7 @@ void defineSTStringWins(const std::unordered_map<int, CursesWindow*>& wins,
 void defineHWButtons(std::unordered_map<int, CursesWindow*>& wins)
 {
   // delete any button windows if they exist
-  for(int i = _HWSFADDFILE; i < _HWSTVIEWTHEME; i++)
+  for(int i = _HWSFADDFILE; i <= _HWSTVIEWTHEME; i++)
     {
       if(wins.at(i)->getWindow() != nullptr)
         {
@@ -1483,7 +1483,7 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                          log);
         }
     }
-} // end of "printSavedFilesWin"
+} // end of "printHelpWin"
 
 
 
@@ -1989,99 +1989,152 @@ void printButtonWin(const std::unordered_map<int, CursesWindow*>& wins,
   Returns:
    NONE
 */
-void checkButtonClick(std::unordered_map<int, CursesWindow*>& wins,
-                     std::vector<CursesWindow*>& stringWins,
-                     const int mainWin,
-                     const int buttonWin,
-                     const std::vector<std::string>& outputStrings,
-                     int& outputStringPos,
+int checkButtonClick(std::unordered_map<int, CursesWindow*>& wins,
                      const int& mouseLine,
                      const int& mouseCol,
-                     std::string outString,
                      std::ofstream& log)
 {
-  if(wins.at(mainWin)->getWindow() != nullptr &&
-     wins.at(buttonWin)->getWindow() != nullptr)
+  int buttonNum = -1;
+  if(wins.at(_MAINWIN)->getWindow() == nullptr ||
+     wins.at(_SAVEDFILESWIN)->getWindow() == nullptr ||
+     wins.at(_SAVEDTHEMESWIN)->getWindow() == nullptr ||
+     wins.at(_HELPWIN)->getWindow() == nullptr)
     {
-      // flash window if mouse click deteceted in range
-      if((mouseLine == wins.at(buttonWin)->getStartY()) &&
-         (mouseCol >= wins.at(buttonWin)->getStartX() &&
-          mouseCol <= wins.at(buttonWin)->getStartX() + outString.length() - 1))
-        {
-          // give the arrow button that was clicked the 'click effect'
-          printButtonWin(wins,
-                         buttonWin,
-                         outString,
-                         _WHITE_TEXT,
-                         log);
-          wnoutrefresh(wins.at(buttonWin)->getWindow());
-          doupdate();
-          usleep(40000);
-
-          switch(buttonWin)
-            {
-            case _LARROWSAVEDFILESWIN:
-              shiftSFLeft(wins,
-                          stringWins,
-                          outputStrings,
-                          outputStringPos,
-                          log);
-              break;
-            case _RARROWSAVEDFILESWIN:
-              shiftSFRight(wins,
-                           stringWins,
-                           outputStrings,
-                           outputStringPos,
-                           log);
-              break;
-            case _LARROWSAVEDTHEMESWIN:
-              shiftSTLeft(wins,
-                          stringWins,
-                          outputStrings,
-                          outputStringPos,
-                          log);
-              break;
-            case _RARROWSAVEDTHEMESWIN:
-              shiftSTRight(wins,
-                           stringWins,
-                           outputStrings,
-                           outputStringPos,
-                           log);
-              break;
-            case _HWSFADDFILE:
-              break;
-            case _HWSFEDITFILEPATH:
-              break;
-            case _HWSFVIEWFILEPATH:
-              break;
-            case _HWSFREMOVEFILE:
-              break;
-            case _HWSFADDTHEME:
-              break;
-            case _HWSFEDITTHEME:
-              break;
-            case _HWSFREMOVETHEME:
-              break;
-            case _HWSTADDTHEME:
-              break;
-            case _HWSTREMOVETHEME:
-              break;
-            case _HWSTEDITTHEME:
-              break;
-            case _HWSTVIEWTHEME:
-              break;
-            default:
-              break;
-            }
-          printButtonWin(wins,
-                         buttonWin,
-                         outString,
-                         _BLACK_TEXT,
-                         log);
-        }
+      return buttonNum;
     }
-} // end of "checkArrowClick"
 
+  if((mouseLine == wins.at(_LARROWSAVEDFILESWIN)->getStartY()) &&
+     (mouseCol >= wins.at(_LARROWSAVEDFILESWIN)->getStartX() &&
+      mouseCol <= wins.at(_LARROWSAVEDFILESWIN)->getStartX() +
+      wins.at(_LARROWSAVEDFILESWIN)->getNumCols() - 1))
+    {
+      buttonNum = _LARROWSAVEDFILESWIN;
+    }
+  else if((mouseLine == wins.at(_RARROWSAVEDFILESWIN)->getStartY()) &&
+          (mouseCol >= wins.at(_RARROWSAVEDFILESWIN)->getStartX() &&
+           mouseCol <= wins.at(_RARROWSAVEDFILESWIN)->getStartX() +
+           wins.at(_RARROWSAVEDFILESWIN)->getNumCols() - 1))
+    {
+      buttonNum = _RARROWSAVEDFILESWIN;
+    }
+  else if((mouseLine == wins.at(_RARROWSAVEDTHEMESWIN)->getStartY()) &&
+          (mouseCol >= wins.at(_RARROWSAVEDTHEMESWIN)->getStartX() &&
+           mouseCol <= wins.at(_RARROWSAVEDTHEMESWIN)->getStartX() +
+           wins.at(_RARROWSAVEDTHEMESWIN)->getNumCols() - 1))
+    {
+      buttonNum = _RARROWSAVEDTHEMESWIN;
+    }
+  else if((mouseLine == wins.at(_LARROWSAVEDTHEMESWIN)->getStartY()) &&
+          (mouseCol >= wins.at(_LARROWSAVEDTHEMESWIN)->getStartX() &&
+           mouseCol <= wins.at(_LARROWSAVEDTHEMESWIN)->getStartX() +
+           wins.at(_LARROWSAVEDTHEMESWIN)->getNumCols() - 1))
+    {
+      buttonNum = _LARROWSAVEDTHEMESWIN;
+    }
+  else if((mouseLine == wins.at(_HWSFADDFILE)->getStartY()) &&
+          (mouseCol >= wins.at(_HWSFADDFILE)->getStartX() &&
+           mouseCol <= wins.at(_HWSFADDFILE)->getStartX() +
+           wins.at(_HWSFADDFILE)->getNumCols() - 1))
+    {
+      buttonNum = _HWSFADDFILE;
+    }
+  else if((mouseLine == wins.at(_HWSFEDITFILEPATH)->getStartY()) &&
+          (mouseCol >= wins.at(_HWSFEDITFILEPATH)->getStartX() &&
+           mouseCol <= wins.at(_HWSFEDITFILEPATH)->getStartX() +
+           wins.at(_HWSFEDITFILEPATH)->getNumCols() - 1))
+    {
+      buttonNum = _HWSFEDITFILEPATH;
+    }
+  else if((mouseLine == wins.at(_HWSFVIEWFILEPATH)->getStartY()) &&
+          (mouseCol >= wins.at(_HWSFVIEWFILEPATH)->getStartX() &&
+           mouseCol <= wins.at(_HWSFVIEWFILEPATH)->getStartX() +
+           wins.at(_HWSFVIEWFILEPATH)->getNumCols() - 1))
+    {
+      buttonNum = _HWSFVIEWFILEPATH;
+    }
+  else if((mouseLine == wins.at(_HWSFREMOVEFILE)->getStartY()) &&
+          (mouseCol >= wins.at(_HWSFREMOVEFILE)->getStartX() &&
+           mouseCol <= wins.at(_HWSFREMOVEFILE)->getStartX() +
+           wins.at(_HWSFREMOVEFILE)->getNumCols() - 1))
+    {
+      buttonNum = _HWSFREMOVEFILE;
+    }
+  else if((mouseLine == wins.at(_HWSFADDTHEME)->getStartY()) &&
+          (mouseCol >= wins.at(_HWSFADDTHEME)->getStartX() &&
+           mouseCol <= wins.at(_HWSFADDTHEME)->getStartX() +
+           wins.at(_HWSFADDTHEME)->getNumCols() - 1))
+    {
+      buttonNum = _HWSFADDTHEME;
+    }
+  else if((mouseLine == wins.at(_HWSFEDITTHEME)->getStartY()) &&
+          (mouseCol >= wins.at(_HWSFEDITTHEME)->getStartX() &&
+           mouseCol <= wins.at(_HWSFEDITTHEME)->getStartX() +
+           wins.at(_HWSFEDITTHEME)->getNumCols() - 1))
+    {
+      buttonNum = _HWSFEDITTHEME;
+    }
+  else if((mouseLine == wins.at(_HWSFREMOVETHEME)->getStartY()) &&
+          (mouseCol >= wins.at(_HWSFREMOVETHEME)->getStartX() &&
+           mouseCol <= wins.at(_HWSFREMOVETHEME)->getStartX() +
+           wins.at(_HWSFREMOVETHEME)->getNumCols() - 1))
+    {
+      buttonNum = _HWSFREMOVETHEME;
+    }
+  else if((mouseLine == wins.at(_HWSTADDTHEME)->getStartY()) &&
+          (mouseCol >= wins.at(_HWSTADDTHEME)->getStartX() &&
+           mouseCol <= wins.at(_HWSTADDTHEME)->getStartX() +
+           wins.at(_HWSTADDTHEME)->getNumCols() - 1))
+    {
+      buttonNum = _HWSTADDTHEME;
+    }
+  else if((mouseLine == wins.at(_HWSTREMOVETHEME)->getStartY()) &&
+          (mouseCol >= wins.at(_HWSTREMOVETHEME)->getStartX() &&
+           mouseCol <= wins.at(_HWSTREMOVETHEME)->getStartX() +
+           wins.at(_HWSTREMOVETHEME)->getNumCols() - 1))
+    {
+      buttonNum = _HWSTREMOVETHEME;
+    }
+  else if((mouseLine == wins.at(_HWSTEDITTHEME)->getStartY()) &&
+          (mouseCol >= wins.at(_HWSTEDITTHEME)->getStartX() &&
+           mouseCol <= wins.at(_HWSTEDITTHEME)->getStartX() +
+           wins.at(_HWSTEDITTHEME)->getNumCols() - 1))
+    {
+      buttonNum = _HWSTEDITTHEME;
+    }
+  else if((mouseLine == wins.at(_HWSTVIEWTHEME)->getStartY()) &&
+          (mouseCol >= wins.at(_HWSTVIEWTHEME)->getStartX() &&
+           mouseCol <= wins.at(_HWSTVIEWTHEME)->getStartX() +
+           wins.at(_HWSTVIEWTHEME)->getNumCols() - 1))
+    {
+      buttonNum = _HWSTVIEWTHEME;
+    }
+
+  return buttonNum;
+} // end of "checkButtonClick"
+
+
+
+void flashButton(const std::unordered_map<int, CursesWindow*>& wins,
+                 const int win,
+                 std::string outString,
+                 const int colorStart,
+                 const int colorFlash,
+                 std::ofstream& log)
+{
+  printButtonWin(wins,
+                 win,
+                 outString,
+                 colorFlash,
+                 log);
+  wnoutrefresh(wins.at(win)->getWindow());
+  doupdate();
+  usleep(40000);
+  printButtonWin(wins,
+                 win,
+                 outString,
+                 colorStart,
+                 log);
+}
 
 
 /*
