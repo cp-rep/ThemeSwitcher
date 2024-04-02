@@ -1291,6 +1291,19 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
     }
 } // end of "printPromptWin"
 
+void printButtonWin(const std::unordered_map<int, CursesWindow*>& wins,
+                    const int win,
+                    std::string outString,
+                    const int colorPair,
+                    std::ofstream& log)
+{
+  wattron(wins.at(win)->getWindow(), COLOR_PAIR(colorPair));
+  mvwaddstr(wins.at(win)->getWindow(),
+            0,
+            0,
+            outString.c_str());
+} // end of "printButtonWin"
+
 
 
 /*
@@ -1935,21 +1948,6 @@ void shiftSTRight(std::unordered_map<int, CursesWindow*>& wins,
         }
     }
 } // end of "shiftSTRight"
-
-
-
-void printButtonWin(const std::unordered_map<int, CursesWindow*>& wins,
-                    const int win,
-                    std::string outString,
-                    const int colorPair,
-                    std::ofstream& log)
-{
-  wattron(wins.at(win)->getWindow(), COLOR_PAIR(colorPair));
-  mvwaddstr(wins.at(win)->getWindow(),
-            0,
-            0,
-            outString.c_str());
-} // end of "printButtonWin"
 
 
 
