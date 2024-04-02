@@ -2003,110 +2003,139 @@ int checkButtonClick(std::unordered_map<int, CursesWindow*>& wins,
       return buttonNum;
     }
 
-  if((mouseLine == wins.at(_LARROWSAVEDFILESWIN)->getStartY()) &&
-     (mouseCol >= wins.at(_LARROWSAVEDFILESWIN)->getStartX() &&
-      mouseCol <= wins.at(_LARROWSAVEDFILESWIN)->getStartX() +
-      wins.at(_LARROWSAVEDFILESWIN)->getNumCols() - 1))
+  // check if click is in _SAVEDFILESWIN
+  if((mouseLine >= wins.at(_SAVEDFILESWIN)->getStartY()) &&
+     (mouseLine < wins.at(_SAVEDFILESWIN)->getStartY() +
+      wins.at(_SAVEDFILESWIN)->getNumLines()) &&
+     (mouseCol >= wins.at(_SAVEDFILESWIN)->getStartX() &&
+      mouseCol < wins.at(_SAVEDFILESWIN)->getStartX() +
+      wins.at(_SAVEDFILESWIN)->getNumCols()))
     {
-      buttonNum = _LARROWSAVEDFILESWIN;
+      if((mouseLine == wins.at(_LARROWSAVEDFILESWIN)->getStartY()) &&
+         (mouseCol >= wins.at(_LARROWSAVEDFILESWIN)->getStartX() &&
+          mouseCol < wins.at(_LARROWSAVEDFILESWIN)->getStartX() +
+          wins.at(_LARROWSAVEDFILESWIN)->getNumCols()))
+        {
+          buttonNum = _LARROWSAVEDFILESWIN;
+        }
+      else if((mouseLine == wins.at(_RARROWSAVEDFILESWIN)->getStartY()) &&
+              (mouseCol >= wins.at(_RARROWSAVEDFILESWIN)->getStartX() &&
+               mouseCol < wins.at(_RARROWSAVEDFILESWIN)->getStartX() +
+               wins.at(_RARROWSAVEDFILESWIN)->getNumCols()))
+        {
+          buttonNum = _RARROWSAVEDFILESWIN;
+        }
     }
-  else if((mouseLine == wins.at(_RARROWSAVEDFILESWIN)->getStartY()) &&
-          (mouseCol >= wins.at(_RARROWSAVEDFILESWIN)->getStartX() &&
-           mouseCol <= wins.at(_RARROWSAVEDFILESWIN)->getStartX() +
-           wins.at(_RARROWSAVEDFILESWIN)->getNumCols() - 1))
+
+  // check if click is in _SAVEDTHEMESWIN
+  if((mouseLine >= wins.at(_SAVEDTHEMESWIN)->getStartY()) &&
+     (mouseLine < wins.at(_SAVEDTHEMESWIN)->getStartY() +
+      wins.at(_SAVEDTHEMESWIN)->getNumLines()) &&
+     (mouseCol >= wins.at(_SAVEDTHEMESWIN)->getStartX() &&
+      mouseCol < wins.at(_SAVEDTHEMESWIN)->getStartX() +
+      wins.at(_SAVEDTHEMESWIN)->getNumCols()))
     {
-      buttonNum = _RARROWSAVEDFILESWIN;
+      if((mouseLine == wins.at(_RARROWSAVEDTHEMESWIN)->getStartY()) &&
+         (mouseCol >= wins.at(_RARROWSAVEDTHEMESWIN)->getStartX() &&
+          mouseCol < wins.at(_RARROWSAVEDTHEMESWIN)->getStartX() +
+          wins.at(_RARROWSAVEDTHEMESWIN)->getNumCols()))
+        {
+          buttonNum = _RARROWSAVEDTHEMESWIN;
+        }
+      else if((mouseLine == wins.at(_LARROWSAVEDTHEMESWIN)->getStartY()) &&
+              (mouseCol >= wins.at(_LARROWSAVEDTHEMESWIN)->getStartX() &&
+               mouseCol < wins.at(_LARROWSAVEDTHEMESWIN)->getStartX() +
+               wins.at(_LARROWSAVEDTHEMESWIN)->getNumCols()))
+        {
+          buttonNum = _LARROWSAVEDTHEMESWIN;
+        }
     }
-  else if((mouseLine == wins.at(_RARROWSAVEDTHEMESWIN)->getStartY()) &&
-          (mouseCol >= wins.at(_RARROWSAVEDTHEMESWIN)->getStartX() &&
-           mouseCol <= wins.at(_RARROWSAVEDTHEMESWIN)->getStartX() +
-           wins.at(_RARROWSAVEDTHEMESWIN)->getNumCols() - 1))
+
+  // check if click is in _HELPWIN
+  if((mouseLine >= wins.at(_HELPWIN)->getStartY()) &&
+     (mouseLine < wins.at(_HELPWIN)->getStartY() +
+      wins.at(_HELPWIN)->getNumLines()) &&
+     (mouseCol >= wins.at(_HELPWIN)->getStartX() &&
+      mouseCol < wins.at(_HELPWIN)->getStartX() +
+      wins.at(_HELPWIN)->getNumCols()))
     {
-      buttonNum = _RARROWSAVEDTHEMESWIN;
-    }
-  else if((mouseLine == wins.at(_LARROWSAVEDTHEMESWIN)->getStartY()) &&
-          (mouseCol >= wins.at(_LARROWSAVEDTHEMESWIN)->getStartX() &&
-           mouseCol <= wins.at(_LARROWSAVEDTHEMESWIN)->getStartX() +
-           wins.at(_LARROWSAVEDTHEMESWIN)->getNumCols() - 1))
-    {
-      buttonNum = _LARROWSAVEDTHEMESWIN;
-    }
-  else if((mouseLine == wins.at(_HWSFADDFILE)->getStartY()) &&
-          (mouseCol >= wins.at(_HWSFADDFILE)->getStartX() &&
-           mouseCol <= wins.at(_HWSFADDFILE)->getStartX() +
-           wins.at(_HWSFADDFILE)->getNumCols() - 1))
-    {
-      buttonNum = _HWSFADDFILE;
-    }
-  else if((mouseLine == wins.at(_HWSFEDITFILEPATH)->getStartY()) &&
-          (mouseCol >= wins.at(_HWSFEDITFILEPATH)->getStartX() &&
-           mouseCol <= wins.at(_HWSFEDITFILEPATH)->getStartX() +
-           wins.at(_HWSFEDITFILEPATH)->getNumCols() - 1))
-    {
-      buttonNum = _HWSFEDITFILEPATH;
-    }
-  else if((mouseLine == wins.at(_HWSFVIEWFILEPATH)->getStartY()) &&
-          (mouseCol >= wins.at(_HWSFVIEWFILEPATH)->getStartX() &&
-           mouseCol <= wins.at(_HWSFVIEWFILEPATH)->getStartX() +
-           wins.at(_HWSFVIEWFILEPATH)->getNumCols() - 1))
-    {
-      buttonNum = _HWSFVIEWFILEPATH;
-    }
-  else if((mouseLine == wins.at(_HWSFREMOVEFILE)->getStartY()) &&
-          (mouseCol >= wins.at(_HWSFREMOVEFILE)->getStartX() &&
-           mouseCol <= wins.at(_HWSFREMOVEFILE)->getStartX() +
-           wins.at(_HWSFREMOVEFILE)->getNumCols() - 1))
-    {
-      buttonNum = _HWSFREMOVEFILE;
-    }
-  else if((mouseLine == wins.at(_HWSFADDTHEME)->getStartY()) &&
-          (mouseCol >= wins.at(_HWSFADDTHEME)->getStartX() &&
-           mouseCol <= wins.at(_HWSFADDTHEME)->getStartX() +
-           wins.at(_HWSFADDTHEME)->getNumCols() - 1))
-    {
-      buttonNum = _HWSFADDTHEME;
-    }
-  else if((mouseLine == wins.at(_HWSFEDITTHEME)->getStartY()) &&
-          (mouseCol >= wins.at(_HWSFEDITTHEME)->getStartX() &&
-           mouseCol <= wins.at(_HWSFEDITTHEME)->getStartX() +
-           wins.at(_HWSFEDITTHEME)->getNumCols() - 1))
-    {
-      buttonNum = _HWSFEDITTHEME;
-    }
-  else if((mouseLine == wins.at(_HWSFREMOVETHEME)->getStartY()) &&
-          (mouseCol >= wins.at(_HWSFREMOVETHEME)->getStartX() &&
-           mouseCol <= wins.at(_HWSFREMOVETHEME)->getStartX() +
-           wins.at(_HWSFREMOVETHEME)->getNumCols() - 1))
-    {
-      buttonNum = _HWSFREMOVETHEME;
-    }
-  else if((mouseLine == wins.at(_HWSTADDTHEME)->getStartY()) &&
-          (mouseCol >= wins.at(_HWSTADDTHEME)->getStartX() &&
-           mouseCol <= wins.at(_HWSTADDTHEME)->getStartX() +
-           wins.at(_HWSTADDTHEME)->getNumCols() - 1))
-    {
-      buttonNum = _HWSTADDTHEME;
-    }
-  else if((mouseLine == wins.at(_HWSTREMOVETHEME)->getStartY()) &&
-          (mouseCol >= wins.at(_HWSTREMOVETHEME)->getStartX() &&
-           mouseCol <= wins.at(_HWSTREMOVETHEME)->getStartX() +
-           wins.at(_HWSTREMOVETHEME)->getNumCols() - 1))
-    {
-      buttonNum = _HWSTREMOVETHEME;
-    }
-  else if((mouseLine == wins.at(_HWSTEDITTHEME)->getStartY()) &&
-          (mouseCol >= wins.at(_HWSTEDITTHEME)->getStartX() &&
-           mouseCol <= wins.at(_HWSTEDITTHEME)->getStartX() +
-           wins.at(_HWSTEDITTHEME)->getNumCols() - 1))
-    {
-      buttonNum = _HWSTEDITTHEME;
-    }
-  else if((mouseLine == wins.at(_HWSTVIEWTHEME)->getStartY()) &&
-          (mouseCol >= wins.at(_HWSTVIEWTHEME)->getStartX() &&
-           mouseCol <= wins.at(_HWSTVIEWTHEME)->getStartX() +
-           wins.at(_HWSTVIEWTHEME)->getNumCols() - 1))
-    {
-      buttonNum = _HWSTVIEWTHEME;
+      if((mouseLine == wins.at(_HWSFADDFILE)->getStartY()) &&
+         (mouseCol >= wins.at(_HWSFADDFILE)->getStartX() &&
+          mouseCol < wins.at(_HWSFADDFILE)->getStartX() +
+          wins.at(_HWSFADDFILE)->getNumCols()))
+        {
+          buttonNum = _HWSFADDFILE;
+        }
+      else if((mouseLine == wins.at(_HWSFEDITFILEPATH)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSFEDITFILEPATH)->getStartX() &&
+               mouseCol < wins.at(_HWSFEDITFILEPATH)->getStartX() +
+               wins.at(_HWSFEDITFILEPATH)->getNumCols()))
+        {
+          buttonNum = _HWSFEDITFILEPATH;
+        }
+      else if((mouseLine == wins.at(_HWSFVIEWFILEPATH)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSFVIEWFILEPATH)->getStartX() &&
+               mouseCol < wins.at(_HWSFVIEWFILEPATH)->getStartX() +
+               wins.at(_HWSFVIEWFILEPATH)->getNumCols()))
+        {
+          buttonNum = _HWSFVIEWFILEPATH;
+        }
+      else if((mouseLine == wins.at(_HWSFREMOVEFILE)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSFREMOVEFILE)->getStartX() &&
+               mouseCol < wins.at(_HWSFREMOVEFILE)->getStartX() +
+               wins.at(_HWSFREMOVEFILE)->getNumCols()))
+        {
+          buttonNum = _HWSFREMOVEFILE;
+        }
+      else if((mouseLine == wins.at(_HWSFADDTHEME)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSFADDTHEME)->getStartX() &&
+               mouseCol < wins.at(_HWSFADDTHEME)->getStartX() +
+               wins.at(_HWSFADDTHEME)->getNumCols()))
+        {
+          buttonNum = _HWSFADDTHEME;
+        }
+      else if((mouseLine == wins.at(_HWSFEDITTHEME)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSFEDITTHEME)->getStartX() &&
+               mouseCol < wins.at(_HWSFEDITTHEME)->getStartX() +
+               wins.at(_HWSFEDITTHEME)->getNumCols()))
+        {
+          buttonNum = _HWSFEDITTHEME;
+        }
+      else if((mouseLine == wins.at(_HWSFREMOVETHEME)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSFREMOVETHEME)->getStartX() &&
+               mouseCol < wins.at(_HWSFREMOVETHEME)->getStartX() +
+               wins.at(_HWSFREMOVETHEME)->getNumCols()))
+        {
+          buttonNum = _HWSFREMOVETHEME;
+        }
+      else if((mouseLine == wins.at(_HWSTADDTHEME)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSTADDTHEME)->getStartX() &&
+               mouseCol < wins.at(_HWSTADDTHEME)->getStartX() +
+               wins.at(_HWSTADDTHEME)->getNumCols()))
+        {
+          buttonNum = _HWSTADDTHEME;
+        }
+      else if((mouseLine == wins.at(_HWSTREMOVETHEME)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSTREMOVETHEME)->getStartX() &&
+               mouseCol < wins.at(_HWSTREMOVETHEME)->getStartX() +
+               wins.at(_HWSTREMOVETHEME)->getNumCols()))
+        {
+          buttonNum = _HWSTREMOVETHEME;
+        }
+      else if((mouseLine == wins.at(_HWSTEDITTHEME)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSTEDITTHEME)->getStartX() &&
+               mouseCol < wins.at(_HWSTEDITTHEME)->getStartX() +
+               wins.at(_HWSTEDITTHEME)->getNumCols()))
+        {
+          buttonNum = _HWSTEDITTHEME;
+        }
+      else if((mouseLine == wins.at(_HWSTVIEWTHEME)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSTVIEWTHEME)->getStartX() &&
+               mouseCol < wins.at(_HWSTVIEWTHEME)->getStartX() +
+               wins.at(_HWSTVIEWTHEME)->getNumCols()))
+        {
+          buttonNum = _HWSTVIEWTHEME;
+        }
     }
 
   return buttonNum;
