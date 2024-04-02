@@ -22,6 +22,9 @@ const std::string _hwSTRemoveTheme = "   Remove Theme    ";
 const std::string _hwSTEditTheme =   "     Edit Theme    ";
 const std::string _hwSTViewTheme = "    View Theme     ";
 
+// other prompts
+const std::string _hwSFAddFileWin = "Please Enter Full File Path of File: ";
+
 // _SAVEDFILESWIN
 const std::string sfTitle = "SAVED FILES:";
 const std::string sfThemeTitle = "CURRENT THEME:";
@@ -76,8 +79,12 @@ void defineHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                    const int& maxCols);
 void defineWins(std::unordered_map<int, CursesWindow*>& wins,
                 std::ofstream& log);
-void defineHWSFAddFileWin(std::unordered_map<int, CursesWindow*>& wins,
-                          std::ofstream& log);
+void defineSFPromptWin(std::unordered_map<int, CursesWindow*>& wins,
+                       std::ofstream& log);
+void printPrompt(std::unordered_map<int, CursesWindow*>& wins,
+                 const int win,
+                 const std::string& prompt,
+                 std::ofstream& log);
 std::vector<std::string> createSFOutputStrings(const std::unordered_map<int, CursesWindow*>& wins,
                                                std::vector<CursesWindow*>& sfStringWins,
                                                const std::vector<std::string>& savedFileStrings,
