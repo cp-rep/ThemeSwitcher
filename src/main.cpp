@@ -361,12 +361,12 @@ int main()
                           _BLACK_TEXT,
                           _WHITE_TEXT,
                           log);
-              defineSFPromptWin(wins,
-                                log);
-              printPrompt(wins,
-                          _SFPROMPTWIN,
-                          _hwSFAddFileWin,
-                          log);
+              // defineSFPromptWin(wins,
+              //                   log);
+              // printPrompt(wins,
+              //             _SFPROMPTWIN,
+              //             _hwSFAddFileWin,
+              //             log);
               break;
             case _HWSFEDITFILEPATH:
               flashButton(wins,
