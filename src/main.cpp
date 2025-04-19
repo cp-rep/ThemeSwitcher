@@ -108,17 +108,17 @@ int main()
 
 
   // for testing windows and visual button operations with dummy strings
-  // const int numStrings = 0;
-  // initTestFilesStringVector(sfStrings,
-  //                           numStrings,
-  //                           log);
-  // initTestCurrThemesStringVector(sfThemes,
-  //                                numStrings,
-  //                                log);
-  // initSTStrings(stStrings,
-  //               numStrings,
-  //               _STWINMAXCOLS,
-  //               log);
+  const int numStrings = 100;
+  initTestFilesStringVector(sfStrings,
+                            numStrings,
+                            log);
+  initTestCurrThemesStringVector(sfThemes,
+                                 numStrings,
+                                 log);
+  initSTStrings(stStrings,
+                numStrings,
+                _STWINMAXCOLS,
+                log);
 
   // ## initialize curses and starting windows ##
 #if _CURSES
