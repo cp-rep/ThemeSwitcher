@@ -30,7 +30,9 @@
 #include "cursesWindow.hpp"
 #include "fileOperations.hpp"
 #include "log.hpp"
+#include "_progStateConsts.hpp"
 #include "testingInterface.hpp"
+#include "_winStringConsts.hpp"
 
 #define _DEBUG 0
 #define _CURSES 1
@@ -95,6 +97,8 @@ int main()
   int sfHighlightNum = -1;
   int stHighlightNum = -1;
   int currStartWin = 0;
+  int yOffset = 0;
+  int xOffset = 0;
   std::vector<std::string> promptStrings;
   // saved file variables
   std::vector<std::string> sfStrings;
@@ -281,6 +285,7 @@ int main()
                                   stHighlightNum,
                                   log);
           refreshwins(wins);
+
           refreshSFStringWins(sfStringWins,
                               log);
           refreshSTStringWins(stStringWins,
@@ -354,19 +359,48 @@ int main()
                            stStringPos,
                            log);
               break;
-            case _HWSFADDFILE:
+            case _HWSFADDFILE: // enter save file state
               flashButton(wins,
                           _HWSFADDFILE,
                           _hwSFAddFile,
                           _BLACK_TEXT,
                           _WHITE_TEXT,
                           log);
-              // defineSFPromptWin(wins,
-              //                   log);
-              // printPrompt(wins,
-              //             _SFPROMPTWIN,
-              //             _hwSFAddFileWin,
-              //             log);
+              defineSFPromptWin(wins,
+                                log);
+              printPrompt(wins,
+                          _SFPROMPTWIN,
+                          _hwSFAddFileWin,
+                          log);
+
+              // yOffset = 2;
+              // xOffset = 2;
+              // CursesWindow* userInputWindow = new CursesWindow();
+              // wins.insert(std::make_pair(_USERINPUTWIN, userInputWindow));
+              // wins.at(_USERINPUTWIN)->defineWindow(newwin(1,
+              //                                             wins.at(_SFPROMPTWIN)->getNumCols(),
+              //                                             0,
+              //                                             0),
+              //                                      "UserInputWindow",
+              //                                      0,
+              //                                      wins.at(_SFPROMPTWIN)->getStartY(),
+              //                                      wins.at(_SFPROMPTWIN)->getStartX(),
+              //                                      10);
+
+              // while(input != KEY_ENTER)
+              //   {
+              //     input = getch();
+              //     printUserInput(wins,
+              //                    _SFPROMPTWIN,
+              //                    input,
+              //                    yOffset,
+              //                    xOffset);
+              //     flushinp();
+              //     refreshwins(wins);
+              //     doupdate();
+              //     usleep(15000);
+              //   }
+              usleep(1000000);
               break;
             case _HWSFEDITFILEPATH:
               flashButton(wins,
@@ -452,7 +486,7 @@ int main()
               break;
             }
 
-          // check if a _SAVEDFILESWIN file was clicked
+          // check if a _SAVEDFILESWIN file was clicked (highlights SF string)
           checkSFClick(wins,
                        sfOutput,
                        sfStringPos,
@@ -468,7 +502,7 @@ int main()
                                  sfHighlightNum,
                                  log);
 
-          // check if a _SAVEDTHEMESWIN file was clicked
+          // check if a _SAVEDTHEMESWIN file was clicked (highlights ST string)
           checkSTClick(wins,
                        stStringWins,
                        mouseLine,
