@@ -11,9 +11,9 @@ CPPFLAGS=-I$(IDIR)
 LIBS=-lm
 BINNAME=themeswitcher
 _DEPS = log.hpp cursesFunctions.hpp cursesWindow.hpp _cursesWinConsts.hpp\
-typeConversions.hpp testingInterface.hpp fileOperations.hpp
+typeConversions.hpp testingInterface.hpp fileOperations.hpp programStates.hpp
 _OBJ = main.o log.o cursesFunctions.o cursesWindow.o typeConversions.o\
-testingInterface.o fileOperations.o
+testingInterface.o fileOperations.o programStates.o
 
 DEPS = $(patsubst %,$(LDIR)/%,$(_DEPS))
 
