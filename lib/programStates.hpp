@@ -1,5 +1,6 @@
 #ifndef PROGRAMSTATES_HPP
 #define PROGRAMSTATES_HPP
+#include <fstream>
 #include <ncurses.h>
 #include <string>
 #include <unordered_map>
@@ -14,5 +15,4 @@
 
 void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                            std::ofstream& log);
-
 #endif // PROGRAMSTATES_HPP
