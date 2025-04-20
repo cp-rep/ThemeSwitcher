@@ -3,6 +3,7 @@
 #include <fstream>
 #include <ncurses.h>
 #include <string>
+#include <unistd.h>
 #include <unordered_map>
 #include <vector>
 #include "_cursesWinConsts.hpp"
