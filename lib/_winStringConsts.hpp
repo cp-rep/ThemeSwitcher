@@ -1,5 +1,5 @@
-#ifndef _WINSTRINGCONSTS_H_
-#define _WINSTRINGCONSTS_H_
+#ifndef _WINSTRINGCONSTS_HPP
+#define _WINSTRINGCONSTS_HPP
 #include <string>
 
 // helpwin
@@ -34,4 +34,4 @@ const std::string stRightArrow = "_RARROWSAVEDTHEMESWIN";
 const std::string leftArrow = " < ";
 const std::string rightArrow = " > ";
 
-#endif // _WINSTRINGCONSTS_H_
+#endif // _WINSTRINGCONSTS_HPP
