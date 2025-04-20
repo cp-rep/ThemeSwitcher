@@ -1,6 +1,9 @@
-#ifndef PROGRAMSTATES_H_
-#define PROGRAMSTATES_H_
+#ifndef PROGRAMSTATES_HPP
+#define PROGRAMSTATES_HPP
+#include <ncurses.h>
 #include <string>
+#include <unordered_map>
+#include <vector>
 #include "_cursesWinConsts.hpp"
 #include "_progStateConsts.hpp"
 #include "_winStringConsts.hpp"
@@ -9,10 +12,7 @@
 #include "fileOperations.hpp"
 #include "log.hpp"
 
-// void enterHWSFaddFileState(const std::unordered_map<int, CursesWindow*>& wins,
-//                            const int HWSFWinIndex,
-//                            const int HWSFAddFileWinIndex,
-//                            const int
-//                            std::ofstream& log);
+void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
+                           std::ofstream& log);
 
-#endif // PROGRAMSTATES_H_
+#endif // PROGRAMSTATES_HPP
