@@ -2582,3 +2582,62 @@ void drawSTStringBoxes(const std::unordered_map<int, CursesWindow*>& wins,
         }
     }
 } // end of "drawBoxes"
+
+
+void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
+                    const int winIndex,
+                    const int& input,
+                    int& yOffset,
+                    int& xOffset)
+{
+  std::string inputString;
+//  if((input >= 32) && (input <= 126))
+  if((input >= 32) &&
+     (input <= 126) &&
+     (input != KEY_ENTER) &&
+     (xOffset < wins.at(winIndex)->getNumCols() - 2))
+    {
+      mvwaddch(wins.at(winIndex)->getWindow(),
+               yOffset,
+               xOffset,
+               input);
+      xOffset++;
+    }
+  else if (input == KEY_ENTER)
+    {
+      mvwaddch(wins.at(winIndex)->getWindow(),
+               yOffset,
+               xOffset,
+               'a');
+      xOffset++;
+    }
+
+  // if((input >= 32) &&
+  //    (input <= 126) &&
+  //    (input != KEY_ENTER) &&
+  //    (xOffset < wins.at(winIndex)->getNumCols() - 2))
+  //   {
+  //     inputString.push_back(input);
+  //     mvwaddch(wins.at(winIndex)->getWindow(),
+	//        yOffset,
+	//        xOffset,
+	//        input);
+  //     xOffset++;
+  //   }
+  // else if(input == KEY_BACKSPACE && xOffset > 0)
+  //   {
+  //     inputString.pop_back();
+  //     xOffset--;
+  //     mvwaddch(wins.at(winIndex)->getWindow(),
+	//        yOffset,
+	//        xOffset,
+	//        ' ');
+  //     wmove(wins.at(winIndex)->getWindow(),
+	//     yOffset,
+	//     xOffset);
+  //   }
+  // else if(input == 10 || input == KEY_ENTER)
+  //   {
+  //     inputString.push_back(10);
+  //   }
+} // end of "printUserInput"
