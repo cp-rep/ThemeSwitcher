@@ -26,13 +26,14 @@
 #include <unordered_map>
 #include <vector>
 #include "_cursesWinConsts.hpp"
+#include "_progStateConsts.hpp"
+#include "_winStringConsts.hpp"
 #include "cursesFunctions.hpp"
 #include "cursesWindow.hpp"
 #include "fileOperations.hpp"
 #include "log.hpp"
-#include "_progStateConsts.hpp"
+#include "programStates.hpp"
 #include "testingInterface.hpp"
-#include "_winStringConsts.hpp"
 
 #define _DEBUG 0
 #define _CURSES 1
