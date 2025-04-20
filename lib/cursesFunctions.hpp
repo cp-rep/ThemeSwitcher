@@ -7,38 +7,7 @@
 #include "cursesWindow.hpp"
 #include "log.hpp"
 #include "typeConversions.hpp"
-
-// helpwin
-const std::string _hwSFAddFile = "     Add File      ";
-const std::string _hwSFEditFilePath = "   Edit File Path  ";
-const std::string _hwSFViewFilePath = "   View File Path  ";
-const std::string _hwSFRemoveFile = "    Remove File    ";
-const std::string _hwSFAddTheme = "  Add File Theme   ";
-const std::string _hwSFEditTheme = "  Edit File Theme  ";
-const std::string _hwSFRemoveTheme = " Remove File Theme ";
-const std::string _hwSTAddTheme = "     Add Theme     ";
-const std::string _hwSTARemoveTheme = "     Add Theme     ";
-const std::string _hwSTRemoveTheme = "   Remove Theme    ";
-const std::string _hwSTEditTheme =   "     Edit Theme    ";
-const std::string _hwSTViewTheme = "    View Theme     ";
-
-// other prompts
-const std::string _hwSFAddFileWin = "Please Enter Full File Path of File: ";
-
-// _SAVEDFILESWIN
-const std::string sfTitle = "SAVED FILES:";
-const std::string sfThemeTitle = "CURRENT THEME:";
-const std::string sfLeftArrow = "_LARROWSAVEDFILESWIN";
-const std::string sfRightArrow = "_RARROWSAVEDFILESWIN";
-
-// _SAVEDTHEMESWIN
-const std::string stTitle = "SAVED THEMES:";
-const std::string stLeftArrow = "_LARROWSAVEDTHEMESWIN";
-const std::string stRightArrow = "_RARROWSAVEDTHEMESWIN";
-
-// arrows
-const std::string leftArrow = " < ";
-const std::string rightArrow = " > ";
+#include "_winStringConsts.hpp"
 
 void initializeCurses();
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
@@ -110,6 +79,11 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
                   std::ofstream& log);
 void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
                           std::ofstream& log);
+void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
+                    const int winIndex,
+                    const int& input,
+                    int& yOffset,
+                    int& xOffset);
 void flashButton(const std::unordered_map<int, CursesWindow*>& wins,
                  const int win,
                  std::string outString,
