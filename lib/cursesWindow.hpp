@@ -63,4 +63,4 @@ private:
   int m_startX;
 };
 
-#endif // CURSESWINDOW_H_
+#endif // CURSESWINDOW_HPP
