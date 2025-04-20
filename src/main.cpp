@@ -360,19 +360,22 @@ int main()
                            stStringPos,
                            log);
               break;
-            case _HWSFADDFILE: // enter save file state
-              flashButton(wins,
-                          _HWSFADDFILE,
-                          _hwSFAddFile,
-                          _BLACK_TEXT,
-                          _WHITE_TEXT,
-                          log);
-              defineSFPromptWin(wins,
-                                log);
-              printPrompt(wins,
-                          _SFPROMPTWIN,
-                          _hwSFAddFileWin,
-                          log);
+            case _HWSFADDFILE:
+              // enterHWSFAddFileState(wins,
+              //                       log);
+
+              // flashButton(wins,
+              //             _HWSFADDFILE,
+              //             _hwSFAddFile,
+              //             _BLACK_TEXT,
+              //             _WHITE_TEXT,
+              //             log);
+              // defineSFPromptWin(wins,
+              //                   log);
+              // printPrompt(wins,
+              //             _SFPROMPTWIN,
+              //             _hwSFAddFileWin,
+              //             log);
 
               // yOffset = 2;
               // xOffset = 2;
