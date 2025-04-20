@@ -45,7 +45,10 @@ enum _WINS {
 
   // file operation wins
   _SFPROMPTWIN,
-  _STPROMPTWIN
+  _STPROMPTWIN,
+
+  // user input window
+  _USERINPUTWIN
 };
 
 // _PROMPTWIN DIMENSIONS
