@@ -2586,58 +2586,33 @@ void drawSTStringBoxes(const std::unordered_map<int, CursesWindow*>& wins,
 
 void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
                     const int winIndex,
-                    const int& input,
-                    int& yOffset,
+                    const int& userInput,
+                    std::string& inputString,
+                    const int& yOffset,
                     int& xOffset)
 {
-  std::string inputString;
-//  if((input >= 32) && (input <= 126))
-  if((input >= 32) &&
-     (input <= 126) &&
-     (input != KEY_ENTER) &&
-     (xOffset < wins.at(winIndex)->getNumCols() - 2))
+  if((userInput >= 32) &&
+     (userInput <= 126) &&
+     (userInput != KEY_ENTER || userInput != 10) &&
+     (xOffset < wins.at(winIndex)->getNumCols()))
     {
+      inputString.push_back(userInput);
       mvwaddch(wins.at(winIndex)->getWindow(),
-               yOffset,
+               0,
                xOffset,
-               input);
+               userInput);
       xOffset++;
     }
-  else if (input == KEY_ENTER)
+  else if(userInput == KEY_BACKSPACE && xOffset > 0)
     {
+      inputString.pop_back();
+      xOffset--;
       mvwaddch(wins.at(winIndex)->getWindow(),
-               yOffset,
+               0,
                xOffset,
-               'a');
-      xOffset++;
+               ' ');
+      wmove(wins.at(winIndex)->getWindow(),
+            0,
+            xOffset);
     }
-
-  // if((input >= 32) &&
-  //    (input <= 126) &&
-  //    (input != KEY_ENTER) &&
-  //    (xOffset < wins.at(winIndex)->getNumCols() - 2))
-  //   {
-  //     inputString.push_back(input);
-  //     mvwaddch(wins.at(winIndex)->getWindow(),
-	//        yOffset,
-	//        xOffset,
-	//        input);
-  //     xOffset++;
-  //   }
-  // else if(input == KEY_BACKSPACE && xOffset > 0)
-  //   {
-  //     inputString.pop_back();
-  //     xOffset--;
-  //     mvwaddch(wins.at(winIndex)->getWindow(),
-	//        yOffset,
-	//        xOffset,
-	//        ' ');
-  //     wmove(wins.at(winIndex)->getWindow(),
-	//     yOffset,
-	//     xOffset);
-  //   }
-  // else if(input == 10 || input == KEY_ENTER)
-  //   {
-  //     inputString.push_back(10);
-  //   }
 } // end of "printUserInput"
