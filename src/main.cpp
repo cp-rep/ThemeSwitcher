@@ -1,21 +1,20 @@
-// ============================================================================
-// File: main.c
-// Author: https://github.com/cp-rep
-//
-// Disclaimer:
-//  You may use and freely distribute my code from this project as long as you
-//  leave the original author provided above in any works that use or borrow
-//  from it.
-//
-//  Using this program is at your own discretion and trust in the software.
-//  Using it means take you responsibility for any and all events that may
-//  happen from its use.
-//
-// Program Description:
-//  Changes the color theme for Linux Window Managers and/or Terminal
-//  Emulators.  A GUI is provided by the Ncurses library.
-//
-// ============================================================================
+/*
+  File: main.cpp
+  Author: https://github.com/cp-rep
+
+  Disclaimer:
+  You may use and freely distribute my code from this project as long as you
+  leave the original author provided above in any works that use or borrow
+  from it.
+
+  Using this program is at your own discretion and trust in the software.
+  Using it means take you responsibility for any and all events that may
+  happen from its use.
+
+  Program Description:
+  Changes the color theme for Linux Window Managers and/or Terminal
+  Emulators.  A GUI is provided by the Ncurses library.
+*/
 #include <chrono>
 #include <ctime>
 #include <fstream>
@@ -35,14 +34,13 @@
 #include "programStates.hpp"
 #include "testingInterface.hpp"
 
-#define _DEBUG 0
 #define _CURSES 1
 
 
 
-// ==== main ==================================================================
-//
-// ============================================================================
+/*
+  main()
+*/
 int main()
 {
   // ## CREATE LOGGING SYSTEM
