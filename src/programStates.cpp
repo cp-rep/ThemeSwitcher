@@ -37,11 +37,47 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
 
   // get user input, dynamically print it, and store in string object
   int userInput = 0;
+  int mouseLine = -1;
+  int mouseCol = -1;
   std::string inputString;
   xOffset = 0;
   curs_set(1);
-  while(userInput != 10 && userInput != KEY_ENTER)
+  MEVENT mouse;
+  while((userInput != 10) &&
+        (userInput != KEY_ENTER))
     {
+      mouseCol = -1;
+      mouseLine = -1;
+
+      if(getmouse(&mouse) == OK)
+        {
+          if(mouse.bstate & BUTTON1_PRESSED)
+            {
+              mouseLine = mouse.y;
+              mouseCol = mouse.x;
+
+              // return to previous state if user clicked out of the _SFPROMPTWIN
+              if((mouseLine <= wins.at(_SFPROMPTWIN)->getStartY() - 1) ||
+                 (mouseLine > wins.at(_SFPROMPTWIN)->getStartY() +
+                  wins.at(_SFPROMPTWIN)->getNumLines()  - 1) ||
+                 ((mouseCol <= wins.at(_SFPROMPTWIN)->getStartX()  - 1) ||
+                  (mouseCol > wins.at(_SFPROMPTWIN)->getStartX() +
+                  wins.at(_SFPROMPTWIN)->getNumCols() - 1)))
+                {
+                  werase(wins.at(_SAVEDFILESWIN)->getWindow());
+                  printSavedFilesWin(wins,
+                                     log);
+                  refreshwins(wins);
+                  doupdate();
+                  break;
+                }
+            }
+        }
+
+      // else check if user clicked on the input string for editing the string
+
+
+      // get user input from keyboard
       userInput = getch();
       flushinp();
 
@@ -56,5 +92,8 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
       usleep(15000);
     }
 
+  // delete _USERINPUTWIN and return to previous Ncurses settings
+  wins.at(_USERINPUTWIN)->deleteWindow();
   curs_set(0);
+
 } // end of "enterHWSFAddFileState"
