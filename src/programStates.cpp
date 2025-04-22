@@ -16,33 +16,45 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
               _hwSFAddFileWin,
               log);
 
-  // yOffset = 2;
-  // xOffset = 2;
-  // CursesWindow* userInputWindow = new CursesWindow();
-  // wins.insert(std::make_pair(_USERINPUTWIN, userInputWindow));
-  // wins.at(_USERINPUTWIN)->defineWindow(newwin(1,
-  //                                             wins.at(_SFPROMPTWIN)->getNumCols(),
-  //                                             0,
-  //                                             0),
-  //                                      "UserInputWindow",
-  //                                      0,
-  //                                      wins.at(_SFPROMPTWIN)->getStartY(),
-  //                                      wins.at(_SFPROMPTWIN)->getStartX(),
-  //                                      10);
+  // create user input window
+  int yOffset = 2;
+  int xOffset = 2;
+  int startY = wins.at(_SFPROMPTWIN)->getStartY() + yOffset;
+  int startX = wins.at(_SFPROMPTWIN)->getStartX() + xOffset;
+  int numCols = wins.at(_SFPROMPTWIN)->getNumCols() - xOffset - xOffset;
+  CursesWindow* userInputWindow = new CursesWindow();
 
-  // while(input != KEY_ENTER)
-  //   {
-  //     input = getch();
-  //     printUserInput(wins,
-  //                    _SFPROMPTWIN,
-  //                    input,
-  //                    yOffset,
-  //                    xOffset);
-  //     flushinp();
-  //     refreshwins(wins);
-  //     doupdate();
-  //     usleep(15000);
-  //   }
-  usleep(1000000);
+  wins.insert(std::make_pair(_USERINPUTWIN, userInputWindow));
+  wins.at(_USERINPUTWIN)->defineWindow(newwin(1,
+                                              numCols,
+                                              startY,
+                                              startX),
+                                       "_USERINPUTWIN",
+                                       1,
+                                       numCols,
+                                       startY,
+                                       startX);
 
+  // get user input, dynamically print it, and store in string object
+  int userInput = 0;
+  std::string inputString;
+  xOffset = 0;
+  curs_set(1);
+  while(userInput != 10 && userInput != KEY_ENTER)
+    {
+      userInput = getch();
+      flushinp();
+
+      printUserInput(wins,
+                     _USERINPUTWIN,
+                     userInput,
+                     inputString,
+                     startY,
+                     xOffset);
+      refreshwins(wins);
+      doupdate();
+      usleep(15000);
+    }
+
+  curs_set(0);
 } // end of "enterHWSFAddFileState"
