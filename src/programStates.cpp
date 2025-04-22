@@ -40,11 +40,10 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
   int mouseLine = -1;
   int mouseCol = -1;
   std::string inputString;
+  MEVENT mouse;
   xOffset = 0;
   curs_set(1);
 
-  // check if a mouse click is detected and operate depending click location
-  MEVENT mouse;
   while(true)
     {
       // reset stored mouse position
@@ -53,6 +52,7 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
 
       if(getmouse(&mouse) == OK)
         {
+          // check if a mouse click is detected and operate depending click location
           if(mouse.bstate & BUTTON1_PRESSED)
             {
               mouseLine = mouse.y;
@@ -81,8 +81,8 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
           break;
         }
 
-      else
-        { //output latest received character
+      else  //output latest received character and store in string
+        {
           printUserInput(wins,
                          _USERINPUTWIN,
                          userInput,
@@ -95,7 +95,7 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
       usleep(15000);
     }
 
-  // delete _USERINPUTWIN and return to previous Ncurses settings
+  // delete _USERINPUTWIN and return to starting program state
   wins.at(_USERINPUTWIN)->deleteWindow();
   curs_set(0);
   werase(wins.at(_SAVEDFILESWIN)->getWindow());
@@ -103,5 +103,4 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                      log);
   refreshwins(wins);
   doupdate();
-
 } // end of "enterHWSFAddFileState"
