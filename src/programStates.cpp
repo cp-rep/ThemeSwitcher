@@ -42,10 +42,12 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
   std::string inputString;
   xOffset = 0;
   curs_set(1);
+
+  // check if a mouse click is detected and operate depending click location
   MEVENT mouse;
-  while((userInput != 10) &&
-        (userInput != KEY_ENTER))
+  while(true)
     {
+      // reset stored mouse position
       mouseCol = -1;
       mouseLine = -1;
 
@@ -64,36 +66,42 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                   (mouseCol > wins.at(_SFPROMPTWIN)->getStartX() +
                   wins.at(_SFPROMPTWIN)->getNumCols() - 1)))
                 {
-                  werase(wins.at(_SAVEDFILESWIN)->getWindow());
-                  printSavedFilesWin(wins,
-                                     log);
-                  refreshwins(wins);
-                  doupdate();
                   break;
                 }
             }
         }
 
-      // else check if user clicked on the input string for editing the string
-
-
-      // get user input from keyboard
+      // get user input
       userInput = getch();
       flushinp();
 
-      printUserInput(wins,
-                     _USERINPUTWIN,
-                     userInput,
-                     inputString,
-                     startY,
-                     xOffset);
-      refreshwins(wins);
-      doupdate();
+      // check if user finished entering the file name
+      if((userInput == 10) || userInput == KEY_ENTER)
+        {
+          break;
+        }
+
+      else
+        { //output latest received character
+          printUserInput(wins,
+                         _USERINPUTWIN,
+                         userInput,
+                         inputString,
+                         startY,
+                         xOffset);
+          refreshwins(wins);
+          doupdate();
+        }
       usleep(15000);
     }
 
   // delete _USERINPUTWIN and return to previous Ncurses settings
   wins.at(_USERINPUTWIN)->deleteWindow();
   curs_set(0);
+  werase(wins.at(_SAVEDFILESWIN)->getWindow());
+  printSavedFilesWin(wins,
+                     log);
+  refreshwins(wins);
+  doupdate();
 
 } // end of "enterHWSFAddFileState"
