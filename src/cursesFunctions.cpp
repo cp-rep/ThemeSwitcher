@@ -90,6 +90,46 @@ void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
+bool checkWindowClick(std::unordered_map<int, CursesWindow*>& wins,
+                      const int win,
+                      MEVENT& mouse,
+                      int& mouseLine,
+                      int& mouseCol,
+                      const int yOffsetStart,
+                      const int yOffsetEnd,
+                      const int xOffsetStart,
+                      const int xOffsetEnd,
+                      std::ofstream& log)
+{
+  mouseLine = -1;
+  mouseCol = -1;
+
+  if(getmouse(&mouse) == OK)
+    {
+      // check if a mouse click is detected and operate depending click location
+      if(mouse.bstate & BUTTON1_PRESSED)
+        {
+          mouseLine = mouse.y;
+          mouseCol = mouse.x;
+
+          // return to previous state if user clicked out of the _SFPROMPTWIN
+          if((mouseLine <= wins.at(win)->getStartY() - yOffsetStart) ||
+             (mouseLine > wins.at(win)->getStartY() +
+              wins.at(win)->getNumLines()  - yOffsetEnd) ||
+             ((mouseCol <= wins.at(win)->getStartX()  - xOffsetStart) ||
+              (mouseCol > wins.at(win)->getStartX() +
+               wins.at(win)->getNumCols() - xOffsetEnd)))
+            {
+              return false;
+            }
+        }
+    }
+
+    return true;
+} // end of "checkWindowClick"
+
+
+
 /*
   Function:
    definePromptTitle
@@ -1335,7 +1375,6 @@ void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
       const int offset = 6;
 
       wattron(wins.at(_PROMPTWIN)->getWindow(), A_BOLD);
-      log << "currCols: " << currCols << std::endl;
       for(it = promptStrings.begin(); it != promptStrings.end(); i++, it++)
         {
           outString = *it;
@@ -2582,6 +2621,7 @@ void drawSTStringBoxes(const std::unordered_map<int, CursesWindow*>& wins,
         }
     }
 } // end of "drawBoxes"
+
 
 
 void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
