@@ -152,7 +152,7 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
                     const int winIndex,
                     const int& input,
                     std::string& outputString,
-                    int& stringIndex,
+                    const int& stringIndex,
                     const int& yOffset,
                     int& xOffset,
                     std::ofstream& log);
