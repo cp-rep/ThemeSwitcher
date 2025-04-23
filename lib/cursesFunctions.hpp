@@ -54,7 +54,8 @@ void createUserInputWin(std::unordered_map<int, CursesWindow*>& wins,
                         const int startY,
                         const int startX,
                         const int numLines,
-                        const int numCols);
+                        const int numCols,
+                        std::ofstream& log);
 void defineArrowWin(std::unordered_map<int, CursesWindow*>& wins,
                     const int mainWin,
                     const int arrowWin,
