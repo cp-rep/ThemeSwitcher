@@ -42,9 +42,20 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
   xOffset = 0;
   curs_set(1);
   bool exitLoop = false;
+  int currLines;
+  int currCols;
 
   while(true)
     {
+      getmaxyx(stdscr, currLines, currCols);
+
+      // check for window resize event
+      if((currLines != wins.at(_MAINWIN)->getNumLines()) ||
+         (currCols != wins.at(_MAINWIN)->getNumCols()))
+        {
+          break;
+        }
+
       isInWindow = checkWindowClick(wins,
                                     _SFPROMPTWIN,
                                     mouse,
