@@ -74,20 +74,22 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
         case KEY_ENTER:
           exitLoop = true;
           break;
-        case KEY_LEFT:
+        case KEY_LEFT: // shift the cursor left on the output string
           stringLen = outputString.length() + stringIndex - 1;
           if(stringLen >= 0)
             {
+              // update the offsets of the cursor and index and move the cursor
               stringIndex--;
               xOffset--;
               wmove(wins.at(_USERINPUTWIN)->getWindow(), 0, xOffset);
             }
           break;
-        case KEY_RIGHT:
+        case KEY_RIGHT: // shift the cursor right on the outputstring
           stringLen = outputString.length() + stringIndex + 1;
           if((stringLen < outputString.length() + 1) &&
              outputString.length() < numCols)
             {
+              // update the offsets of the cursor and index and move the cursor
               stringIndex++;
               xOffset++;
               wmove(wins.at(_USERINPUTWIN)->getWindow(), 0, xOffset);
