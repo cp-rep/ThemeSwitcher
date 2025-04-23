@@ -15,5 +15,8 @@
 #include "log.hpp"
 
 void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
+                           MEVENT& mouse,
+                           int& mouseLine,
+                           int& mouseCol,
                            std::ofstream& log);
 #endif // PROGRAMSTATES_HPP
