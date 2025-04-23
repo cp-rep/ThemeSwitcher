@@ -433,4 +433,9 @@ void CursesWindow::deleteWindow()
 {
   delwin(getWindow());
   setWindow(nullptr);
+  m_windowName = "";
+  m_numLines = 0;
+  m_numCols = 0;
+  m_startY = 0;
+  m_startX = 0;
 } // end of "deleteWindow"
