@@ -541,24 +541,22 @@ void createUserInputWin(std::unordered_map<int, CursesWindow*>& wins,
                         const int numCols,
                         std::ofstream& log)
 {
-  if(wins.at(_USERINPUTWIN)->getWindow() == nullptr)
+  // if for some reason the _USERINPUT win exists, delete it
+  if(wins.at(_USERINPUTWIN)->getWindow() != nullptr)
     {
-      CursesWindow* userInputWindow = new CursesWindow();
-      wins.at(_USERINPUTWIN)->defineWindow(newwin(numLines,
-                                                  numCols,
-                                                  startY,
-                                                  startX),
-                                           "_USERINPUTWIN",
-                                           numLines,
-                                           numCols,
-                                           startY,
-                                           startX);
+      wins.at(_USERINPUTWIN)->deleteWindow();
     }
-  else
-    {
-      log << "createUserInputWin(): failed to create user input window.";
-      log << " The window already exists." << std::endl;
-    }
+
+  // define the _USERINPUTWIN
+  wins.at(_USERINPUTWIN)->defineWindow(newwin(numLines,
+                                              numCols,
+                                              startY,
+                                              startX),
+                                       "_USERINPUTWIN",
+                                       numLines,
+                                       numCols,
+                                       startY,
+                                       startX);
 } // end of "createUseInputWin"
 
 
@@ -1784,7 +1782,9 @@ void initializeCurses()
 
   Description:
    This function creates and initializes all the necessary startup windows via
-   dynamic allocation and stores them in an unordered_map for later use.
+   dynamic allocation and stores them in an unordered_map for later use.  No
+   actual windows are created, just their logical pairing - e.g. all windows
+   are set to nullptr awaiting allocation and definition before use.
 
   Input/Output:
    wins                     - A reference to an unordered map <int, CursesWindow*>
