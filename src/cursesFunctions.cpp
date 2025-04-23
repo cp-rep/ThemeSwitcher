@@ -1816,6 +1816,7 @@ void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
+
 void printButtonWin(const std::unordered_map<int, CursesWindow*>& wins,
                     const int win,
                     std::string outString,
@@ -2401,34 +2402,50 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
 void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
                     const int winIndex,
                     const int& userInput,
-                    std::string& inputString,
+                    std::string& outputString,
+                    int& stringIndex,
                     const int& yOffset,
-                    int& xOffset)
+                    int& xOffset,
+                    std::ofstream& log)
 {
   if((userInput >= 32) &&
      (userInput <= 126) &&
-     (userInput != KEY_ENTER || userInput != 10) &&
-     (xOffset < wins.at(winIndex)->getNumCols()))
+     outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
     {
-      inputString.push_back(userInput);
-      mvwaddch(wins.at(winIndex)->getWindow(),
-               0,
-               xOffset,
-               userInput);
+      std::string tempString  = outputString;
+      int tempLen = tempString.length() + stringIndex;
+      tempString.resize(tempLen);
+      tempString.push_back(userInput);
+      for(int i = tempString.length() - 1; i < outputString.length(); i++)
+        {
+          tempString.push_back(outputString.at(i));
+        }
+
+      outputString = tempString;
       xOffset++;
     }
-  else if(userInput == KEY_BACKSPACE && xOffset > 0)
+  else if(userInput == KEY_BACKSPACE &&
+          !outputString.empty())
     {
-      inputString.pop_back();
+      std::string tempString  = outputString;
+      int tempLen = tempString.length() + stringIndex;
+      tempString.resize(tempLen);
+      tempString.pop_back();
+
+      for(int i = tempString.length(); i < outputString.length() - 1; ++i)
+        {
+          tempString.push_back(outputString.at(i));
+        }
+      outputString = tempString;
       xOffset--;
-      mvwaddch(wins.at(winIndex)->getWindow(),
-               0,
-               xOffset,
-               ' ');
-      wmove(wins.at(winIndex)->getWindow(),
-            0,
-            xOffset);
     }
+
+  werase(wins.at(_USERINPUTWIN)->getWindow());
+  mvwaddstr(wins.at(_USERINPUTWIN)->getWindow(),
+            0,
+            0,
+            outputString.c_str());
+  wmove(wins.at(_USERINPUTWIN)->getWindow(), 0, xOffset);
 } // end of "printUserInput"
 
 
