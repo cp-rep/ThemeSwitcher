@@ -2434,7 +2434,7 @@ void refreshSTStringWins(const std::vector<CursesWindow*>& stStringWins,
 
 /*
   Function:
-   refreshwins
+   refreshWins
 
   Description:
    Refreshes all CursesWindow objects member variables that point to a
@@ -2456,7 +2456,7 @@ void refreshSTStringWins(const std::vector<CursesWindow*>& stStringWins,
   Returns:
    NONE
 */
-void refreshwins(const std::unordered_map<int, CursesWindow*>& wins)
+void refreshWins(const std::unordered_map<int, CursesWindow*>& wins)
 {
 
   // ##
@@ -2493,7 +2493,7 @@ void refreshwins(const std::unordered_map<int, CursesWindow*>& wins)
   //       }
   //   }
 
-} // end of "refreshwins"
+} // end of "refreshWins"
 
 
 
