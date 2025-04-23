@@ -31,7 +31,8 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                      startY,
                      startX,
                      numLines,
-                     numCols);
+                     numCols,
+                     log);
 
   // get user input, dynamically print it, and store in string object
   bool isInWindow = false;
