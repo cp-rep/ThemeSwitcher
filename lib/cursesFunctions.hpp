@@ -151,9 +151,11 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
 void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
                     const int winIndex,
                     const int& input,
-                    std::string& inputString,
+                    std::string& outputString,
+                    int& stringIndex,
                     const int& yOffset,
-                    int& xOffset);
+                    int& xOffset,
+                    std::ofstream& log);
 void refreshSFStringWins(const std::vector<CursesWindow*>& sfStringWins,
                          std::ofstream& log);
 void refreshSTStringWins(const std::vector<CursesWindow*>& stStringWins,
