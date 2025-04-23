@@ -24,19 +24,14 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
   int xOffset = 2;
   int startY = wins.at(_SFPROMPTWIN)->getStartY() + yOffset;
   int startX = wins.at(_SFPROMPTWIN)->getStartX() + xOffset;
+  int numLines = 1;
   int numCols = wins.at(_SFPROMPTWIN)->getNumCols() - xOffset - xOffset;
-  CursesWindow* userInputWindow = new CursesWindow();
 
-  wins.insert(std::make_pair(_USERINPUTWIN, userInputWindow));
-  wins.at(_USERINPUTWIN)->defineWindow(newwin(1,
-                                              numCols,
-                                              startY,
-                                              startX),
-                                       "_USERINPUTWIN",
-                                       1,
-                                       numCols,
-                                       startY,
-                                       startX);
+  createUserInputWin(wins,
+                     startY,
+                     startX,
+                     numLines,
+                     numCols);
 
   // get user input, dynamically print it, and store in string object
   bool isInWindow = false;
