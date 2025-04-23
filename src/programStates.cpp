@@ -36,9 +36,12 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
   // get user input, dynamically print it, and store in string object
   bool isInWindow = false;
   int userInput = 0;
-  std::string inputString;
+  std::string outputString;
+  int stringIndex = 0;
+  int stringLen = 0;
   xOffset = 0;
   curs_set(1);
+  bool exitLoop = false;
 
   while(true)
     {
@@ -63,30 +66,58 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
       userInput = getch();
       flushinp();
 
-      // exit state if user finished entering the file name via new line char
-      if((userInput == 10) || userInput == KEY_ENTER)
+      switch(userInput)
+        {
+        case '\n':
+          exitLoop = true;
+          break;
+        case KEY_ENTER:
+          exitLoop = true;
+          break;
+        case KEY_LEFT:
+          stringLen = outputString.length() + stringIndex - 1;
+          if(stringLen >= 0)
+            {
+              stringIndex--;
+              xOffset--;
+              wmove(wins.at(_USERINPUTWIN)->getWindow(), 0, xOffset);
+            }
+          break;
+        case KEY_RIGHT:
+          stringLen = outputString.length() + stringIndex + 1;
+          if((stringLen < outputString.length() + 1) &&
+             outputString.length() < numCols)
+            {
+              stringIndex++;
+              xOffset++;
+              wmove(wins.at(_USERINPUTWIN)->getWindow(), 0, xOffset);
+            }
+          break;
+        default:
+          break;
+        }
+
+      if(exitLoop == true)
         {
           break;
         }
 
-      else  //output latest received character and store in string
-        {
-          printUserInput(wins,
-                         _USERINPUTWIN,
-                         userInput,
-                         inputString,
-                         startY,
-                         xOffset);
-          refreshWins(wins);
-          doupdate();
-        }
+      printUserInput(wins,
+                     _USERINPUTWIN,
+                     userInput,
+                     outputString,
+                     stringIndex,
+                     startY,
+                     xOffset,
+                     log);
+      refreshWins(wins);
+      doupdate();
       usleep(15000);
     }
 
   // delete _USERINPUTWIN and return to starting program state
   wins.at(_USERINPUTWIN)->deleteWindow();
   curs_set(0);
-  werase(wins.at(_SAVEDFILESWIN)->getWindow());
   printSavedFilesWin(wins,
                      log);
   refreshWins(wins);
