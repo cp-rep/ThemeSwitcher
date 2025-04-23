@@ -12,6 +12,16 @@
 void initializeCurses();
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
                     std::ofstream& log);
+bool checkWindowClick(std::unordered_map<int, CursesWindow*>& wins,
+                      const int win,
+                      MEVENT& mouse,
+                      int& mouseLine,
+                      int& mouseCol,
+                      const int yOffsetStart,
+                      const int yOffsetEnd,
+                      const int xOffsetStart,
+                      const int xOffsetEnd,
+                      std::ofstream& log);
 void definePromptTitle(std::vector<std::string>& promptStrings);
 void definePromptWin(std::unordered_map<int, CursesWindow*>& wins,
                      const int& maxLines,
