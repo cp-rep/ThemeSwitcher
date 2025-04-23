@@ -6,6 +6,7 @@
    Function implementations for the cursesFunctions.hpp header file.
 */
 #include <algorithm>
+#include <iostream>
 #include <vector>
 #include "cursesFunctions.hpp"
 #include <unistd.h>
@@ -537,21 +538,27 @@ void createUserInputWin(std::unordered_map<int, CursesWindow*>& wins,
                         const int startY,
                         const int startX,
                         const int numLines,
-                        const int numCols)
+                        const int numCols,
+                        std::ofstream& log)
 {
-  CursesWindow* userInputWindow = new CursesWindow();
-
-  wins.insert(std::make_pair(_USERINPUTWIN, userInputWindow));
-  wins.at(_USERINPUTWIN)->defineWindow(newwin(numLines,
-                                              numCols,
-                                              startY,
-                                              startX),
-                                       "_USERINPUTWIN",
-                                       numLines,
-                                       numCols,
-                                       startY,
-                                       startX);
-
+  if(wins.at(_USERINPUTWIN)->getWindow() == nullptr)
+    {
+      CursesWindow* userInputWindow = new CursesWindow();
+      wins.at(_USERINPUTWIN)->defineWindow(newwin(numLines,
+                                                  numCols,
+                                                  startY,
+                                                  startX),
+                                           "_USERINPUTWIN",
+                                           numLines,
+                                           numCols,
+                                           startY,
+                                           startX);
+    }
+  else
+    {
+      log << "createUserInputWin(): failed to create user input window.";
+      log << " The window already exists." << std::endl;
+    }
 } // end of "createUseInputWin"
 
 
@@ -1800,7 +1807,7 @@ void initializeCurses()
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
                     std::ofstream& log)
 {
-  for(int i = _MAINWIN; i <= _STPROMPTWIN; i++)
+  for(int i = _MAINWIN; i <= _USERINPUTWIN; i++)
     {
       CursesWindow* newWindow = new CursesWindow();
       wins.insert(std::make_pair(i, newWindow));
