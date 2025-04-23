@@ -533,6 +533,28 @@ std::vector<std::string> createSTOutputStrings(const std::unordered_map<int, Cur
 
 
 
+void createUserInputWin(std::unordered_map<int, CursesWindow*>& wins,
+                        const int startY,
+                        const int startX,
+                        const int numLines,
+                        const int numCols)
+{
+  CursesWindow* userInputWindow = new CursesWindow();
+
+  wins.insert(std::make_pair(_USERINPUTWIN, userInputWindow));
+  wins.at(_USERINPUTWIN)->defineWindow(newwin(numLines,
+                                              numCols,
+                                              startY,
+                                              startX),
+                                       "_USERINPUTWIN",
+                                       numLines,
+                                       numCols,
+                                       startY,
+                                       startX);
+
+} // end of "createUseInputWin"
+
+
 
 /*
   Function:
