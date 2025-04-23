@@ -360,6 +360,9 @@ int main()
               break;
             case _HWSFADDFILE:
               enterHWSFAddFileState(wins,
+                                    mouse,
+                                    mouseLine,
+                                    mouseCol,
                                     log);
               break;
             case _HWSFEDITFILEPATH:
