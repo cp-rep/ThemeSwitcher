@@ -81,7 +81,7 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                          inputString,
                          startY,
                          xOffset);
-          refreshwins(wins);
+          refreshWins(wins);
           doupdate();
         }
       usleep(15000);
@@ -93,6 +93,6 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
   werase(wins.at(_SAVEDFILESWIN)->getWindow());
   printSavedFilesWin(wins,
                      log);
-  refreshwins(wins);
+  refreshWins(wins);
   doupdate();
 } // end of "enterHWSFAddFileState"
