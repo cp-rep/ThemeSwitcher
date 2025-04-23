@@ -50,6 +50,11 @@ std::vector<std::string> createSTOutputStrings(const std::unordered_map<int, Cur
                                                const std::vector<std::string>& stStrings,
                                                const int& stStringPos,
                                                std::ofstream& log);
+void createUserInputWin(std::unordered_map<int, CursesWindow*>& wins,
+                        const int startY,
+                        const int startX,
+                        const int numLines,
+                        const int numCols);
 void defineArrowWin(std::unordered_map<int, CursesWindow*>& wins,
                     const int mainWin,
                     const int arrowWin,
