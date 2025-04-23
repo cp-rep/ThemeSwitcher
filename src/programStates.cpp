@@ -1,6 +1,9 @@
 #include "programStates.hpp"
 
 void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
+                           MEVENT& mouse,
+                           int& mouseLine,
+                           int& mouseCol,
                            std::ofstream& log)
 {
   flashButton(wins,
@@ -36,39 +39,28 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                                        startX);
 
   // get user input, dynamically print it, and store in string object
+  bool isInWindow = false;
   int userInput = 0;
-  int mouseLine = -1;
-  int mouseCol = -1;
   std::string inputString;
-  MEVENT mouse;
   xOffset = 0;
   curs_set(1);
 
   while(true)
     {
-      // reset stored mouse position
-      mouseCol = -1;
-      mouseLine = -1;
+      isInWindow = checkWindowClick(wins,
+                                    _SFPROMPTWIN,
+                                    mouse,
+                                    mouseLine,
+                                    mouseCol,
+                                    1,
+                                    1,
+                                    1,
+                                    1,
+                                    log);
 
-      if(getmouse(&mouse) == OK)
+      if(isInWindow == false)
         {
-          // check if a mouse click is detected and operate depending click location
-          if(mouse.bstate & BUTTON1_PRESSED)
-            {
-              mouseLine = mouse.y;
-              mouseCol = mouse.x;
-
-              // return to previous state if user clicked out of the _SFPROMPTWIN
-              if((mouseLine <= wins.at(_SFPROMPTWIN)->getStartY() - 1) ||
-                 (mouseLine > wins.at(_SFPROMPTWIN)->getStartY() +
-                  wins.at(_SFPROMPTWIN)->getNumLines()  - 1) ||
-                 ((mouseCol <= wins.at(_SFPROMPTWIN)->getStartX()  - 1) ||
-                  (mouseCol > wins.at(_SFPROMPTWIN)->getStartX() +
-                  wins.at(_SFPROMPTWIN)->getNumCols() - 1)))
-                {
-                  break;
-                }
-            }
+          break;
         }
 
       // get user input
