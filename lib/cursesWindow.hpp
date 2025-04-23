@@ -14,26 +14,26 @@ class CursesWindow {
 public:
   // constructors
   CursesWindow(WINDOW* win = nullptr,
-	       const std::string& windowName = "",
-	       const int& numLines = 0,
-	       const int& numCols = 0,
-	       const int& startY = 0,
-	       const int& startX = 0);
+               const std::string& windowName = "",
+               const int& numLines = 0,
+               const int& numCols = 0,
+               const int& startY = 0,
+               const int& startX = 0);
 
   // destructor
   ~CursesWindow();
 
   // member functions
   void defineWindow(WINDOW* win,
-		    const std::string& windowName,
-		    const int& numLines,
-		    const int& numCols,
-		    const int& startY,
-		    const int& startX);
+                    const std::string& windowName,
+                    const int& numLines,
+                    const int& numCols,
+                    const int& startY,
+                    const int& startX);
   void createWindow(const int& numLines,
-		    const int& numCols,
-		    const int& startY,
-		    const int& startX);
+                    const int& numCols,
+                    const int& startY,
+                    const int& startX);
   void deleteWindow();
   WINDOW* createWindow();
 
