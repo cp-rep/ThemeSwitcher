@@ -14,63 +14,32 @@
 
 /*
   Function:
-   initializeCurses
+   checkButtonClick
 
   Description:
-   Initializes the curses stdscr and curses datastructures.
+   Prints the incoming "win" to STDSCR representing a click on a "button".
 
   Input/Output:
-   NONE
-
+   wins                 - A reference to a const unordered map
+                          <int, CursesWindow*> type that contains pointers
+                          to all currently allocated CursesWindow objects
+                          that can be indexed by key values in the file
+                          _cursesWinConsts.hpp.
   Input:
-   NONE
+   win                  - a const integer containing a value representing a window
+                          from _cursesWinConsts.hpp that should be for an "button"
+                          window.
 
-  Output:
-   NONE
-*/
-void initializeCurses()
-{
-  initscr();
+  mouseLine             - A reference to a constant integer containing the 'y'
+                          value or 'line number' in which a mouse click was
+                          detected.
 
-  if(has_colors())
-    {
-      start_color();
-      init_pair(_WHITE_TEXT, COLOR_WHITE, COLOR_BLACK);
-      init_pair(_BLACK_TEXT, COLOR_BLACK, COLOR_WHITE);
-    }
+  mouseLine             - A reference to a constant integer containing the 'x'
+                          value or 'column number' in which a mouse click was
+                          detected.
 
-  curs_set(0);
-  timeout(0);
-  noecho();
-  cbreak();
-  keypad(stdscr, true);
-  nodelay(stdscr, true);
-  mousemask(ALL_MOUSE_EVENTS, NULL);
-  mouseinterval(0);
-
-} // end of "initializeCurses"
-
-
-
-/*
-  Function:
-   initializeWins
-
-  Description:
-   This function creates and initializes all the necessary startup windows via
-   dynamic allocation and stores them in an unordered_map for later use.
-
-  Input/Output:
-   wins                     - A reference to an unordered map <int, CursesWindow*>
-                              object type that will be used to store each
-                              CursesWindow object initialized in this function.  The
-                              keys are from _cursesWinConsts.hpp and match the
-                              corresponding CursesWindow objects they are pointing
-                              to.
-   NONE
-
-  Input:
-   NONE
+  outString             - A string type containing a the string to print to
+                          output to the incoming window buffer.
 
   Output:
    NONE
@@ -78,15 +47,262 @@ void initializeCurses()
   Returns:
    NONE
 */
-void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
-                    std::ofstream& log)
+int checkButtonClick(std::unordered_map<int, CursesWindow*>& wins,
+                     const int& mouseLine,
+                     const int& mouseCol,
+                     std::ofstream& log)
 {
-  for(int i = _MAINWIN; i <= _STPROMPTWIN; i++)
+  int buttonNum = -1;
+  if(wins.at(_MAINWIN)->getWindow() == nullptr ||
+     wins.at(_SAVEDFILESWIN)->getWindow() == nullptr ||
+     wins.at(_SAVEDTHEMESWIN)->getWindow() == nullptr ||
+     wins.at(_HELPWIN)->getWindow() == nullptr)
     {
-      CursesWindow* newWindow = new CursesWindow();
-      wins.insert(std::make_pair(i, newWindow));
+      return buttonNum;
     }
-} // end of "initializeWins"
+
+  // check if click is in _SAVEDFILESWIN
+  if((mouseLine >= wins.at(_SAVEDFILESWIN)->getStartY()) &&
+     (mouseLine < wins.at(_SAVEDFILESWIN)->getStartY() +
+      wins.at(_SAVEDFILESWIN)->getNumLines()) &&
+     (mouseCol >= wins.at(_SAVEDFILESWIN)->getStartX() &&
+      mouseCol < wins.at(_SAVEDFILESWIN)->getStartX() +
+      wins.at(_SAVEDFILESWIN)->getNumCols()))
+    {
+      if((mouseLine == wins.at(_LARROWSAVEDFILESWIN)->getStartY()) &&
+         (mouseCol >= wins.at(_LARROWSAVEDFILESWIN)->getStartX() &&
+          mouseCol < wins.at(_LARROWSAVEDFILESWIN)->getStartX() +
+          wins.at(_LARROWSAVEDFILESWIN)->getNumCols()))
+        {
+          buttonNum = _LARROWSAVEDFILESWIN;
+        }
+      else if((mouseLine == wins.at(_RARROWSAVEDFILESWIN)->getStartY()) &&
+              (mouseCol >= wins.at(_RARROWSAVEDFILESWIN)->getStartX() &&
+               mouseCol < wins.at(_RARROWSAVEDFILESWIN)->getStartX() +
+               wins.at(_RARROWSAVEDFILESWIN)->getNumCols()))
+        {
+          buttonNum = _RARROWSAVEDFILESWIN;
+        }
+    }
+
+  // check if click is in _SAVEDTHEMESWIN
+  if((mouseLine >= wins.at(_SAVEDTHEMESWIN)->getStartY()) &&
+     (mouseLine < wins.at(_SAVEDTHEMESWIN)->getStartY() +
+      wins.at(_SAVEDTHEMESWIN)->getNumLines()) &&
+     (mouseCol >= wins.at(_SAVEDTHEMESWIN)->getStartX() &&
+      mouseCol < wins.at(_SAVEDTHEMESWIN)->getStartX() +
+      wins.at(_SAVEDTHEMESWIN)->getNumCols()))
+    {
+      if((mouseLine == wins.at(_RARROWSAVEDTHEMESWIN)->getStartY()) &&
+         (mouseCol >= wins.at(_RARROWSAVEDTHEMESWIN)->getStartX() &&
+          mouseCol < wins.at(_RARROWSAVEDTHEMESWIN)->getStartX() +
+          wins.at(_RARROWSAVEDTHEMESWIN)->getNumCols()))
+        {
+          buttonNum = _RARROWSAVEDTHEMESWIN;
+        }
+      else if((mouseLine == wins.at(_LARROWSAVEDTHEMESWIN)->getStartY()) &&
+              (mouseCol >= wins.at(_LARROWSAVEDTHEMESWIN)->getStartX() &&
+               mouseCol < wins.at(_LARROWSAVEDTHEMESWIN)->getStartX() +
+               wins.at(_LARROWSAVEDTHEMESWIN)->getNumCols()))
+        {
+          buttonNum = _LARROWSAVEDTHEMESWIN;
+        }
+    }
+
+  // check if click is in _HELPWIN
+  if((mouseLine >= wins.at(_HELPWIN)->getStartY()) &&
+     (mouseLine < wins.at(_HELPWIN)->getStartY() +
+      wins.at(_HELPWIN)->getNumLines()) &&
+     (mouseCol >= wins.at(_HELPWIN)->getStartX() &&
+      mouseCol < wins.at(_HELPWIN)->getStartX() +
+      wins.at(_HELPWIN)->getNumCols()))
+    {
+      if((mouseLine == wins.at(_HWSFADDFILE)->getStartY()) &&
+         (mouseCol >= wins.at(_HWSFADDFILE)->getStartX() &&
+          mouseCol < wins.at(_HWSFADDFILE)->getStartX() +
+          wins.at(_HWSFADDFILE)->getNumCols()))
+        {
+          buttonNum = _HWSFADDFILE;
+        }
+      else if((mouseLine == wins.at(_HWSFEDITFILEPATH)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSFEDITFILEPATH)->getStartX() &&
+               mouseCol < wins.at(_HWSFEDITFILEPATH)->getStartX() +
+               wins.at(_HWSFEDITFILEPATH)->getNumCols()))
+        {
+          buttonNum = _HWSFEDITFILEPATH;
+        }
+      else if((mouseLine == wins.at(_HWSFVIEWFILEPATH)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSFVIEWFILEPATH)->getStartX() &&
+               mouseCol < wins.at(_HWSFVIEWFILEPATH)->getStartX() +
+               wins.at(_HWSFVIEWFILEPATH)->getNumCols()))
+        {
+          buttonNum = _HWSFVIEWFILEPATH;
+        }
+      else if((mouseLine == wins.at(_HWSFREMOVEFILE)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSFREMOVEFILE)->getStartX() &&
+               mouseCol < wins.at(_HWSFREMOVEFILE)->getStartX() +
+               wins.at(_HWSFREMOVEFILE)->getNumCols()))
+        {
+          buttonNum = _HWSFREMOVEFILE;
+        }
+      else if((mouseLine == wins.at(_HWSFADDTHEME)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSFADDTHEME)->getStartX() &&
+               mouseCol < wins.at(_HWSFADDTHEME)->getStartX() +
+               wins.at(_HWSFADDTHEME)->getNumCols()))
+        {
+          buttonNum = _HWSFADDTHEME;
+        }
+      else if((mouseLine == wins.at(_HWSFEDITTHEME)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSFEDITTHEME)->getStartX() &&
+               mouseCol < wins.at(_HWSFEDITTHEME)->getStartX() +
+               wins.at(_HWSFEDITTHEME)->getNumCols()))
+        {
+          buttonNum = _HWSFEDITTHEME;
+        }
+      else if((mouseLine == wins.at(_HWSFREMOVETHEME)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSFREMOVETHEME)->getStartX() &&
+               mouseCol < wins.at(_HWSFREMOVETHEME)->getStartX() +
+               wins.at(_HWSFREMOVETHEME)->getNumCols()))
+        {
+          buttonNum = _HWSFREMOVETHEME;
+        }
+      else if((mouseLine == wins.at(_HWSTADDTHEME)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSTADDTHEME)->getStartX() &&
+               mouseCol < wins.at(_HWSTADDTHEME)->getStartX() +
+               wins.at(_HWSTADDTHEME)->getNumCols()))
+        {
+          buttonNum = _HWSTADDTHEME;
+        }
+      else if((mouseLine == wins.at(_HWSTREMOVETHEME)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSTREMOVETHEME)->getStartX() &&
+               mouseCol < wins.at(_HWSTREMOVETHEME)->getStartX() +
+               wins.at(_HWSTREMOVETHEME)->getNumCols()))
+        {
+          buttonNum = _HWSTREMOVETHEME;
+        }
+      else if((mouseLine == wins.at(_HWSTEDITTHEME)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSTEDITTHEME)->getStartX() &&
+               mouseCol < wins.at(_HWSTEDITTHEME)->getStartX() +
+               wins.at(_HWSTEDITTHEME)->getNumCols()))
+        {
+          buttonNum = _HWSTEDITTHEME;
+        }
+      else if((mouseLine == wins.at(_HWSTVIEWTHEME)->getStartY()) &&
+              (mouseCol >= wins.at(_HWSTVIEWTHEME)->getStartX() &&
+               mouseCol < wins.at(_HWSTVIEWTHEME)->getStartX() +
+               wins.at(_HWSTVIEWTHEME)->getNumCols()))
+        {
+          buttonNum = _HWSTVIEWTHEME;
+        }
+    }
+
+  return buttonNum;
+} // end of "checkButtonClick"
+
+
+
+/*
+  Function:
+   checkSFClick
+
+  Description:
+   Checks if the incoming mouse click Line and Col values match with a
+   printed file line.  If they do, the matching file line coordinate file
+   line is printed in the "highlighted" color scheme.
+
+  Input/Output:
+   wins                     - A reference to a const unordered map
+                              <int, CursesWindow*> type that contains pointers
+                              to all currently allocated CursesWindow objects
+                              that can be indexed by key values in the file
+                              _cursesWinConsts.hpp.
+  Input:
+  outputStrings             - a reference to to a constant vector of strings
+                              containing the formatted file string lines
+                              that will be used for outputing to file line
+                              windows.
+
+  mouseLine                 - a reference to a constant integer that contains
+                              the current Y(line) value of the just clicked
+                              mouse click.
+
+  mouseCol                  - a reference to a constant integer that contains
+                              the current X(col) value of the just clicked
+                              mouse click.
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
+void checkSFClick(const std::unordered_map<int, CursesWindow*>& wins,
+                  const std::vector<std::string>& outputStrings,
+                  const int& outputStringPos,
+                  const int& mouseLine,
+                  const int& mouseCol,
+                  int& highlightWinNum,
+                  std::ofstream& log)
+{
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
+     !outputStrings.empty())
+    {
+      int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
+      int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
+      const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
+      const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
+
+      // enter iff the mouse click is in file clicking range offsets
+      if(((mouseLine >= startY + _SFSWINMINLINEOFFSET) &&
+                        (mouseLine < startY + maxLines - _SFSWINMAXLINEOFFSET)) &&
+         ((mouseCol >= startX + _SFWINMINCOLOFFSET) &&
+          (mouseCol < startX + maxCols - _SFWINMAXCOLOFFSET)))
+        {
+          highlightWinNum = mouseLine - (wins.at(_SAVEDFILESWIN)->getStartY()
+                                       + _SFSWINMINLINEOFFSET);
+        }
+      else
+        {
+          highlightWinNum = -1;
+        }
+    }
+} // end of "checkSFClick"
+
+
+
+void checkSTClick(const std::unordered_map<int, CursesWindow*>& wins,
+                  const std::vector<CursesWindow*>& stStringWins,
+                  const int& mouseLine,
+                  const int& mouseCol,
+                  int& highlightWinNum,
+                  std::ofstream& log)
+{
+  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr && !stStringWins.empty())
+    {
+      for(int i = 0; i < stStringWins.size(); i ++)
+        {
+          int maxLines = stStringWins.at(i)->getNumLines();
+          int maxCols = stStringWins.at(i)->getNumCols();
+          getmaxyx(stStringWins.at(i)->getWindow(), maxLines, maxCols);
+          const int startY = stStringWins.at(i)->getStartY();
+          const int startX = stStringWins.at(i)->getStartX();
+
+          if((mouseLine == startY) && ((mouseCol >= startX) &&
+                                       (mouseCol < startX + maxCols)))
+            {
+              highlightWinNum = i;
+            }
+          else
+            {
+              highlightWinNum = -1;
+            }
+
+          if(highlightWinNum != -1)
+            {
+              break;
+            }
+        }
+    }
+} // end of "checkSTClick"
 
 
 
@@ -127,6 +343,291 @@ bool checkWindowClick(std::unordered_map<int, CursesWindow*>& wins,
 
     return true;
 } // end of "checkWindowClick"
+
+
+
+
+/*
+  Function:
+   clearWins
+
+  Description:
+   Clears all currently active and defined CursesWindow object screens. All
+   "erased" screens are stored in the screen buffer waiting for a call to
+   refresh() to write the changes.
+
+  Input/Output:
+   NONE
+
+  Input:
+   wins                 - A reference to a const unordered map
+                          <int, CursesWindow*> type that contains pointers
+                          to all currently allocated CursesWindow objects
+                          that can be indexed by key values in the file
+                          _cursesWinConsts.hpp.
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
+void clearWins(const std::unordered_map<int, CursesWindow*>& wins)
+{
+  std::unordered_map<int, CursesWindow*>::const_iterator it;
+  for(it = wins.begin(); it != wins.end(); it++)
+    {
+      werase(it->second->getWindow());
+    }
+} // end of "clearWins"
+
+
+
+void clearSFStringWins(const std::vector<CursesWindow*>& sfStringWins)
+{
+  for(int i = 0; i < sfStringWins.size(); i++)
+    {
+      if(sfStringWins.at(i)->getWindow() != nullptr)
+        {
+          werase(sfStringWins.at(i)->getWindow());
+        }
+    }
+} // end of "clearWins"
+
+
+
+
+void clearSTStringWins(const std::vector<CursesWindow*>& stStringWins)
+{
+  for(int i = 0; i < stStringWins.size(); i++)
+    {
+      if(stStringWins.at(i)->getWindow() != nullptr)
+        {
+          werase(stStringWins.at(i)->getWindow());
+        }
+    }
+} // end of "clearWins"
+
+
+std::vector<std::string> createSFOutputStrings(const std::unordered_map<int, CursesWindow*>& wins,
+                                               std::vector<CursesWindow*>& sfStringWins,
+                                               const std::vector<std::string>& sfStrings,
+                                               const std::vector<std::string>& currThemes,
+                                               std::ofstream& log)
+{
+  std::vector<std::string> outputStrings;
+
+  if(sfStrings.empty() || currThemes.empty())
+    {
+      return outputStrings;
+    }
+
+  std::string dots = "...";
+  int maxLines = 0;
+  int maxCols = 0;
+
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+    {
+      outputStrings.clear();
+      if(sfStringWins.at(0)->getWindow() != nullptr)
+        {
+          int maxPossible = maxCols - 6;
+          std::string tempString;
+          std::string fileString;
+          std::string themeString;
+          std::string countString;
+
+          getmaxyx(sfStringWins.at(0)->getWindow(), maxLines, maxCols);
+          int i = 0;
+
+          for(i = 0; i < sfStrings.size(); i++)
+            {
+              countString.clear();
+              fileString.clear();
+              themeString.clear();
+              tempString.clear();
+              countString = intToStr(i+1);
+              countString.append(". ");
+              fileString = sfStrings.at(i);
+              themeString = currThemes.at(i);
+              int totalFileLength = fileString.length() + dots.length() +
+                themeString.length() + countString.length();
+
+              if(totalFileLength > maxCols)
+                {
+                  int difference = totalFileLength - maxCols;
+                  tempString.append(dots);
+
+                  for(int j = difference + dots.length(); j < fileString.length(); j++)
+                    {
+                      char c = fileString.at(j);
+                      tempString.push_back(c);
+                    }
+
+                  tempString.append(dots);
+                  tempString.append(themeString);
+                  fileString = tempString;
+                }
+              else
+                {
+                  int dotCount = fileString.length();
+
+                  while(dotCount < maxCols - themeString.length() - countString.length())
+                    {
+                      fileString.push_back('.');
+                      dotCount++;
+                    }
+                  fileString.append(themeString);
+                }
+              countString.append(fileString);
+              outputStrings.push_back(countString);
+            }
+        }
+    }
+
+  return outputStrings;
+} // end of "createSFOutputStrings"
+
+
+
+std::vector<std::string> createSTOutputStrings(const std::unordered_map<int, CursesWindow*>& wins,
+                                               const std::vector<std::string>& stStrings,
+                                               const int& stStringPos,
+                                               std::ofstream& log)
+{
+  std::vector<std::string> outputStrings;
+
+  if(stStrings.empty())
+    {
+      return outputStrings;
+    }
+
+  std::string dots = "...";
+  int maxLines = 0;
+  int maxCols = 30;
+
+  std::string tempString;
+  std::string fileString;
+  int i = 0;
+  int j = 0;
+  for(j = stStringPos; j < stStrings.size(); j++)
+    {
+      fileString.clear();
+      tempString.clear();
+      fileString = intToStr(j+1);
+      fileString.append(". ");
+      fileString.append(stStrings.at(j));
+
+      if(maxCols < fileString.length())
+        {
+          while( (maxCols - fileString.length()) != 3)
+            {
+              fileString.pop_back();
+            }
+          fileString.append(dots);
+        }
+      outputStrings.push_back(fileString);
+    }
+
+  return outputStrings;
+} // end of "createSTOutputStrings"
+
+
+
+
+/*
+  Function:
+   drawBoxes
+
+  Description:
+   Draws a box for every "WINDOW" that is currently initialized and stored
+   in the "wins" object.
+
+  Input/Output:
+   wins                 - A reference to a const unordered map
+                          <int, CursesWindow*> type that contains pointers
+                          to CursesWindow objects that can be indexed by values
+                          in the file _cursesWinConsts.hpp.
+  Input:
+   NONE
+
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
+void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins,
+               std::ofstream& log)
+{
+  char val = 'A';
+  std::unordered_map<int, CursesWindow*>::const_iterator it;
+
+  for(it = wins.begin(); it != wins.end(); it++)
+    {
+      wattron(it->second->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+      if((it->second->getWindowName() != "SAVEDFILE") &&
+         (it->second->getWindowName() != "_PROMPTWIN")&&
+         (it->second->getWindowName() != "_LARROWSAVEDFILESWIN") &&
+         (it->second->getWindowName() != "_RARROWSAVEDFILESWIN") &&
+         (it->second->getWindowName() != "_LARROWSAVEDTHEMESWIN") &&
+         (it->second->getWindowName() != "_RARROWSAVEDTHEMESWIN"))
+        {
+          // if(val == '[')
+          //   {
+          //     val = 'A';
+          //   }
+
+          val++;
+
+          if(it->second->getWindow() != nullptr)
+            {
+              box(it->second->getWindow(), ' ', ' ');
+            }
+      }
+      wattron(it->second->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+    }
+} // end of "drawBoxes"
+
+
+
+void drawSFStringBoxes(const std::unordered_map<int, CursesWindow*>& wins,
+                       const std::vector<CursesWindow*> & sfStringWins,
+                       std::ofstream& log)
+{
+  char val = '.';
+
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+    {
+      for(int i = 0; i < sfStringWins.size(); i++)
+        {
+          if(sfStringWins.at(i)->getWindow() != nullptr)
+            {
+              box(sfStringWins.at(i)->getWindow(), val, val);
+            }
+        }
+    }
+} // end of "drawBoxes"
+
+
+
+void drawSTStringBoxes(const std::unordered_map<int, CursesWindow*>& wins,
+                       const std::vector<CursesWindow*> & stStringWins,
+                       std::ofstream& log)
+{
+  char val = '.';
+
+
+  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
+    {
+      for(int i = 0; i < stStringWins.size(); i++)
+        {
+          if(stStringWins.at(i)->getWindow() != nullptr)
+            {
+              box(stStringWins.at(i)->getWindow(), val, val);
+            }
+        }
+    }
+} // end of "drawBoxes"
 
 
 
@@ -1184,174 +1685,89 @@ void defineSFPromptWin(std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-void printPrompt(std::unordered_map<int, CursesWindow*>& wins,
+
+void flashButton(const std::unordered_map<int, CursesWindow*>& wins,
                  const int win,
-                 const std::string& prompt,
+                 std::string outString,
+                 const int colorStart,
+                 const int colorFlash,
                  std::ofstream& log)
 {
-  wattron(wins.at(win)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-  box(wins.at(win)->getWindow(), ' ', ' ');
-  wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-  
-  mvwaddstr(wins.at(win)->getWindow(),
-            1,
-            1,
-            prompt.c_str());
-  wrefresh(wins.at(win)->getWindow());
-  doupdate;
-}
+  printButtonWin(wins,
+                 win,
+                 outString,
+                 colorFlash,
+                 log);
+  wnoutrefresh(wins.at(win)->getWindow());
+  doupdate();
+  usleep(40000);
+  printButtonWin(wins,
+                 win,
+                 outString,
+                 colorStart,
+                 log);
+} // "end of FlashButton"
 
 
+/*
+  Function:
+   initializeCurses
 
-std::vector<std::string> createSFOutputStrings(const std::unordered_map<int, CursesWindow*>& wins,
-                                               std::vector<CursesWindow*>& sfStringWins,
-                                               const std::vector<std::string>& sfStrings,
-                                               const std::vector<std::string>& currThemes,
-                                               std::ofstream& log)
+  Description:
+   Initializes the curses stdscr and curses datastructures.
+
+  Input/Output:
+   NONE
+
+  Input:
+   NONE
+
+  Output:
+   NONE
+*/
+void initializeCurses()
 {
-  std::vector<std::string> outputStrings;
+  initscr();
 
-  if(sfStrings.empty() || currThemes.empty())
+  if(has_colors())
     {
-      return outputStrings;
+      start_color();
+      init_pair(_WHITE_TEXT, COLOR_WHITE, COLOR_BLACK);
+      init_pair(_BLACK_TEXT, COLOR_BLACK, COLOR_WHITE);
     }
 
-  std::string dots = "...";
-  int maxLines = 0;
-  int maxCols = 0;
+  curs_set(0);
+  timeout(0);
+  noecho();
+  cbreak();
+  keypad(stdscr, true);
+  nodelay(stdscr, true);
+  mousemask(ALL_MOUSE_EVENTS, NULL);
+  mouseinterval(0);
 
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
-    {
-      outputStrings.clear();
-      if(sfStringWins.at(0)->getWindow() != nullptr)
-        {
-          int maxPossible = maxCols - 6;
-          std::string tempString;
-          std::string fileString;
-          std::string themeString;
-          std::string countString;
-
-          getmaxyx(sfStringWins.at(0)->getWindow(), maxLines, maxCols);
-          int i = 0;
-
-          for(i = 0; i < sfStrings.size(); i++)
-            {
-              countString.clear();
-              fileString.clear();
-              themeString.clear();
-              tempString.clear();
-              countString = intToStr(i+1);
-              countString.append(". ");
-              fileString = sfStrings.at(i);
-              themeString = currThemes.at(i);
-              int totalFileLength = fileString.length() + dots.length() +
-                themeString.length() + countString.length();
-
-              if(totalFileLength > maxCols)
-                {
-                  int difference = totalFileLength - maxCols;
-                  tempString.append(dots);
-
-                  for(int j = difference + dots.length(); j < fileString.length(); j++)
-                    {
-                      char c = fileString.at(j);
-                      tempString.push_back(c);
-                    }
-
-                  tempString.append(dots);
-                  tempString.append(themeString);
-                  fileString = tempString;
-                }
-              else
-                {
-                  int dotCount = fileString.length();
-
-                  while(dotCount < maxCols - themeString.length() - countString.length())
-                    {
-                      fileString.push_back('.');
-                      dotCount++;
-                    }
-                  fileString.append(themeString);
-                }
-              countString.append(fileString);
-              outputStrings.push_back(countString);
-            }
-        }
-    }
-
-  return outputStrings;
-} // end of "createSFOutputStrings"
-
-
-
-std::vector<std::string> createSTOutputStrings(const std::unordered_map<int, CursesWindow*>& wins,
-                                               const std::vector<std::string>& stStrings,
-                                               const int& stStringPos,
-                                               std::ofstream& log)
-{
-  std::vector<std::string> outputStrings;
-
-  if(stStrings.empty())
-    {
-      return outputStrings;
-    }
-
-  std::string dots = "...";
-  int maxLines = 0;
-  int maxCols = 30;
-
-  std::string tempString;
-  std::string fileString;
-  int i = 0;
-  int j = 0;
-  for(j = stStringPos; j < stStrings.size(); j++)
-    {
-      fileString.clear();
-      tempString.clear();
-      fileString = intToStr(j+1);
-      fileString.append(". ");
-      fileString.append(stStrings.at(j));
-
-      if(maxCols < fileString.length())
-        {
-          while( (maxCols - fileString.length()) != 3)
-            {
-              fileString.pop_back();
-            }
-          fileString.append(dots);
-        }
-      outputStrings.push_back(fileString);
-    }
-
-  return outputStrings;
-} // end of "createSTOutputStrings"
+} // end of "initializeCurses"
 
 
 
 /*
   Function:
-   printPromptWin
+   initializeWins
 
   Description:
-   Prints the program title to _PROMPTWIN
+   This function creates and initializes all the necessary startup windows via
+   dynamic allocation and stores them in an unordered_map for later use.
 
   Input/Output:
-   wins                     - A reference to a const unordered map
-                              <int, CursesWindow*> type that contains pointers
-                              to all currently allocated CursesWindow objects
-                              that can be indexed by key values in the file
-                              _cursesWinConsts.hpp.
+   wins                     - A reference to an unordered map <int, CursesWindow*>
+                              object type that will be used to store each
+                              CursesWindow object initialized in this function.  The
+                              keys are from _cursesWinConsts.hpp and match the
+                              corresponding CursesWindow objects they are pointing
+                              to.
+   NONE
+
   Input:
-   title                    - a reference to to a constant vector of strings
-                              containing characters that make up a graphical
-                              depiction of the title of the program when
-                              printed in correct order.
-
-  currLines                 - a reference to a constant integer that contains
-                              the current max lines of the STDSCR(_MAINWIN).
-
-  currCols                  - a reference to a constant integer that contains
-                              the current max columns of the STDSCR(_MAINWIN).
+   NONE
 
   Output:
    NONE
@@ -1359,40 +1775,17 @@ std::vector<std::string> createSTOutputStrings(const std::unordered_map<int, Cur
   Returns:
    NONE
 */
-void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
-                    const std::vector<std::string>& promptStrings,
-                    const int& currLines,
-                    const int& currCols,
-                    const int& mouseLine,
-                    const int& mouseCol,
+void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
                     std::ofstream& log)
 {
-  if(wins.at(_PROMPTWIN)->getWindow() != nullptr)
+  for(int i = _MAINWIN; i <= _STPROMPTWIN; i++)
     {
-      int i = 0;
-      std::vector<std::string>::const_iterator it;
-      std::string outString;
-      const int offset = 6;
-
-      wattron(wins.at(_PROMPTWIN)->getWindow(), A_BOLD);
-      for(it = promptStrings.begin(); it != promptStrings.end(); i++, it++)
-        {
-          outString = *it;
-          const int temp = wins.at(_MAINWIN)->getStartX();
-
-          if(outString.length() >= currCols - offset)
-            {
-              outString.resize(currCols - offset);
-            }
-
-          mvwaddstr(wins.at(_PROMPTWIN)->getWindow(),
-                    i,
-                    0,
-                    outString.c_str());
-        }
-      wattroff(wins.at(_PROMPTWIN)->getWindow(), A_BOLD);
+      CursesWindow* newWindow = new CursesWindow();
+      wins.insert(std::make_pair(i, newWindow));
     }
-} // end of "printPromptWin"
+} // end of "initializeWins"
+
+
 
 void printButtonWin(const std::unordered_map<int, CursesWindow*>& wins,
                     const int win,
@@ -1406,78 +1799,6 @@ void printButtonWin(const std::unordered_map<int, CursesWindow*>& wins,
             0,
             outString.c_str());
 } // end of "printButtonWin"
-
-
-
-/*
-  Function:
-   printNumberedStrings
-
-  Description:
-   Prints the incoming vector of strings as a numbered list to the window buffer
-   based on the provided incoming offset values.
-
-  Input/Output:
-   wins                     - A reference to a const unordered map
-                              <int, CursesWindow*> type that contains pointers
-                              to all currently allocated CursesWindow objects
-                              that can be indexed by key values in the file
-                              _cursesWinConsts.hpp.
-  Input:
-  strings                   - a reference to to a constant vector of strings
-                              to be printed to the window buffer in numbered
-                              ascending order.
-
-  lineMaxOffest             - a reference to a constant int type that contains
-                              a value used as a offset to subtract from the
-                              current windows maximum number of lines
-                              available.
-
-  colMaxOffest              - a reference to a constant int type that contains
-                              a value used as a offset to subtract from the
-                              current windows maximum number of columns
-                              available.
-
-  lineMinOffest             - a reference to a constant int type that contains
-                              a value used as an offset to the starting line
-                              of the window (which should be zero).
-
-  colMinOffset              - a reference to a constant int type that contains
-                              a value used as an offset to the starting column
-                              of the window (which should be zero).
-
-  Output:
-   NONE
-
-  Returns:
-   NONE
-*/
-void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
-                          std::ofstream& log)
-{
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
-    {
-      int maxWinLines;
-      int maxWinCols;
-      getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),
-               maxWinLines,
-               maxWinCols);
-
-      std::string fileCount;
-
-      // print list of the saved files
-      for(int i = 0; i < maxWinLines - _SFWINMAXLINEOFFSET - _SFWINMINLINEOFFSET; i++)
-        {
-          fileCount = intToStr(i + 1);
-          fileCount.append(". ");
-
-          mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
-                    i + _SFWINMINLINEOFFSET + 2,
-                    _SFWINMINCOLOFFSET,
-                    fileCount.c_str());
-        }
-    }
-} // end of "printNumberedStrings"
 
 
 
@@ -1605,6 +1926,223 @@ void printHelpWin(std::unordered_map<int, CursesWindow*>& wins,
 
 /*
   Function:
+   printNumberedStrings
+
+  Description:
+   Prints the incoming vector of strings as a numbered list to the window buffer
+   based on the provided incoming offset values.
+
+  Input/Output:
+   wins                     - A reference to a const unordered map
+                              <int, CursesWindow*> type that contains pointers
+                              to all currently allocated CursesWindow objects
+                              that can be indexed by key values in the file
+                              _cursesWinConsts.hpp.
+  Input:
+  strings                   - a reference to to a constant vector of strings
+                              to be printed to the window buffer in numbered
+                              ascending order.
+
+  lineMaxOffest             - a reference to a constant int type that contains
+                              a value used as a offset to subtract from the
+                              current windows maximum number of lines
+                              available.
+
+  colMaxOffest              - a reference to a constant int type that contains
+                              a value used as a offset to subtract from the
+                              current windows maximum number of columns
+                              available.
+
+  lineMinOffest             - a reference to a constant int type that contains
+                              a value used as an offset to the starting line
+                              of the window (which should be zero).
+
+  colMinOffset              - a reference to a constant int type that contains
+                              a value used as an offset to the starting column
+                              of the window (which should be zero).
+
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
+void printNumberedStrings(std::unordered_map<int, CursesWindow*>& wins,
+                          std::ofstream& log)
+{
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+    {
+      int maxWinLines;
+      int maxWinCols;
+      getmaxyx(wins.at(_SAVEDFILESWIN)->getWindow(),
+               maxWinLines,
+               maxWinCols);
+
+      std::string fileCount;
+
+      // print list of the saved files
+      for(int i = 0; i < maxWinLines - _SFWINMAXLINEOFFSET - _SFWINMINLINEOFFSET; i++)
+        {
+          fileCount = intToStr(i + 1);
+          fileCount.append(". ");
+
+          mvwaddstr(wins.at(_SAVEDFILESWIN)->getWindow(),
+                    i + _SFWINMINLINEOFFSET + 2,
+                    _SFWINMINCOLOFFSET,
+                    fileCount.c_str());
+        }
+    }
+} // end of "printNumberedStrings"
+
+
+
+void printPrompt(std::unordered_map<int, CursesWindow*>& wins,
+                 const int win,
+                 const std::string& prompt,
+                 std::ofstream& log)
+{
+  wattron(wins.at(win)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+  box(wins.at(win)->getWindow(), ' ', ' ');
+  wattron(wins.at(win)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+
+  mvwaddstr(wins.at(win)->getWindow(),
+            1,
+            1,
+            prompt.c_str());
+  wrefresh(wins.at(win)->getWindow());
+  doupdate;
+} // end of "printPrompt"
+
+
+/*
+  Function:
+   printPromptWin
+
+  Description:
+   Prints the program title to _PROMPTWIN
+
+  Input/Output:
+   wins                     - A reference to a const unordered map
+                              <int, CursesWindow*> type that contains pointers
+                              to all currently allocated CursesWindow objects
+                              that can be indexed by key values in the file
+                              _cursesWinConsts.hpp.
+  Input:
+   title                    - a reference to to a constant vector of strings
+                              containing characters that make up a graphical
+                              depiction of the title of the program when
+                              printed in correct order.
+
+  currLines                 - a reference to a constant integer that contains
+                              the current max lines of the STDSCR(_MAINWIN).
+
+  currCols                  - a reference to a constant integer that contains
+                              the current max columns of the STDSCR(_MAINWIN).
+
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
+void printPromptWin(const std::unordered_map<int, CursesWindow*>& wins,
+                    const std::vector<std::string>& promptStrings,
+                    const int& currLines,
+                    const int& currCols,
+                    const int& mouseLine,
+                    const int& mouseCol,
+                    std::ofstream& log)
+{
+  if(wins.at(_PROMPTWIN)->getWindow() != nullptr)
+    {
+      int i = 0;
+      std::vector<std::string>::const_iterator it;
+      std::string outString;
+      const int offset = 6;
+
+      wattron(wins.at(_PROMPTWIN)->getWindow(), A_BOLD);
+      for(it = promptStrings.begin(); it != promptStrings.end(); i++, it++)
+        {
+          outString = *it;
+          const int temp = wins.at(_MAINWIN)->getStartX();
+
+          if(outString.length() >= currCols - offset)
+            {
+              outString.resize(currCols - offset);
+            }
+
+          mvwaddstr(wins.at(_PROMPTWIN)->getWindow(),
+                    i,
+                    0,
+                    outString.c_str());
+        }
+      wattroff(wins.at(_PROMPTWIN)->getWindow(), A_BOLD);
+    }
+} // end of "printPromptWin"
+
+
+
+/*
+  Function:
+   printSavedFilesStrings
+
+  Description:
+   Prints the saved files data to the buffer for the _SAVEDFILESWIN window.
+
+  Input/Output:
+   wins                     - A reference to a const unordered map
+                              <int, CursesWindow*> type that contains pointers
+                              to all currently allocated CursesWindow objects
+                              that can be indexed by key values in the file
+                              _cursesWinConsts.hpp.
+  Input:
+  savedFilesStrings         - a reference to to a constant vector of strings
+                              containing the paths for the files that have/can
+                              be modified by ThemesSwitcher for changing
+                              the color theme.
+  Output:
+   NONE
+
+  Returns:
+   NONE
+*/
+void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
+                            std::vector<CursesWindow*>& sfStringWins,
+                            std::vector<std::string> sfStrings,
+                            const int& sfStringPos,
+                            const int& currStartWin,
+                            const int& highlightWinNum,
+                            std::ofstream& log)
+{
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
+    {
+      int j = sfStringPos;
+      for(int i = 0; i < sfStringWins.size() && j < sfStrings.size(); i++, j++)
+        {
+          if(sfStringWins.at(i)->getWindow() != nullptr)
+            {
+              if(highlightWinNum == i)
+                {
+                  wattron(sfStringWins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+                }
+              else
+                {
+                  wattron(sfStringWins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+                }
+
+              mvwaddstr(sfStringWins.at(i)->getWindow(),
+                        0,
+                        0,
+                        sfStrings.at(j).c_str());
+            }
+        }
+    }
+} // end of "printSavedFilesStrings"
+
+
+
+/*
+  Function:
    printSavedFilesWin
 
   Description:
@@ -1682,65 +2220,6 @@ void printSavedFilesWin(std::unordered_map<int, CursesWindow*>& wins,
                     log);
     }
 } // end of "printSavedFilesWin"
-
-
-
-/*
-  Function:
-   printSavedFilesStrings
-
-  Description:
-   Prints the saved files data to the buffer for the _SAVEDFILESWIN window.
-
-  Input/Output:
-   wins                     - A reference to a const unordered map
-                              <int, CursesWindow*> type that contains pointers
-                              to all currently allocated CursesWindow objects
-                              that can be indexed by key values in the file
-                              _cursesWinConsts.hpp.
-  Input:
-  savedFilesStrings         - a reference to to a constant vector of strings
-                              containing the paths for the files that have/can
-                              be modified by ThemesSwitcher for changing
-                              the color theme.
-  Output:
-   NONE
-
-  Returns:
-   NONE
-*/
-void printSavedFilesStrings(std::unordered_map<int, CursesWindow*>& wins,
-                            std::vector<CursesWindow*>& sfStringWins,
-                            std::vector<std::string> sfStrings,
-                            const int& sfStringPos,
-                            const int& currStartWin,
-                            const int& highlightWinNum,
-                            std::ofstream& log)
-{
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
-    {
-      int j = sfStringPos;
-      for(int i = 0; i < sfStringWins.size() && j < sfStrings.size(); i++, j++)
-        {
-          if(sfStringWins.at(i)->getWindow() != nullptr)
-            {
-              if(highlightWinNum == i)
-                {
-                  wattron(sfStringWins.at(i)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-                }
-              else
-                {
-                  wattron(sfStringWins.at(i)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-                }
-
-              mvwaddstr(sfStringWins.at(i)->getWindow(),
-                        0,
-                        0,
-                        sfStrings.at(j).c_str());
-            }
-        }
-    }
-} // end of "printSavedFilesStrings"
 
 
 
@@ -1890,485 +2369,38 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-void shiftSFRight(const std::unordered_map<int, CursesWindow*>& wins,
-                     std::vector<CursesWindow*>& sfStringWins,
-                     const std::vector<std::string>& outputStrings,
-                     int& sfStringPos,
-                     std::ofstream& log)
+void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
+                    const int winIndex,
+                    const int& userInput,
+                    std::string& inputString,
+                    const int& yOffset,
+                    int& xOffset)
 {
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
-     !outputStrings.empty())
+  if((userInput >= 32) &&
+     (userInput <= 126) &&
+     (userInput != KEY_ENTER || userInput != 10) &&
+     (xOffset < wins.at(winIndex)->getNumCols()))
     {
-      int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
-      int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
-      const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
-      const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
-
-      // get number of printable file windows
-      int val = maxLines - _SFSWINMINLINEOFFSET - _SFSWINMAXLINEOFFSET;
-
-      // check if there is another list to 'scroll' to
-      if(sfStringPos + val < outputStrings.size())
-        {
-          defineSFStringWins(wins,
-                             sfStringWins,
-                             outputStrings,
-                             sfStringPos,
-                             log);
-          sfStringPos += val;
-        }
+      inputString.push_back(userInput);
+      mvwaddch(wins.at(winIndex)->getWindow(),
+               0,
+               xOffset,
+               userInput);
+      xOffset++;
     }
-} // end of "shiftSFRight"
-
-
-
-void shiftSFLeft(const std::unordered_map<int, CursesWindow*>& wins,
-                    std::vector<CursesWindow*>& sfStringWins,
-                    const std::vector<std::string>& outputStrings,
-                    int& sfStringPos,
-                    std::ofstream& log)
-{
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
-     !outputStrings.empty())
+  else if(userInput == KEY_BACKSPACE && xOffset > 0)
     {
-      int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
-      int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
-      const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
-      const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
-
-      // get number of printable file windows
-      int val = maxLines - _SFSWINMINLINEOFFSET - _SFSWINMAXLINEOFFSET;
-
-      // check if there is another list to 'scroll' to
-      if(sfStringPos - val >= 0)
-        {
-          sfStringPos -= val;
-          defineSFStringWins(wins,
-                             sfStringWins,
-                             outputStrings,
-                             sfStringPos,
-                             log);
-        }
-      else
-        {
-          sfStringPos = 0;
-          defineSFStringWins(wins,
-                             sfStringWins,
-                             outputStrings,
-                             sfStringPos,
-                             log);
-        }
+      inputString.pop_back();
+      xOffset--;
+      mvwaddch(wins.at(winIndex)->getWindow(),
+               0,
+               xOffset,
+               ' ');
+      wmove(wins.at(winIndex)->getWindow(),
+            0,
+            xOffset);
     }
-}// end of "shiftSFLeft"
-
-
-
-void shiftSTLeft(std::unordered_map<int, CursesWindow*>& wins,
-                 std::vector<CursesWindow*>& stStringWins,
-                 const std::vector<std::string>& outputStrings,
-                 int& stStringPos,
-                 std::ofstream& log)
-{
-  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr &&
-     !outputStrings.empty())
-    {
-      int maxLines = wins.at(_SAVEDTHEMESWIN)->getNumLines();
-      int maxCols = wins.at(_SAVEDTHEMESWIN)->getNumCols();
-      const int startY = wins.at(_SAVEDTHEMESWIN)->getStartY();
-      const int startX = wins.at(_SAVEDTHEMESWIN)->getStartX();
-
-      // get number of printable file windows
-      int val = maxLines - _STWINMINLINEOFFSET - _STWINMAXLINEOFFSET;
-
-      defineSavedThemesWin(wins,
-                           wins.at(_MAINWIN)->getNumLines(),
-                           wins.at(_MAINWIN)->getNumCols(),
-                           log);
-      wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-      box(wins.at(_SAVEDTHEMESWIN)->getWindow(), ' ', ' ');
-      wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-      printSavedThemesWin(wins,
-                          log);
-
-      // check if there is another list to 'scroll' to
-      if(stStringPos - val >= 0)
-        {
-          stStringPos -= val;
-          defineSTStringWins(wins,
-                             stStringWins,
-                             outputStrings,
-                             stStringPos,
-                             log);
-        }
-      else
-        {
-          stStringPos = 0;
-          defineSTStringWins(wins,
-                             stStringWins,
-                             outputStrings,
-                             stStringPos,
-                             log);
-        }
-    }
-}// end of "shiftSFLeft"
-
-
-void shiftSTRight(std::unordered_map<int, CursesWindow*>& wins,
-                  std::vector<CursesWindow*>& stStringWins,
-                  const std::vector<std::string>& outputStrings,
-                  int& outputStringPos,
-                  std::ofstream& log)
-{
-  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr &&
-     !outputStrings.empty())
-    {
-      int maxLines = wins.at(_SAVEDTHEMESWIN)->getNumLines();
-      int maxCols = wins.at(_SAVEDTHEMESWIN)->getNumCols();
-      const int startY = wins.at(_SAVEDTHEMESWIN)->getStartY();
-      const int startX = wins.at(_SAVEDTHEMESWIN)->getStartX();
-
-      // get number of printable file windows
-      int val = maxLines - _STWINMINLINEOFFSET - _STWINMAXLINEOFFSET;
-
-      // check if there is another list to 'scroll' to
-      if(outputStringPos + val < outputStrings.size())
-        {
-          defineSavedThemesWin(wins,
-                               wins.at(_MAINWIN)->getNumLines(),
-                               wins.at(_MAINWIN)->getNumCols(),
-                               log);
-          wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-          box(wins.at(_SAVEDTHEMESWIN)->getWindow(), ' ', ' ');
-          wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-          printSavedThemesWin(wins,
-                              log);
-          outputStringPos += val;
-          defineSTStringWins(wins,
-                             stStringWins,
-                             outputStrings,
-                             outputStringPos,
-                             log);
-        }
-    }
-} // end of "shiftSTRight"
-
-
-
-/*
-  Function:
-   checkArrowClick
-
-  Description:
-   Prints the incoming "win" to STDSCR which looks like a left or right
-   arrow.
-
-  Input/Output:
-   wins                 - A reference to a const unordered map
-                          <int, CursesWindow*> type that contains pointers
-                          to all currently allocated CursesWindow objects
-                          that can be indexed by key values in the file
-                          _cursesWinConsts.hpp.
-  Input:
-   win                  - a const integer containing a value representing a window
-                          from _cursesWinConsts.hpp that should be for an arrow
-                          window.
-
-  mouseLine             - A reference to a constant integer containing the 'y'
-                          value or 'line number' in which a mouse click was
-                          detected.
-
-  mouseLine             - A reference to a constant integer containing the 'x'
-                          value or 'column number' in which a mouse click was
-                          detected.
-
-  outString             - A string type containing a the string to print to
-                          output to the incoming window buffer.
-
-  Output:
-   NONE
-
-  Returns:
-   NONE
-*/
-int checkButtonClick(std::unordered_map<int, CursesWindow*>& wins,
-                     const int& mouseLine,
-                     const int& mouseCol,
-                     std::ofstream& log)
-{
-  int buttonNum = -1;
-  if(wins.at(_MAINWIN)->getWindow() == nullptr ||
-     wins.at(_SAVEDFILESWIN)->getWindow() == nullptr ||
-     wins.at(_SAVEDTHEMESWIN)->getWindow() == nullptr ||
-     wins.at(_HELPWIN)->getWindow() == nullptr)
-    {
-      return buttonNum;
-    }
-
-  // check if click is in _SAVEDFILESWIN
-  if((mouseLine >= wins.at(_SAVEDFILESWIN)->getStartY()) &&
-     (mouseLine < wins.at(_SAVEDFILESWIN)->getStartY() +
-      wins.at(_SAVEDFILESWIN)->getNumLines()) &&
-     (mouseCol >= wins.at(_SAVEDFILESWIN)->getStartX() &&
-      mouseCol < wins.at(_SAVEDFILESWIN)->getStartX() +
-      wins.at(_SAVEDFILESWIN)->getNumCols()))
-    {
-      if((mouseLine == wins.at(_LARROWSAVEDFILESWIN)->getStartY()) &&
-         (mouseCol >= wins.at(_LARROWSAVEDFILESWIN)->getStartX() &&
-          mouseCol < wins.at(_LARROWSAVEDFILESWIN)->getStartX() +
-          wins.at(_LARROWSAVEDFILESWIN)->getNumCols()))
-        {
-          buttonNum = _LARROWSAVEDFILESWIN;
-        }
-      else if((mouseLine == wins.at(_RARROWSAVEDFILESWIN)->getStartY()) &&
-              (mouseCol >= wins.at(_RARROWSAVEDFILESWIN)->getStartX() &&
-               mouseCol < wins.at(_RARROWSAVEDFILESWIN)->getStartX() +
-               wins.at(_RARROWSAVEDFILESWIN)->getNumCols()))
-        {
-          buttonNum = _RARROWSAVEDFILESWIN;
-        }
-    }
-
-  // check if click is in _SAVEDTHEMESWIN
-  if((mouseLine >= wins.at(_SAVEDTHEMESWIN)->getStartY()) &&
-     (mouseLine < wins.at(_SAVEDTHEMESWIN)->getStartY() +
-      wins.at(_SAVEDTHEMESWIN)->getNumLines()) &&
-     (mouseCol >= wins.at(_SAVEDTHEMESWIN)->getStartX() &&
-      mouseCol < wins.at(_SAVEDTHEMESWIN)->getStartX() +
-      wins.at(_SAVEDTHEMESWIN)->getNumCols()))
-    {
-      if((mouseLine == wins.at(_RARROWSAVEDTHEMESWIN)->getStartY()) &&
-         (mouseCol >= wins.at(_RARROWSAVEDTHEMESWIN)->getStartX() &&
-          mouseCol < wins.at(_RARROWSAVEDTHEMESWIN)->getStartX() +
-          wins.at(_RARROWSAVEDTHEMESWIN)->getNumCols()))
-        {
-          buttonNum = _RARROWSAVEDTHEMESWIN;
-        }
-      else if((mouseLine == wins.at(_LARROWSAVEDTHEMESWIN)->getStartY()) &&
-              (mouseCol >= wins.at(_LARROWSAVEDTHEMESWIN)->getStartX() &&
-               mouseCol < wins.at(_LARROWSAVEDTHEMESWIN)->getStartX() +
-               wins.at(_LARROWSAVEDTHEMESWIN)->getNumCols()))
-        {
-          buttonNum = _LARROWSAVEDTHEMESWIN;
-        }
-    }
-
-  // check if click is in _HELPWIN
-  if((mouseLine >= wins.at(_HELPWIN)->getStartY()) &&
-     (mouseLine < wins.at(_HELPWIN)->getStartY() +
-      wins.at(_HELPWIN)->getNumLines()) &&
-     (mouseCol >= wins.at(_HELPWIN)->getStartX() &&
-      mouseCol < wins.at(_HELPWIN)->getStartX() +
-      wins.at(_HELPWIN)->getNumCols()))
-    {
-      if((mouseLine == wins.at(_HWSFADDFILE)->getStartY()) &&
-         (mouseCol >= wins.at(_HWSFADDFILE)->getStartX() &&
-          mouseCol < wins.at(_HWSFADDFILE)->getStartX() +
-          wins.at(_HWSFADDFILE)->getNumCols()))
-        {
-          buttonNum = _HWSFADDFILE;
-        }
-      else if((mouseLine == wins.at(_HWSFEDITFILEPATH)->getStartY()) &&
-              (mouseCol >= wins.at(_HWSFEDITFILEPATH)->getStartX() &&
-               mouseCol < wins.at(_HWSFEDITFILEPATH)->getStartX() +
-               wins.at(_HWSFEDITFILEPATH)->getNumCols()))
-        {
-          buttonNum = _HWSFEDITFILEPATH;
-        }
-      else if((mouseLine == wins.at(_HWSFVIEWFILEPATH)->getStartY()) &&
-              (mouseCol >= wins.at(_HWSFVIEWFILEPATH)->getStartX() &&
-               mouseCol < wins.at(_HWSFVIEWFILEPATH)->getStartX() +
-               wins.at(_HWSFVIEWFILEPATH)->getNumCols()))
-        {
-          buttonNum = _HWSFVIEWFILEPATH;
-        }
-      else if((mouseLine == wins.at(_HWSFREMOVEFILE)->getStartY()) &&
-              (mouseCol >= wins.at(_HWSFREMOVEFILE)->getStartX() &&
-               mouseCol < wins.at(_HWSFREMOVEFILE)->getStartX() +
-               wins.at(_HWSFREMOVEFILE)->getNumCols()))
-        {
-          buttonNum = _HWSFREMOVEFILE;
-        }
-      else if((mouseLine == wins.at(_HWSFADDTHEME)->getStartY()) &&
-              (mouseCol >= wins.at(_HWSFADDTHEME)->getStartX() &&
-               mouseCol < wins.at(_HWSFADDTHEME)->getStartX() +
-               wins.at(_HWSFADDTHEME)->getNumCols()))
-        {
-          buttonNum = _HWSFADDTHEME;
-        }
-      else if((mouseLine == wins.at(_HWSFEDITTHEME)->getStartY()) &&
-              (mouseCol >= wins.at(_HWSFEDITTHEME)->getStartX() &&
-               mouseCol < wins.at(_HWSFEDITTHEME)->getStartX() +
-               wins.at(_HWSFEDITTHEME)->getNumCols()))
-        {
-          buttonNum = _HWSFEDITTHEME;
-        }
-      else if((mouseLine == wins.at(_HWSFREMOVETHEME)->getStartY()) &&
-              (mouseCol >= wins.at(_HWSFREMOVETHEME)->getStartX() &&
-               mouseCol < wins.at(_HWSFREMOVETHEME)->getStartX() +
-               wins.at(_HWSFREMOVETHEME)->getNumCols()))
-        {
-          buttonNum = _HWSFREMOVETHEME;
-        }
-      else if((mouseLine == wins.at(_HWSTADDTHEME)->getStartY()) &&
-              (mouseCol >= wins.at(_HWSTADDTHEME)->getStartX() &&
-               mouseCol < wins.at(_HWSTADDTHEME)->getStartX() +
-               wins.at(_HWSTADDTHEME)->getNumCols()))
-        {
-          buttonNum = _HWSTADDTHEME;
-        }
-      else if((mouseLine == wins.at(_HWSTREMOVETHEME)->getStartY()) &&
-              (mouseCol >= wins.at(_HWSTREMOVETHEME)->getStartX() &&
-               mouseCol < wins.at(_HWSTREMOVETHEME)->getStartX() +
-               wins.at(_HWSTREMOVETHEME)->getNumCols()))
-        {
-          buttonNum = _HWSTREMOVETHEME;
-        }
-      else if((mouseLine == wins.at(_HWSTEDITTHEME)->getStartY()) &&
-              (mouseCol >= wins.at(_HWSTEDITTHEME)->getStartX() &&
-               mouseCol < wins.at(_HWSTEDITTHEME)->getStartX() +
-               wins.at(_HWSTEDITTHEME)->getNumCols()))
-        {
-          buttonNum = _HWSTEDITTHEME;
-        }
-      else if((mouseLine == wins.at(_HWSTVIEWTHEME)->getStartY()) &&
-              (mouseCol >= wins.at(_HWSTVIEWTHEME)->getStartX() &&
-               mouseCol < wins.at(_HWSTVIEWTHEME)->getStartX() +
-               wins.at(_HWSTVIEWTHEME)->getNumCols()))
-        {
-          buttonNum = _HWSTVIEWTHEME;
-        }
-    }
-
-  return buttonNum;
-} // end of "checkButtonClick"
-
-
-
-void flashButton(const std::unordered_map<int, CursesWindow*>& wins,
-                 const int win,
-                 std::string outString,
-                 const int colorStart,
-                 const int colorFlash,
-                 std::ofstream& log)
-{
-  printButtonWin(wins,
-                 win,
-                 outString,
-                 colorFlash,
-                 log);
-  wnoutrefresh(wins.at(win)->getWindow());
-  doupdate();
-  usleep(40000);
-  printButtonWin(wins,
-                 win,
-                 outString,
-                 colorStart,
-                 log);
-}
-
-
-/*
-  Function:
-   checkFileClick
-
-  Description:
-   Checks if the incoming mouse click Line and Col values match with a
-   printed file line.  If they do, the matching file line coordinate file
-   line is printed in the "highlighted" color scheme.
-
-  Input/Output:
-   wins                     - A reference to a const unordered map
-                              <int, CursesWindow*> type that contains pointers
-                              to all currently allocated CursesWindow objects
-                              that can be indexed by key values in the file
-                              _cursesWinConsts.hpp.
-  Input:
-  outputStrings             - a reference to to a constant vector of strings
-                              containing the formatted file string lines
-                              that will be used for outputing to file line
-                              windows.
-
-  mouseLine                 - a reference to a constant integer that contains
-                              the current Y(line) value of the just clicked
-                              mouse click.
-
-  mouseCol                  - a reference to a constant integer that contains
-                              the current X(col) value of the just clicked
-                              mouse click.
-  Output:
-   NONE
-
-  Returns:
-   NONE
-*/
-void checkSFClick(const std::unordered_map<int, CursesWindow*>& wins,
-                  const std::vector<std::string>& outputStrings,
-                  const int& outputStringPos,
-                  const int& mouseLine,
-                  const int& mouseCol,
-                  int& highlightWinNum,
-                  std::ofstream& log)
-{
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
-     !outputStrings.empty())
-    {
-      int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
-      int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
-      const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
-      const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
-
-      // enter iff the mouse click is in file clicking range offsets
-      if(((mouseLine >= startY + _SFSWINMINLINEOFFSET) &&
-                        (mouseLine < startY + maxLines - _SFSWINMAXLINEOFFSET)) &&
-         ((mouseCol >= startX + _SFWINMINCOLOFFSET) &&
-          (mouseCol < startX + maxCols - _SFWINMAXCOLOFFSET)))
-        {
-          highlightWinNum = mouseLine - (wins.at(_SAVEDFILESWIN)->getStartY()
-                                       + _SFSWINMINLINEOFFSET);
-        }
-      else
-        {
-          highlightWinNum = -1;
-        }
-    }
-} // end of "checkFileClick"
-
-
-
-void checkSTClick(const std::unordered_map<int, CursesWindow*>& wins,
-                  const std::vector<CursesWindow*>& stStringWins,
-                  const int& mouseLine,
-                  const int& mouseCol,
-                  int& highlightWinNum,
-                  std::ofstream& log)
-{
-  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr && !stStringWins.empty())
-    {
-      for(int i = 0; i < stStringWins.size(); i ++)
-        {
-          int maxLines = stStringWins.at(i)->getNumLines();
-          int maxCols = stStringWins.at(i)->getNumCols();
-          getmaxyx(stStringWins.at(i)->getWindow(), maxLines, maxCols);
-          const int startY = stStringWins.at(i)->getStartY();
-          const int startX = stStringWins.at(i)->getStartX();
-
-          if((mouseLine == startY) && ((mouseCol >= startX) &&
-                                       (mouseCol < startX + maxCols)))
-            {
-              highlightWinNum = i;
-            }
-          else
-            {
-              highlightWinNum = -1;
-            }
-
-          if(highlightWinNum != -1)
-            {
-              break;
-            }
-        }
-    }
-} // end of "checkFileClick"
+} // end of "printUserInput"
 
 
 
@@ -2465,194 +2497,165 @@ void refreshwins(const std::unordered_map<int, CursesWindow*>& wins)
 
 
 
-/*
-  Function:
-   clearWins
-
-  Description:
-   Clears all currently active and defined CursesWindow object screens. All
-   "erased" screens are stored in the screen buffer waiting for a call to
-   refresh() to write the changes.
-
-  Input/Output:
-   NONE
-
-  Input:
-   wins                 - A reference to a const unordered map
-                          <int, CursesWindow*> type that contains pointers
-                          to all currently allocated CursesWindow objects
-                          that can be indexed by key values in the file
-                          _cursesWinConsts.hpp.
-  Output:
-   NONE
-
-  Returns:
-   NONE
-*/
-void clearWins(const std::unordered_map<int, CursesWindow*>& wins)
+void shiftSFLeft(const std::unordered_map<int, CursesWindow*>& wins,
+                    std::vector<CursesWindow*>& sfStringWins,
+                    const std::vector<std::string>& outputStrings,
+                    int& sfStringPos,
+                    std::ofstream& log)
 {
-  std::unordered_map<int, CursesWindow*>::const_iterator it;
-  for(it = wins.begin(); it != wins.end(); it++)
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
+     !outputStrings.empty())
     {
-      werase(it->second->getWindow());
-    }
-} // end of "clearWins"
+      int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
+      int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
+      const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
+      const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
 
+      // get number of printable file windows
+      int val = maxLines - _SFSWINMINLINEOFFSET - _SFSWINMAXLINEOFFSET;
 
-
-void clearSFStringWins(const std::vector<CursesWindow*>& sfStringWins)
-{
-  for(int i = 0; i < sfStringWins.size(); i++)
-    {
-      if(sfStringWins.at(i)->getWindow() != nullptr)
+      // check if there is another list to 'scroll' to
+      if(sfStringPos - val >= 0)
         {
-          werase(sfStringWins.at(i)->getWindow());
+          sfStringPos -= val;
+          defineSFStringWins(wins,
+                             sfStringWins,
+                             outputStrings,
+                             sfStringPos,
+                             log);
+        }
+      else
+        {
+          sfStringPos = 0;
+          defineSFStringWins(wins,
+                             sfStringWins,
+                             outputStrings,
+                             sfStringPos,
+                             log);
         }
     }
-} // end of "clearWins"
+}// end of "shiftSFLeft"
 
 
 
-
-void clearSTStringWins(const std::vector<CursesWindow*>& stStringWins)
+void shiftSFRight(const std::unordered_map<int, CursesWindow*>& wins,
+                     std::vector<CursesWindow*>& sfStringWins,
+                     const std::vector<std::string>& outputStrings,
+                     int& sfStringPos,
+                     std::ofstream& log)
 {
-  for(int i = 0; i < stStringWins.size(); i++)
+  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr &&
+     !outputStrings.empty())
     {
-      if(stStringWins.at(i)->getWindow() != nullptr)
+      int maxLines = wins.at(_SAVEDFILESWIN)->getNumLines();
+      int maxCols = wins.at(_SAVEDFILESWIN)->getNumCols();
+      const int startY = wins.at(_SAVEDFILESWIN)->getStartY();
+      const int startX = wins.at(_SAVEDFILESWIN)->getStartX();
+
+      // get number of printable file windows
+      int val = maxLines - _SFSWINMINLINEOFFSET - _SFSWINMAXLINEOFFSET;
+
+      // check if there is another list to 'scroll' to
+      if(sfStringPos + val < outputStrings.size())
         {
-          werase(stStringWins.at(i)->getWindow());
+          defineSFStringWins(wins,
+                             sfStringWins,
+                             outputStrings,
+                             sfStringPos,
+                             log);
+          sfStringPos += val;
         }
     }
-} // end of "clearWins"
+} // end of "shiftSFRight"
 
 
 
-/*
-  Function:
-   drawBoxes
-
-  Description:
-   Draws a box for every "WINDOW" that is currently initialized and stored
-   in the "wins" object.
-
-  Input/Output:
-   wins                 - A reference to a const unordered map
-                          <int, CursesWindow*> type that contains pointers
-                          to CursesWindow objects that can be indexed by values
-                          in the file _cursesWinConsts.hpp.
-  Input:
-   NONE
-
-  Output:
-   NONE
-
-  Returns:
-   NONE
-*/
-void drawBoxes(const std::unordered_map<int, CursesWindow*>& wins,
-               std::ofstream& log)
+void shiftSTLeft(std::unordered_map<int, CursesWindow*>& wins,
+                 std::vector<CursesWindow*>& stStringWins,
+                 const std::vector<std::string>& outputStrings,
+                 int& stStringPos,
+                 std::ofstream& log)
 {
-  char val = 'A';
-  std::unordered_map<int, CursesWindow*>::const_iterator it;
-
-  for(it = wins.begin(); it != wins.end(); it++)
+  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr &&
+     !outputStrings.empty())
     {
-      wattron(it->second->getWindow(), COLOR_PAIR(_BLACK_TEXT));
-      if((it->second->getWindowName() != "SAVEDFILE") &&
-         (it->second->getWindowName() != "_PROMPTWIN")&&
-         (it->second->getWindowName() != "_LARROWSAVEDFILESWIN") &&
-         (it->second->getWindowName() != "_RARROWSAVEDFILESWIN") &&
-         (it->second->getWindowName() != "_LARROWSAVEDTHEMESWIN") &&
-         (it->second->getWindowName() != "_RARROWSAVEDTHEMESWIN"))
+      int maxLines = wins.at(_SAVEDTHEMESWIN)->getNumLines();
+      int maxCols = wins.at(_SAVEDTHEMESWIN)->getNumCols();
+      const int startY = wins.at(_SAVEDTHEMESWIN)->getStartY();
+      const int startX = wins.at(_SAVEDTHEMESWIN)->getStartX();
+
+      // get number of printable file windows
+      int val = maxLines - _STWINMINLINEOFFSET - _STWINMAXLINEOFFSET;
+
+      defineSavedThemesWin(wins,
+                           wins.at(_MAINWIN)->getNumLines(),
+                           wins.at(_MAINWIN)->getNumCols(),
+                           log);
+      wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+      box(wins.at(_SAVEDTHEMESWIN)->getWindow(), ' ', ' ');
+      wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+      printSavedThemesWin(wins,
+                          log);
+
+      // check if there is another list to 'scroll' to
+      if(stStringPos - val >= 0)
         {
-          // if(val == '[')
-          //   {
-          //     val = 'A';
-          //   }
-
-          val++;
-
-          if(it->second->getWindow() != nullptr)
-            {
-              box(it->second->getWindow(), ' ', ' ');
-            }
-      }
-      wattron(it->second->getWindow(), COLOR_PAIR(_WHITE_TEXT));
-    }
-} // end of "drawBoxes"
-
-
-
-void drawSFStringBoxes(const std::unordered_map<int, CursesWindow*>& wins,
-                       const std::vector<CursesWindow*> & sfStringWins,
-                       std::ofstream& log)
-{
-  char val = '.';
-
-  if(wins.at(_SAVEDFILESWIN)->getWindow() != nullptr)
-    {
-      for(int i = 0; i < sfStringWins.size(); i++)
+          stStringPos -= val;
+          defineSTStringWins(wins,
+                             stStringWins,
+                             outputStrings,
+                             stStringPos,
+                             log);
+        }
+      else
         {
-          if(sfStringWins.at(i)->getWindow() != nullptr)
-            {
-              box(sfStringWins.at(i)->getWindow(), val, val);
-            }
+          stStringPos = 0;
+          defineSTStringWins(wins,
+                             stStringWins,
+                             outputStrings,
+                             stStringPos,
+                             log);
         }
     }
-} // end of "drawBoxes"
+}// end of "shiftSFLeft"
 
 
 
-void drawSTStringBoxes(const std::unordered_map<int, CursesWindow*>& wins,
-                       const std::vector<CursesWindow*> & stStringWins,
-                       std::ofstream& log)
+void shiftSTRight(std::unordered_map<int, CursesWindow*>& wins,
+                  std::vector<CursesWindow*>& stStringWins,
+                  const std::vector<std::string>& outputStrings,
+                  int& outputStringPos,
+                  std::ofstream& log)
 {
-  char val = '.';
-
-
-  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr)
+  if(wins.at(_SAVEDTHEMESWIN)->getWindow() != nullptr &&
+     !outputStrings.empty())
     {
-      for(int i = 0; i < stStringWins.size(); i++)
+      int maxLines = wins.at(_SAVEDTHEMESWIN)->getNumLines();
+      int maxCols = wins.at(_SAVEDTHEMESWIN)->getNumCols();
+      const int startY = wins.at(_SAVEDTHEMESWIN)->getStartY();
+      const int startX = wins.at(_SAVEDTHEMESWIN)->getStartX();
+
+      // get number of printable file windows
+      int val = maxLines - _STWINMINLINEOFFSET - _STWINMAXLINEOFFSET;
+
+      // check if there is another list to 'scroll' to
+      if(outputStringPos + val < outputStrings.size())
         {
-          if(stStringWins.at(i)->getWindow() != nullptr)
-            {
-              box(stStringWins.at(i)->getWindow(), val, val);
-            }
+          defineSavedThemesWin(wins,
+                               wins.at(_MAINWIN)->getNumLines(),
+                               wins.at(_MAINWIN)->getNumCols(),
+                               log);
+          wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), COLOR_PAIR(_BLACK_TEXT));
+          box(wins.at(_SAVEDTHEMESWIN)->getWindow(), ' ', ' ');
+          wattron(wins.at(_SAVEDTHEMESWIN)->getWindow(), COLOR_PAIR(_WHITE_TEXT));
+          printSavedThemesWin(wins,
+                              log);
+          outputStringPos += val;
+          defineSTStringWins(wins,
+                             stStringWins,
+                             outputStrings,
+                             outputStringPos,
+                             log);
         }
     }
-} // end of "drawBoxes"
-
-
-
-void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
-                    const int winIndex,
-                    const int& userInput,
-                    std::string& inputString,
-                    const int& yOffset,
-                    int& xOffset)
-{
-  if((userInput >= 32) &&
-     (userInput <= 126) &&
-     (userInput != KEY_ENTER || userInput != 10) &&
-     (xOffset < wins.at(winIndex)->getNumCols()))
-    {
-      inputString.push_back(userInput);
-      mvwaddch(wins.at(winIndex)->getWindow(),
-               0,
-               xOffset,
-               userInput);
-      xOffset++;
-    }
-  else if(userInput == KEY_BACKSPACE && xOffset > 0)
-    {
-      inputString.pop_back();
-      xOffset--;
-      mvwaddch(wins.at(winIndex)->getWindow(),
-               0,
-               xOffset,
-               ' ');
-      wmove(wins.at(winIndex)->getWindow(),
-            0,
-            xOffset);
-    }
-} // end of "printUserInput"
+} // end of "shiftSTRight"
