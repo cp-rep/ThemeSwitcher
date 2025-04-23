@@ -185,7 +185,7 @@ int main()
                             stStringPos,
                             stHighlightNum,
                             log);
-    refreshwins(wins);
+    refreshWins(wins);
     refreshSFStringWins(sfStringWins,
                         log);
     refreshSTStringWins(stStringWins,
@@ -283,7 +283,7 @@ int main()
                                   stStringPos,
                                   stHighlightNum,
                                   log);
-          refreshwins(wins);
+          refreshWins(wins);
 
           refreshSFStringWins(sfStringWins,
                               log);
@@ -482,7 +482,7 @@ int main()
                        log);
 
           // print any changes to the windows
-          refreshwins(wins);
+          refreshWins(wins);
           refreshSFStringWins(sfStringWins,
                               log);
           refreshSTStringWins(stStringWins,
