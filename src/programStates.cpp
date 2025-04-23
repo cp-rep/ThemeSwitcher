@@ -26,7 +26,6 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
   int startX = wins.at(_SFPROMPTWIN)->getStartX() + xOffset;
   int numLines = 1;
   int numCols = wins.at(_SFPROMPTWIN)->getNumCols() - xOffset - xOffset;
-
   createUserInputWin(wins,
                      startY,
                      startX,
@@ -54,6 +53,7 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                                     1,
                                     log);
 
+      // exit state if user clicked outside of _SFPROMTWIN
       if(isInWindow == false)
         {
           break;
@@ -63,7 +63,7 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
       userInput = getch();
       flushinp();
 
-      // check if user finished entering the file name
+      // exit state if user finished entering the file name via new line char
       if((userInput == 10) || userInput == KEY_ENTER)
         {
           break;
