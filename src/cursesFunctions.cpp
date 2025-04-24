@@ -2437,7 +2437,7 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
           // case: outputstring shorter than window size
           if(outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
             {
-              tempString  = outputString;
+              tempString = outputString;
               tempLen = tempString.length() + stringIndex;
               tempString.resize(tempLen);
               tempString.push_back(userInput);
@@ -2452,9 +2452,36 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
               tempOutputString = tempString;
               cursorPosition++;
             }
-          // else if(outputString.length() >=  wins.at(_USERINPUTWIN)->getNumCols() - 1)
-          //   {
-          //   }
+          else if(outputString.length() >=  wins.at(_USERINPUTWIN)->getNumCols() - 1)
+            {
+              int maxColumns = wins.at(_USERINPUTWIN)->getNumCols() - 1;
+              tempString = outputString;
+              tempLen = tempString.length() + stringIndex;
+              tempString.resize(tempLen);
+              tempString.push_back(userInput);
+
+              // append the rest of the output string to the temp string after offset
+              for(int i = tempString.length() - 1; i < outputString.length(); i++)
+                {
+                  tempString.push_back(outputString.at(i));
+                }
+
+              // the new full output string with the appended characters in the middle/beginning
+              outputString = tempString;
+
+              // now create the display string that fits in the window
+              tempOutputString.clear();
+              int difference = (outputString.length() - maxColumns);
+              std::string dots = "...";
+              tempOutputString.append(dots);
+
+              for(int i = difference + dots.length() + 1; i < outputString.length(); i++)
+                {
+                  char c = outputString.at(i);
+                  tempOutputString.push_back(c);
+                }
+//              cursorPosition++;
+            }
         }
       // // case: outputstring >= window size, cursor shifted left
       // else
