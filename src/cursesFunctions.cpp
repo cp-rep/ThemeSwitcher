@@ -2403,16 +2403,17 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
                     const int& userInput,
                     std::string& outputString,
                     std::string& tempOutputString,
-                    int& stringIndex,
+                    int& stringIndexOffset,
                     int& yOffset,
                     int& cursorPosition,
                     int& stringLen,
                     std::ofstream& log)
 {
-  // resize output string to fit window if it's greater than num cols
   const int numCols =  wins.at(_USERINPUTWIN)->getNumCols();
   bool endFunction = false;
+  int actualCurrIndex = outputString.length() + stringIndexOffset - 1;
 
+  // resize output string to fit window if it's greater than num cols
   if(outputString.length() > numCols - 1)
     {
       tempOutputString.clear();
@@ -2429,6 +2430,7 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
       tempOutputString = outputString;
     }
 
+
   switch(userInput)
     {
     case '\n':
@@ -2437,29 +2439,39 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
     case KEY_ENTER:
       endFunction = true;
       break;
-    case KEY_LEFT: // shift the cursor left on the output string
-      stringLen = outputString.length() + stringIndex - 1;
-      log << "outputString.length(): " << outputString.length() << std::endl;
-      log << "stringIndex: " << stringIndex << std::endl;
-      log << "stringLen(outputString.length() + stringIndex - 1): " << stringLen << std::endl;
-
-      if(stringLen >= 0)
+    case KEY_LEFT:
+      log << "actual current index before: " << actualCurrIndex << std::endl;
+      // enter if the actual index is within the zero bound of the full file string
+      if(actualCurrIndex >= 0)
         {
-          // update the offsets of the cursor and index and move the cursor
-          stringIndex--;
-          if(cursorPosition > 0)
-            {
-              cursorPosition--;
-            }
+          // subtract 1 from the index offset
+          stringIndexOffset--;
         }
-      break;
-    case KEY_RIGHT: // shift the cursor right on the outputstring
-      stringLen = outputString.length() + stringIndex + 1;
-      if((stringLen < outputString.length() + 1) &&
-         outputString.length() < numCols)
+
+      // if the visual cursor is not at the far left end, move it left
+      if(cursorPosition > 0)
         {
-          // update the offsets of the cursor and index and move the cursor
-          stringIndex++;
+          cursorPosition--;
+        }
+
+      log << "cursorPosition: " << cursorPosition << std::endl;
+      log << "stringIndexOffset: " << stringIndexOffset << std::endl;
+      actualCurrIndex = outputString.length() + stringIndexOffset - 1;
+      log << "actual current index after: " << actualCurrIndex << std::endl;
+      log << "outputString.length(): " << outputString.length() << std::endl;
+      break;
+    case KEY_RIGHT:
+      // enter if the actual index is not at the end of the full file string
+      if(actualCurrIndex < outputString.length() - 1)
+        {
+          stringIndexOffset++;
+        }
+
+      // enter if the cursor is not at the end of the printable window
+      // and keep it within bounds of the printable file string
+      if((cursorPosition < numCols - 1) &&
+        cursorPosition < tempOutputString.length())
+        {
           cursorPosition++;
         }
       break;
@@ -2474,14 +2486,20 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
   if((userInput >= 32) &&
      (userInput <= 126))
     {
-      // cursor at end of string cases
-      if(cursorPosition == tempOutputString.length())
+      // cursor at end of full output string cases
+      if(stringIndexOffset == 0)
         {
           if(outputString.length() < numCols - 1)
             {
               outputString.push_back(userInput);
               tempOutputString.push_back(userInput);
               cursorPosition++;
+
+              if(stringIndexOffset < 0)
+                {
+                  stringIndexOffset++;
+                }
+
             }
           else if(outputString.length() >=  numCols - 1)
             {
@@ -2493,133 +2511,177 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
       else
         {
           // case: outputstring shorter than window size
+          // we want to insert text when the cursor is not at the end of the full outputstring
+          // and the output string is shorter than the window size
+          // we need to modify the outputstring, inserting the character at the cursor position
+          // we need to print the resulting string and make sure it fits in the output window
+          // we want the text to push the string forward no matter where you input it
           if(outputString.length() < numCols - 1)
             {
-              tempString = outputString;
-              tempLen = tempString.length() + stringIndex;
-              tempString.resize(tempLen);
-              tempString.push_back(userInput);
+              std::string beforeCursor;
+              char inputtedChar = userInput;
+              std::string afterInputChar;
 
-              // append the rest of the output string to the temp string after offset
-              for(int i = tempString.length() - 1; i < outputString.length(); i++)
+              // insert after the current index
+              log << "inputting character at position: " << actualCurrIndex + 1 << std::endl;
+              outputString.insert(actualCurrIndex + 1, 1, inputtedChar);
+              tempOutputString = outputString;
+
+              // // update the cursor position
+              if(cursorPosition < numCols - 1)
                 {
-                  tempString.push_back(outputString.at(i));
+                  cursorPosition++;
                 }
+              //stringIndexOffset--;
 
-              outputString = tempString;
-              tempOutputString = tempString;
-              cursorPosition++;
+
+
+              // // a temporary copy of the full string
+              // tempString = outputString;
+
+              // // we need to truncate the tempString up to the index we are inserting at
+              // for(int i = 0; i < actualCurrIndex; i++)
+              //   {
+
+              //   }
+
+
+
+              // tempString = outputString;
+              // tempLen = tempString.length() + stringIndexOffset;
+              // tempString.resize(tempLen);
+              // tempString.push_back(userInput);
+
+              // // append the rest of the output string to the temp string after offset
+              // for(int i = tempString.length() - 1; i < outputString.length(); i++)
+              //   {
+              //     tempString.push_back(outputString.at(i));
+              //   }
+
+              // outputString = tempString;
+              // tempOutputString = tempString;
+              // cursorPosition++;
             }
+          }
           // case: outputString greater than window size
-          else if(outputString.length() >=  numCols  - 1)
-            {
-              tempString = outputString;
-              tempLen = tempString.length() + stringIndex;
-              tempString.resize(tempLen);
-              tempString.push_back(userInput);
+  //         else if(outputString.length() >=  numCols  - 1)
+  //           {
+  //             int actualIndex;
+  //             tempString = outputString;
+  //             actualIndex = tempString.length() + stringIndexOffset;
+  //             tempString.resize(actualIndex);
+  //             tempString.push_back(userInput);
 
-              // append the rest of the output string to the temp string after offset
-              for(int i = tempString.length() - 1; i < outputString.length(); i++)
-                {
-                  tempString.push_back(outputString.at(i));
-                }
+  //             // append the rest of the output string to the temp string after offset
+  //             for(int i = tempString.length() - 1; i < outputString.length(); i++)
+  //               {
+  //                 tempString.push_back(outputString.at(i));
+  //               }
 
-              // the new full output string with the appended characters in the middle/beginning
-              outputString = tempString;
+  //             // increment the cursor since we added a character
+  //             if(cursorPosition < numCols - 1)
+  //               {
+  //                 cursorPosition++;
+  //               }
+  //             stringIndexOffset++;
 
-              // now create the display string that fits in the window
-              tempOutputString.clear();
-              int difference = ((outputString.length() - numCols) - 1);
+  //             // the new full output string with the appended characters in the middle/beginning
+  //             outputString = tempString;
 
-              for(int i = difference + 1; i < outputString.length(); i++)
-                {
-                  char c = outputString.at(i);
-                  tempOutputString.push_back(c);
-                }
-              cursorPosition++;
-            }
+  //             // now create the display string that fits in the window
+  //             tempOutputString.clear();
+  //             int tempIndex = outputString.length() + stringIndexOffset;
+
+  //             // int difference = ((outputString.length() - numCols) - 1);
+
+  //             // for(int i = difference + 1; i < outputString.length(); i++)
+  //             //   {
+  //             //     char c = outputString.at(i);
+  //             //     tempOutputString.push_back(c);
+  //             //   }
+  //           }
+  //       }
+  //     // // case: outputstring >= window size, cursor shifted left
+  //     // else
+  //     //   {
+  //     //     // append the character to the beginning/middle of the string at offset
+  //     //     tempString  = tempOutputString;
+  //     //     tempLen = tempString.length() + stringIndexOffset;
+  //     //     tempString.resize(tempLen);
+  //     //     tempString.push_back(userInput);
+
+  //     //     // append the rest of the output string to the temp string after offset
+  //     //     for(int i = tempString.length() - 1; i < tempOutputString.length(); i++)
+  //     //       {
+  //     //         tempString.push_back(tempOutputString.at(i));
+  //     //       }
+
+  //     //     tempOutputString = tempString;
+  //     //   }
+  //   }
+  // else if((userInput == KEY_BACKSPACE) &&
+  //         !outputString.empty())
+  //   {
+  //     // cursor at end of string cases
+  //     if(cursorPosition == tempOutputString.length())
+  //       {
+  //         if(outputString.length() < numCols - 1)
+  //           {
+  //             outputString.pop_back();
+  //             tempOutputString.pop_back();
+  //             cursorPosition--;
+  //           }
+  //         else if(outputString.length() ==  numCols - 1)
+  //           {
+  //             outputString.pop_back();
+  //             tempOutputString.pop_back();
+  //             cursorPosition--;
+  //           }
+  //         else if(outputString.length() >  numCols - 1)
+  //           {
+  //             outputString.pop_back();
+  //             tempOutputString.pop_back();
+  //           }
+  //     }
+  //     // cursor not at end of string cases
+  //     else
+  //       {
+  //         // if((outputString.length() < numCols - 1) &&
+  //         //    stringIndexOffset != 0)
+  //         //   {
+  //         //     cursorPosition--;
+  //         //   }
+  //         // // case: outputstring >= window size, cursor shifted left
+  //         // else if((outputString.length() >  numCols - 1) &&
+  //         //         stringIndexOffset != 0)
+  //         //   {
+  //         //   }
+  //       }
+  //     // else
+  //     //   {
+  //     //     tempString  = tempOutputString;
+  //     //     tempLen = tempString.length() + stringIndexOffset;
+
+  //     //     outputString.erase(tempLen - 1, 1);
+
+  //     //     // enter if the offset is in the bounds of the string
+  //     //     if(tempLen > 0)
+  //     //       {
+  //     //         // remove character from beginning/middle of string
+  //     //         tempString.resize(tempLen);
+  //     //         tempString.pop_back();
+  //     //         xOffset--;
+
+  //     //         // append the rest of the output string to the temp string
+  //     //         for(int i = tempString.length() + 1; i < tempOutputString.length(); ++i)
+  //     //           {
+  //     //             tempString.push_back(tempOutputString.at(i));
+  //     //           }
+
+  //     //         tempOutputString = tempString;
+  //     //       }
+  //     //   }
         }
-      // // case: outputstring >= window size, cursor shifted left
-      // else
-      //   {
-      //     // append the character to the beginning/middle of the string at offset
-      //     tempString  = tempOutputString;
-      //     tempLen = tempString.length() + stringIndex;
-      //     tempString.resize(tempLen);
-      //     tempString.push_back(userInput);
-
-      //     // append the rest of the output string to the temp string after offset
-      //     for(int i = tempString.length() - 1; i < tempOutputString.length(); i++)
-      //       {
-      //         tempString.push_back(tempOutputString.at(i));
-      //       }
-
-      //     tempOutputString = tempString;
-      //   }
-    }
-  else if((userInput == KEY_BACKSPACE) &&
-          !outputString.empty())
-    {
-      // cursor at end of string cases
-      if(cursorPosition == tempOutputString.length())
-        {
-          if(outputString.length() < numCols - 1)
-            {
-              outputString.pop_back();
-              tempOutputString.pop_back();
-              cursorPosition--;
-            }
-          else if(outputString.length() ==  numCols - 1)
-            {
-              outputString.pop_back();
-              tempOutputString.pop_back();
-              cursorPosition--;
-            }
-          else if(outputString.length() >  numCols - 1)
-            {
-              outputString.pop_back();
-              tempOutputString.pop_back();
-            }
-      }
-      // cursor not at end of string cases
-      else
-        {
-          // if((outputString.length() < numCols - 1) &&
-          //    stringIndex != 0)
-          //   {
-          //     cursorPosition--;
-          //   }
-          // // case: outputstring >= window size, cursor shifted left
-          // else if((outputString.length() >  numCols - 1) &&
-          //         stringIndex != 0)
-          //   {
-          //   }
-        }
-      // else
-      //   {
-      //     tempString  = tempOutputString;
-      //     tempLen = tempString.length() + stringIndex;
-
-      //     outputString.erase(tempLen - 1, 1);
-
-      //     // enter if the offset is in the bounds of the string
-      //     if(tempLen > 0)
-      //       {
-      //         // remove character from beginning/middle of string
-      //         tempString.resize(tempLen);
-      //         tempString.pop_back();
-      //         xOffset--;
-
-      //         // append the rest of the output string to the temp string
-      //         for(int i = tempString.length() + 1; i < tempOutputString.length(); ++i)
-      //           {
-      //             tempString.push_back(tempOutputString.at(i));
-      //           }
-
-      //         tempOutputString = tempString;
-      //       }
-      //   }
-    }
 
   werase(wins.at(_USERINPUTWIN)->getWindow());
   mvwaddstr(wins.at(_USERINPUTWIN)->getWindow(),
