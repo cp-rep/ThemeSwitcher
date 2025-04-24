@@ -2406,7 +2406,7 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
                     std::string& tempOutputString,
                     const int& stringIndex,
                     const int& yOffset,
-                    int& xOffset,
+                    int& cursorPosition,
                     std::ofstream& log)
 {
   std::string tempString;
@@ -2418,13 +2418,36 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
      (userInput <= 126))
     {
       // append the user input if the offset is the end of the string
-      if(xOffset >= tempOutputString.length())
+      // cursor at end of string cases
+      if(stringIndex == 0)
         {
-          log << "added character" << std::endl;
-          outputString.push_back(userInput);
-          tempOutputString.push_back(userInput);
-          xOffset++;
+          if(outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
+            {
+              outputString.push_back(userInput);
+              tempOutputString.push_back(userInput);
+              cursorPosition++;
+            }
+          else if(outputString.length() >=  wins.at(_USERINPUTWIN)->getNumCols() - 1)
+            {
+              outputString.push_back(userInput);
+              tempOutputString.push_back(userInput);
+            }
         }
+      // cursor not at end of string cases
+      else
+        {
+          // // case: outputstring shorter than window size
+          // if(outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
+          //   {
+          //     outputString.push_back(userInput);
+          //     tempOutputString.push_back(userInput);
+          //     cursorPosition++;
+          //   }
+          // else if(outputString.length() >=  wins.at(_USERINPUTWIN)->getNumCols() - 1)
+          //   {
+          //   }
+        }
+      // // case: outputstring >= window size, cursor shifted left
       // else
       //   {
       //     // append the character to the beginning/middle of the string at offset
@@ -2443,47 +2466,74 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
       //   }
     }
   else if(userInput == KEY_BACKSPACE &&
-          !tempOutputString.empty())
+          !outputString.empty())
     {
-      // the offset is at end of string, pop the end
-      if(xOffset == tempOutputString.length())
+      // cursor at end of string cases
+      if(stringIndex == 0)
         {
-          log << "removed characted" << std::endl;
-          outputString.pop_back();
-          tempOutputString.pop_back();
-          xOffset--;
-        }
+          if(outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
+            {
+              outputString.pop_back();
+              tempOutputString.pop_back();
+              cursorPosition--;
+            }
+          else if(outputString.length() ==  wins.at(_USERINPUTWIN)->getNumCols() - 1)
+            {
+              outputString.pop_back();
+              tempOutputString.pop_back();
+              cursorPosition--;
+            }
+          else if(outputString.length() >  wins.at(_USERINPUTWIN)->getNumCols() - 1)
+            {
+              outputString.pop_back();
+              tempOutputString.pop_back();
+            }
+      }
+      // cursor not at end of string cases
       else
         {
-          tempString  = tempOutputString;
-          tempLen = tempString.length() + stringIndex;
-
-          outputString.erase(tempLen - 1, 1);
-
-          // enter if the offset is in the bounds of the string
-          if(tempLen > 0)
-            {
-              // remove character from beginning/middle of string
-              tempString.resize(tempLen);
-              tempString.pop_back();
-              xOffset--;
-
-              // append the rest of the output string to the temp string
-              for(int i = tempString.length() + 1; i < tempOutputString.length(); ++i)
-                {
-                  tempString.push_back(tempOutputString.at(i));
-                }
-
-              tempOutputString = tempString;
-            }
+          // if((outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1) &&
+          //    stringIndex != 0)
+          //   {
+          //     cursorPosition--;
+          //   }
+          // // case: outputstring >= window size, cursor shifted left
+          // else if((outputString.length() >  wins.at(_USERINPUTWIN)->getNumCols() - 1) &&
+          //         stringIndex != 0)
+          //   {
+          //   }
         }
+      // else
+      //   {
+      //     tempString  = tempOutputString;
+      //     tempLen = tempString.length() + stringIndex;
+
+      //     outputString.erase(tempLen - 1, 1);
+
+      //     // enter if the offset is in the bounds of the string
+      //     if(tempLen > 0)
+      //       {
+      //         // remove character from beginning/middle of string
+      //         tempString.resize(tempLen);
+      //         tempString.pop_back();
+      //         xOffset--;
+
+      //         // append the rest of the output string to the temp string
+      //         for(int i = tempString.length() + 1; i < tempOutputString.length(); ++i)
+      //           {
+      //             tempString.push_back(tempOutputString.at(i));
+      //           }
+
+      //         tempOutputString = tempString;
+      //       }
+      //   }
     }
   werase(wins.at(_USERINPUTWIN)->getWindow());
   mvwaddstr(wins.at(_USERINPUTWIN)->getWindow(),
             0,
             0,
             tempOutputString.c_str());
-  wmove(wins.at(_USERINPUTWIN)->getWindow(), 0, xOffset);
+  wmove(wins.at(_USERINPUTWIN)->getWindow(), 0, cursorPosition);
 
 
 
