@@ -2412,14 +2412,12 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
   std::string tempString;
   int tempLen;
 
-
   // enter on ascii user input in range 32-126
   if((userInput >= 32) &&
      (userInput <= 126))
     {
-      // append the user input if the offset is the end of the string
       // cursor at end of string cases
-      if(stringIndex == 0)
+      if(cursorPosition == tempOutputString.length())
         {
           if(outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
             {
@@ -2436,13 +2434,15 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
       // cursor not at end of string cases
       else
         {
-          // // case: outputstring shorter than window size
-          // if(outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
-          //   {
-          //     outputString.push_back(userInput);
-          //     tempOutputString.push_back(userInput);
-          //     cursorPosition++;
-          //   }
+          // case: outputstring shorter than window size
+          if(outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
+            {
+
+              cursorPosition++;
+              // outputString.push_back(userInput);
+              // tempOutputString.push_back(userInput);
+              // cursorPosition++;
+            }
           // else if(outputString.length() >=  wins.at(_USERINPUTWIN)->getNumCols() - 1)
           //   {
           //   }
@@ -2465,11 +2465,11 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
       //     tempOutputString = tempString;
       //   }
     }
-  else if(userInput == KEY_BACKSPACE &&
+  else if((userInput == KEY_BACKSPACE) &&
           !outputString.empty())
     {
       // cursor at end of string cases
-      if(stringIndex == 0)
+      if(cursorPosition == tempOutputString.length())
         {
           if(outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
             {
