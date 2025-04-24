@@ -2401,8 +2401,8 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
 
 bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
                     const int& userInput,
+                    std::string& fullPath,
                     std::string& outputString,
-                    std::string& tempOutputString,
                     int& stringIndexOffset,
                     int& yOffset,
                     int& cursorPosition,
@@ -2411,25 +2411,7 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
 {
   const int numCols =  wins.at(_USERINPUTWIN)->getNumCols();
   bool endFunction = false;
-  int actualCurrIndex = outputString.length() + stringIndexOffset - 1;
-
-  // resize output string to fit window if it's greater than num cols
-  if(outputString.length() > numCols - 1)
-    {
-      tempOutputString.clear();
-      int difference = outputString.length() - numCols;
-
-      for(int i = difference + 1; i < outputString.length(); i++)
-        {
-          char c = outputString.at(i);
-          tempOutputString.push_back(c);
-        }
-    }
-  else
-    {
-      tempOutputString = outputString;
-    }
-
+  int actualCurrIndex = fullPath.length() + stringIndexOffset - 1;
 
   switch(userInput)
     {
@@ -2440,7 +2422,6 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
       endFunction = true;
       break;
     case KEY_LEFT:
-      log << "actual current index before: " << actualCurrIndex << std::endl;
       // enter if the actual index is within the zero bound of the full file string
       if(actualCurrIndex >= 0)
         {
@@ -2448,21 +2429,34 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
           stringIndexOffset--;
         }
 
+      actualCurrIndex = fullPath.length() + stringIndexOffset - 1;
+
       // if the visual cursor is not at the far left end, move it left
       if(cursorPosition > 0)
         {
           cursorPosition--;
         }
+      // the cursor is at 0 and the index is greater 0 for left scroll
+      else if((actualCurrIndex > 0) &&
+              (cursorPosition == 0))
+        {
+          outputString.clear();
 
-      log << "cursorPosition: " << cursorPosition << std::endl;
-      log << "stringIndexOffset: " << stringIndexOffset << std::endl;
-      actualCurrIndex = outputString.length() + stringIndexOffset - 1;
-      log << "actual current index after: " << actualCurrIndex << std::endl;
-      log << "outputString.length(): " << outputString.length() << std::endl;
+          if(actualCurrIndex - 1 >= 0)
+            {
+              int j = 0;
+              for(int i = actualCurrIndex - 1, j = 0; (j < numCols - 1) &&
+                    (i < fullPath.length()); i++, j++)
+                {
+                  outputString.push_back(fullPath.at(i));
+                }
+            }
+        }
+
       break;
     case KEY_RIGHT:
       // enter if the actual index is not at the end of the full file string
-      if(actualCurrIndex < outputString.length() - 1)
+      if(actualCurrIndex < fullPath.length() - 1)
         {
           stringIndexOffset++;
         }
@@ -2470,10 +2464,11 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
       // enter if the cursor is not at the end of the printable window
       // and keep it within bounds of the printable file string
       if((cursorPosition < numCols - 1) &&
-        cursorPosition < tempOutputString.length())
+        cursorPosition < outputString.length())
         {
           cursorPosition++;
         }
+      actualCurrIndex = fullPath.length() + stringIndexOffset - 1;
       break;
     default:
       break;
@@ -2489,10 +2484,10 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
       // cursor at end of full output string cases
       if(stringIndexOffset == 0)
         {
-          if(outputString.length() < numCols - 1)
+          if(fullPath.length() < numCols - 1)
             {
+              fullPath.push_back(userInput);
               outputString.push_back(userInput);
-              tempOutputString.push_back(userInput);
               cursorPosition++;
 
               if(stringIndexOffset < 0)
@@ -2501,22 +2496,24 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
                 }
 
             }
-          else if(outputString.length() >=  numCols - 1)
+          else if(fullPath.length() >=  numCols - 1)
             {
-              outputString.push_back(userInput);
-              tempOutputString.push_back(userInput);
+              fullPath.push_back(userInput);
+              outputString.clear();
+              int difference = fullPath.length() - numCols;
+
+              for(int i = difference + 1; i < fullPath.length(); i++)
+                {
+                  char c = fullPath.at(i);
+                  outputString.push_back(c);
+                }
             }
         }
       // cursor not at end of string cases
       else
         {
           // case: outputstring shorter than window size
-          // we want to insert text when the cursor is not at the end of the full outputstring
-          // and the output string is shorter than the window size
-          // we need to modify the outputstring, inserting the character at the cursor position
-          // we need to print the resulting string and make sure it fits in the output window
-          // we want the text to push the string forward no matter where you input it
-          if(outputString.length() < numCols - 1)
+          if(fullPath.length() < numCols - 1)
             {
               std::string beforeCursor;
               char inputtedChar = userInput;
@@ -2524,43 +2521,14 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
 
               // insert after the current index
               log << "inputting character at position: " << actualCurrIndex + 1 << std::endl;
-              outputString.insert(actualCurrIndex + 1, 1, inputtedChar);
-              tempOutputString = outputString;
+              fullPath.insert(actualCurrIndex + 1, 1, inputtedChar);
+              outputString = fullPath;
 
               // // update the cursor position
               if(cursorPosition < numCols - 1)
                 {
                   cursorPosition++;
                 }
-              //stringIndexOffset--;
-
-
-
-              // // a temporary copy of the full string
-              // tempString = outputString;
-
-              // // we need to truncate the tempString up to the index we are inserting at
-              // for(int i = 0; i < actualCurrIndex; i++)
-              //   {
-
-              //   }
-
-
-
-              // tempString = outputString;
-              // tempLen = tempString.length() + stringIndexOffset;
-              // tempString.resize(tempLen);
-              // tempString.push_back(userInput);
-
-              // // append the rest of the output string to the temp string after offset
-              // for(int i = tempString.length() - 1; i < outputString.length(); i++)
-              //   {
-              //     tempString.push_back(outputString.at(i));
-              //   }
-
-              // outputString = tempString;
-              // tempOutputString = tempString;
-              // cursorPosition++;
             }
           }
           // case: outputString greater than window size
@@ -2589,7 +2557,7 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
   //             outputString = tempString;
 
   //             // now create the display string that fits in the window
-  //             tempOutputString.clear();
+  //             outputString.clear();
   //             int tempIndex = outputString.length() + stringIndexOffset;
 
   //             // int difference = ((outputString.length() - numCols) - 1);
@@ -2597,7 +2565,7 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
   //             // for(int i = difference + 1; i < outputString.length(); i++)
   //             //   {
   //             //     char c = outputString.at(i);
-  //             //     tempOutputString.push_back(c);
+  //             //     outputString.push_back(c);
   //             //   }
   //           }
   //       }
@@ -2605,42 +2573,42 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
   //     // else
   //     //   {
   //     //     // append the character to the beginning/middle of the string at offset
-  //     //     tempString  = tempOutputString;
+  //     //     tempString  = outputString;
   //     //     tempLen = tempString.length() + stringIndexOffset;
   //     //     tempString.resize(tempLen);
   //     //     tempString.push_back(userInput);
 
   //     //     // append the rest of the output string to the temp string after offset
-  //     //     for(int i = tempString.length() - 1; i < tempOutputString.length(); i++)
+  //     //     for(int i = tempString.length() - 1; i < outputString.length(); i++)
   //     //       {
-  //     //         tempString.push_back(tempOutputString.at(i));
+  //     //         tempString.push_back(outputString.at(i));
   //     //       }
 
-  //     //     tempOutputString = tempString;
+  //     //     outputString = tempString;
   //     //   }
   //   }
   // else if((userInput == KEY_BACKSPACE) &&
   //         !outputString.empty())
   //   {
   //     // cursor at end of string cases
-  //     if(cursorPosition == tempOutputString.length())
+  //     if(cursorPosition == outputString.length())
   //       {
   //         if(outputString.length() < numCols - 1)
   //           {
   //             outputString.pop_back();
-  //             tempOutputString.pop_back();
+  //             outputString.pop_back();
   //             cursorPosition--;
   //           }
   //         else if(outputString.length() ==  numCols - 1)
   //           {
   //             outputString.pop_back();
-  //             tempOutputString.pop_back();
+  //             outputString.pop_back();
   //             cursorPosition--;
   //           }
   //         else if(outputString.length() >  numCols - 1)
   //           {
   //             outputString.pop_back();
-  //             tempOutputString.pop_back();
+  //             outputString.pop_back();
   //           }
   //     }
   //     // cursor not at end of string cases
@@ -2659,7 +2627,7 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
   //       }
   //     // else
   //     //   {
-  //     //     tempString  = tempOutputString;
+  //     //     tempString  = outputString;
   //     //     tempLen = tempString.length() + stringIndexOffset;
 
   //     //     outputString.erase(tempLen - 1, 1);
@@ -2673,12 +2641,12 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
   //     //         xOffset--;
 
   //     //         // append the rest of the output string to the temp string
-  //     //         for(int i = tempString.length() + 1; i < tempOutputString.length(); ++i)
+  //     //         for(int i = tempString.length() + 1; i < outputString.length(); ++i)
   //     //           {
-  //     //             tempString.push_back(tempOutputString.at(i));
+  //     //             tempString.push_back(outputString.at(i));
   //     //           }
 
-  //     //         tempOutputString = tempString;
+  //     //         outputString = tempString;
   //     //       }
   //     //   }
         }
@@ -2687,7 +2655,7 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
   mvwaddstr(wins.at(_USERINPUTWIN)->getWindow(),
             0,
             0,
-            tempOutputString.c_str());
+            outputString.c_str());
   wmove(wins.at(_USERINPUTWIN)->getWindow(), 0, cursorPosition);
 
   return endFunction;
