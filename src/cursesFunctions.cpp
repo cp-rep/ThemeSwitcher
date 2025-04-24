@@ -2439,11 +2439,18 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
       break;
     case KEY_LEFT: // shift the cursor left on the output string
       stringLen = outputString.length() + stringIndex - 1;
+      log << "outputString.length(): " << outputString.length() << std::endl;
+      log << "stringIndex: " << stringIndex << std::endl;
+      log << "stringLen(outputString.length() + stringIndex - 1): " << stringLen << std::endl;
+
       if(stringLen >= 0)
         {
           // update the offsets of the cursor and index and move the cursor
           stringIndex--;
-          cursorPosition--;
+          if(cursorPosition > 0)
+            {
+              cursorPosition--;
+            }
         }
       break;
     case KEY_RIGHT: // shift the cursor right on the outputstring
@@ -2503,6 +2510,7 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
               tempOutputString = tempString;
               cursorPosition++;
             }
+          // case: outputString greater than window size
           else if(outputString.length() >=  numCols  - 1)
             {
               tempString = outputString;
@@ -2528,7 +2536,7 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
                   char c = outputString.at(i);
                   tempOutputString.push_back(c);
                 }
-//              cursorPosition++;
+              cursorPosition++;
             }
         }
       // // case: outputstring >= window size, cursor shifted left
