@@ -2403,6 +2403,7 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
                     const int winIndex,
                     const int& userInput,
                     std::string& outputString,
+                    std::string& tempOutputString,
                     const int& stringIndex,
                     const int& yOffset,
                     int& xOffset,
@@ -2411,47 +2412,53 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
   std::string tempString;
   int tempLen;
 
+
   // enter on ascii user input in range 32-126
   if((userInput >= 32) &&
-     (userInput <= 126) &&
-     outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
+     (userInput <= 126))
     {
       // append the user input if the offset is the end of the string
-      if(xOffset == outputString.length())
+      if(xOffset >= tempOutputString.length())
         {
+          log << "added character" << std::endl;
           outputString.push_back(userInput);
+          tempOutputString.push_back(userInput);
+          xOffset++;
         }
-      else
-        {
-          // append the character to the beginning/middle of the string at offset
-          tempString  = outputString;
-          tempLen = tempString.length() + stringIndex;
-          tempString.resize(tempLen);
-          tempString.push_back(userInput);
+      // else
+      //   {
+      //     // append the character to the beginning/middle of the string at offset
+      //     tempString  = tempOutputString;
+      //     tempLen = tempString.length() + stringIndex;
+      //     tempString.resize(tempLen);
+      //     tempString.push_back(userInput);
 
-          // append the rest of the output string to the temp string after offset
-          for(int i = tempString.length() - 1; i < outputString.length(); i++)
-            {
-              tempString.push_back(outputString.at(i));
-            }
+      //     // append the rest of the output string to the temp string after offset
+      //     for(int i = tempString.length() - 1; i < tempOutputString.length(); i++)
+      //       {
+      //         tempString.push_back(tempOutputString.at(i));
+      //       }
 
-          outputString = tempString;
-      }
-      xOffset++;
+      //     tempOutputString = tempString;
+      //   }
     }
   else if(userInput == KEY_BACKSPACE &&
-          !outputString.empty())
+          !tempOutputString.empty())
     {
       // the offset is at end of string, pop the end
-      if(xOffset == outputString.length())
+      if(xOffset == tempOutputString.length())
         {
+          log << "removed characted" << std::endl;
           outputString.pop_back();
+          tempOutputString.pop_back();
           xOffset--;
         }
       else
         {
-          tempString  = outputString;
+          tempString  = tempOutputString;
           tempLen = tempString.length() + stringIndex;
+
+          outputString.erase(tempLen - 1, 1);
 
           // enter if the offset is in the bounds of the string
           if(tempLen > 0)
@@ -2462,22 +2469,180 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
               xOffset--;
 
               // append the rest of the output string to the temp string
-              for(int i = tempString.length() + 1; i < outputString.length(); ++i)
+              for(int i = tempString.length() + 1; i < tempOutputString.length(); ++i)
                 {
-                  tempString.push_back(outputString.at(i));
+                  tempString.push_back(tempOutputString.at(i));
                 }
 
-              outputString = tempString;
+              tempOutputString = tempString;
             }
         }
     }
-
   werase(wins.at(_USERINPUTWIN)->getWindow());
   mvwaddstr(wins.at(_USERINPUTWIN)->getWindow(),
             0,
             0,
-            outputString.c_str());
+            tempOutputString.c_str());
   wmove(wins.at(_USERINPUTWIN)->getWindow(), 0, xOffset);
+
+
+
+  //  // ## basic endless scroll
+  // if((userInput >= 32) &&
+  //    (userInput <= 126))
+  //   {
+  //     outputString.push_back(userInput);
+  //     tempOutputString.push_back(userInput);
+  //   }
+  // else if(userInput == KEY_BACKSPACE &&
+  //         !tempOutputString.empty())
+  //   {
+  //         outputString.pop_back();
+  //         tempOutputString.pop_back();
+  //   }
+
+  // werase(wins.at(_USERINPUTWIN)->getWindow());
+  // mvwaddstr(wins.at(_USERINPUTWIN)->getWindow(),
+  //           0,
+  //           0,
+  //           tempOutputString.c_str());
+
+//   // enter on ascii user input in range 32-126
+//   if((userInput >= 32) &&
+//      (userInput <= 126))
+//     {
+//       // append the user input if the offset is the end of the string
+//       // if(xOffset == tempOutputString.length())
+//       //   {
+//           outputString.push_back(userInput);
+//           tempOutputString.push_back(userInput);
+//         //   xOffset++;
+//         // }
+//       // else
+//       //   {
+//       //     // append the character to the beginning/middle of the string at offset
+//       //     tempString  = tempOutputString;
+//       //     tempLen = tempString.length() + stringIndex;
+//       //     tempString.resize(tempLen);
+//       //     tempString.push_back(userInput);
+
+//       //     // append the rest of the output string to the temp string after offset
+//       //    for(int i = tempString.length() - 1; i < tempOutputString.length(); i++)
+//       //       {
+//       //         tempString.push_back(tempOutputString.at(i));
+//       //       }
+
+//       //     tempOutputString = tempString;
+//       // }
+// //      xOffset++;
+//     }
+//   else if(userInput == KEY_BACKSPACE &&
+//           !tempOutputString.empty())
+//     {
+//       // the offset is at end of string, pop the end
+//       // if(xOffset == tempOutputString.length())
+//       //   {
+//           outputString.pop_back();
+//           tempOutputString.pop_back();
+//         //   xOffset--;
+//         // }
+//       // else
+//       //   {
+//       //     tempString  = tempOutputString;
+//       //     tempLen = tempString.length() + stringIndex;
+
+//       //     // enter if the offset is in the bounds of the string
+//       //     if(tempLen > 0)
+//       //       {
+//       //         // remove character from beginning/middle of string
+//       //         tempString.resize(tempLen);
+//       //         tempString.pop_back();
+//       //         xOffset--;
+
+//       //         // append the rest of the output string to the temp string
+//       //         for(int i = tempString.length() + 1; i < tempOutputString.length(); ++i)
+//       //           {
+//       //             tempString.push_back(tempOutputString.at(i));
+//       //           }
+
+//       //         tempOutputString = tempString;
+//       //       }
+//       //   }
+//     }
+//   werase(wins.at(_USERINPUTWIN)->getWindow());
+//   mvwaddstr(wins.at(_USERINPUTWIN)->getWindow(),
+//             0,
+//             0,
+//             tempOutputString.c_str());
+//    wmove(wins.at(_USERINPUTWIN)->getWindow(), 0, xOffset);
+
+  //   // enter on ascii user input in range 32-126
+  // if((userInput >= 32) &&
+  //    (userInput <= 126) &&
+  //    outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
+  //   {
+  //     // append the user input if the offset is the end of the string
+  //     if(xOffset == outputString.length())
+  //       {
+  //         outputString.push_back(userInput);
+  //       }
+  //     else
+  //       {
+  //         // append the character to the beginning/middle of the string at offset
+  //         tempString  = outputString;
+  //         tempLen = tempString.length() + stringIndex;
+  //         tempString.resize(tempLen);
+  //         tempString.push_back(userInput);
+
+  //         // append the rest of the output string to the temp string after offset
+  //         for(int i = tempString.length() - 1; i < outputString.length(); i++)
+  //           {
+  //             tempString.push_back(outputString.at(i));
+  //           }
+
+  //         outputString = tempString;
+  //     }
+  //     xOffset++;
+  //   }
+  // else if(userInput == KEY_BACKSPACE &&
+  //         !outputString.empty())
+  //   {
+  //     // the offset is at end of string, pop the end
+  //     if(xOffset == outputString.length())
+  //       {
+  //         outputString.pop_back();
+  //         xOffset--;
+  //       }
+  //     else
+  //       {
+  //         tempString  = outputString;
+  //         tempLen = tempString.length() + stringIndex;
+
+  //         // enter if the offset is in the bounds of the string
+  //         if(tempLen > 0)
+  //           {
+  //             // remove character from beginning/middle of string
+  //             tempString.resize(tempLen);
+  //             tempString.pop_back();
+  //             xOffset--;
+
+  //             // append the rest of the output string to the temp string
+  //             for(int i = tempString.length() + 1; i < outputString.length(); ++i)
+  //               {
+  //                 tempString.push_back(outputString.at(i));
+  //               }
+
+  //             outputString = tempString;
+  //           }
+  //       }
+  //   }
+
+  // werase(wins.at(_USERINPUTWIN)->getWindow());
+  // mvwaddstr(wins.at(_USERINPUTWIN)->getWindow(),
+  //           0,
+  //           0,
+  //           outputString.c_str());
+  //wmove(wins.at(_USERINPUTWIN)->getWindow(), 0, xOffset);
 } // end of "printUserInput"
 
 
