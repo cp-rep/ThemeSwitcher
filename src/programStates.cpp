@@ -1,4 +1,5 @@
 #include "programStates.hpp"
+#include <cmath>
 
 void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                            MEVENT& mouse,
@@ -49,6 +50,7 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
   std::string tempOutputString = "";
   std::string dots = "...";
   int totalStringLength = 0;
+  int scrollCount = 0;
 
   while(true)
     {
@@ -81,70 +83,21 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
       // get user input
       userInput = getch();
       flushinp();
-
-      // resize output string to fit window if it's greater than num cols
-      if(outputString.length() > numCols - 1)
-        {
-          tempOutputString.clear();
-          int difference = outputString.length() - numCols;
-          tempOutputString.append(dots);
-
-          for(int i = difference + dots.length() + 1; i < outputString.length(); i++)
-            {
-              char c = outputString.at(i);
-              tempOutputString.push_back(c);
-            }
-        }
-      else
-        {
-          tempOutputString = outputString;
-        }
-
-      switch(userInput)
-        {
-        case '\n':
-          exitLoop = true;
-          break;
-        case KEY_ENTER:
-          exitLoop = true;
-          break;
-        case KEY_LEFT: // shift the cursor left on the output string
-          stringLen = outputString.length() + stringIndex - 1;
-          if(stringLen >= 0)
-           {
-             // update the offsets of the cursor and index and move the cursor
-             stringIndex--;
-             cursorPosition--;
-           }
-          break;
-        case KEY_RIGHT: // shift the cursor right on the outputstring
-          stringLen = outputString.length() + stringIndex + 1;
-          if((stringLen < outputString.length() + 1) &&
-             outputString.length() < numCols)
-            {
-              // update the offsets of the cursor and index and move the cursor
-              stringIndex++;
-              cursorPosition++;
-            }
-          break;
-        default:
-          break;
-        }
+      exitLoop = printUserInput(wins,
+                                userInput,
+                                outputString,
+                                tempOutputString,
+                                stringIndex,
+                                startY,
+                                cursorPosition,
+                                stringLen,
+                                log);
 
       if(exitLoop == true)
         {
           break;
         }
 
-      printUserInput(wins,
-                     _USERINPUTWIN,
-                     userInput,
-                     outputString,
-                     tempOutputString,
-                     stringIndex,
-                     startY,
-                     cursorPosition,
-                     log);
       wrefresh(wins.at(_USERINPUTWIN)->getWindow());
       doupdate();
       usleep(15000);
