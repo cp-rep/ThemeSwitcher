@@ -82,17 +82,11 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
       userInput = getch();
       flushinp();
 
-      log << "before outputstring.length(): " << outputString.length() << std::endl;
-
       // resize output string to fit window if it's greater than num cols
       if(outputString.length() > numCols - 1)
         {
-          log << "outputstring.length(): " << outputString.length() << std::endl;
-          log << "numCols: " << numCols << std::endl;
-
           tempOutputString.clear();
           int difference = outputString.length() - numCols;
-          log << "difference: " << difference << std::endl;
           tempOutputString.append(dots);
 
           for(int i = difference + dots.length() + 1; i < outputString.length(); i++)
