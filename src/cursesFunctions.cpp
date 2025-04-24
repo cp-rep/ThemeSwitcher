@@ -2437,11 +2437,20 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
           // case: outputstring shorter than window size
           if(outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
             {
+              tempString  = outputString;
+              tempLen = tempString.length() + stringIndex;
+              tempString.resize(tempLen);
+              tempString.push_back(userInput);
 
+              // append the rest of the output string to the temp string after offset
+              for(int i = tempString.length() - 1; i < outputString.length(); i++)
+                {
+                  tempString.push_back(outputString.at(i));
+                }
+
+              outputString = tempString;
+              tempOutputString = tempString;
               cursorPosition++;
-              // outputString.push_back(userInput);
-              // tempOutputString.push_back(userInput);
-              // cursorPosition++;
             }
           // else if(outputString.length() >=  wins.at(_USERINPUTWIN)->getNumCols() - 1)
           //   {
