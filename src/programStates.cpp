@@ -100,30 +100,6 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
           tempOutputString = outputString;
         }
 
-
-      // // ## basic endless scroll
-      // // resize output string to fit window if it's greater than num cols
-      // if(outputString.length() > numCols - 1)
-      //   {
-      //     log << "outputstring.length(): " << outputString.length() << std::endl;
-      //     log << "numCols: " << numCols << std::endl;
-
-      //     tempOutputString.clear();
-      //     int difference = outputString.length() - numCols;
-      //     log << "difference: " << difference << std::endl;
-      //     tempOutputString.append(dots);
-
-      //     for(int i = difference + dots.length() + 1; i < outputString.length(); i++)
-      //       {
-      //         char c = outputString.at(i);
-      //         tempOutputString.push_back(c);
-      //       }
-      //   }
-      // else
-      //   {
-      //     tempOutputString = outputString;
-      //   }
-
       switch(userInput)
         {
         case '\n':
