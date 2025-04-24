@@ -2399,16 +2399,67 @@ void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
 
 
 
-void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
-                    const int winIndex,
+bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
                     const int& userInput,
                     std::string& outputString,
                     std::string& tempOutputString,
-                    const int& stringIndex,
-                    const int& yOffset,
+                    int& stringIndex,
+                    int& yOffset,
                     int& cursorPosition,
+                    int& stringLen,
                     std::ofstream& log)
 {
+  // resize output string to fit window if it's greater than num cols
+  const int numCols =  wins.at(_USERINPUTWIN)->getNumCols();
+  bool endFunction = false;
+
+  if(outputString.length() > numCols - 1)
+    {
+      tempOutputString.clear();
+      int difference = outputString.length() - numCols;
+
+      for(int i = difference + 1; i < outputString.length(); i++)
+        {
+          char c = outputString.at(i);
+          tempOutputString.push_back(c);
+        }
+    }
+  else
+    {
+      tempOutputString = outputString;
+    }
+
+  switch(userInput)
+    {
+    case '\n':
+      endFunction = true;
+      break;
+    case KEY_ENTER:
+      endFunction = true;
+      break;
+    case KEY_LEFT: // shift the cursor left on the output string
+      stringLen = outputString.length() + stringIndex - 1;
+      if(stringLen >= 0)
+        {
+          // update the offsets of the cursor and index and move the cursor
+          stringIndex--;
+          cursorPosition--;
+        }
+      break;
+    case KEY_RIGHT: // shift the cursor right on the outputstring
+      stringLen = outputString.length() + stringIndex + 1;
+      if((stringLen < outputString.length() + 1) &&
+         outputString.length() < numCols)
+        {
+          // update the offsets of the cursor and index and move the cursor
+          stringIndex++;
+          cursorPosition++;
+        }
+      break;
+    default:
+      break;
+    }
+
   std::string tempString;
   int tempLen;
 
@@ -2419,13 +2470,13 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
       // cursor at end of string cases
       if(cursorPosition == tempOutputString.length())
         {
-          if(outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
+          if(outputString.length() < numCols - 1)
             {
               outputString.push_back(userInput);
               tempOutputString.push_back(userInput);
               cursorPosition++;
             }
-          else if(outputString.length() >=  wins.at(_USERINPUTWIN)->getNumCols() - 1)
+          else if(outputString.length() >=  numCols - 1)
             {
               outputString.push_back(userInput);
               tempOutputString.push_back(userInput);
@@ -2435,7 +2486,7 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
       else
         {
           // case: outputstring shorter than window size
-          if(outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
+          if(outputString.length() < numCols - 1)
             {
               tempString = outputString;
               tempLen = tempString.length() + stringIndex;
@@ -2452,9 +2503,8 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
               tempOutputString = tempString;
               cursorPosition++;
             }
-          else if(outputString.length() >=  wins.at(_USERINPUTWIN)->getNumCols() - 1)
+          else if(outputString.length() >=  numCols  - 1)
             {
-              int maxColumns = wins.at(_USERINPUTWIN)->getNumCols() - 1;
               tempString = outputString;
               tempLen = tempString.length() + stringIndex;
               tempString.resize(tempLen);
@@ -2471,11 +2521,9 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
 
               // now create the display string that fits in the window
               tempOutputString.clear();
-              int difference = (outputString.length() - maxColumns);
-              std::string dots = "...";
-              tempOutputString.append(dots);
+              int difference = ((outputString.length() - numCols) - 1);
 
-              for(int i = difference + dots.length() + 1; i < outputString.length(); i++)
+              for(int i = difference + 1; i < outputString.length(); i++)
                 {
                   char c = outputString.at(i);
                   tempOutputString.push_back(c);
@@ -2507,19 +2555,19 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
       // cursor at end of string cases
       if(cursorPosition == tempOutputString.length())
         {
-          if(outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1)
+          if(outputString.length() < numCols - 1)
             {
               outputString.pop_back();
               tempOutputString.pop_back();
               cursorPosition--;
             }
-          else if(outputString.length() ==  wins.at(_USERINPUTWIN)->getNumCols() - 1)
+          else if(outputString.length() ==  numCols - 1)
             {
               outputString.pop_back();
               tempOutputString.pop_back();
               cursorPosition--;
             }
-          else if(outputString.length() >  wins.at(_USERINPUTWIN)->getNumCols() - 1)
+          else if(outputString.length() >  numCols - 1)
             {
               outputString.pop_back();
               tempOutputString.pop_back();
@@ -2528,13 +2576,13 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
       // cursor not at end of string cases
       else
         {
-          // if((outputString.length() < wins.at(_USERINPUTWIN)->getNumCols() - 1) &&
+          // if((outputString.length() < numCols - 1) &&
           //    stringIndex != 0)
           //   {
           //     cursorPosition--;
           //   }
           // // case: outputstring >= window size, cursor shifted left
-          // else if((outputString.length() >  wins.at(_USERINPUTWIN)->getNumCols() - 1) &&
+          // else if((outputString.length() >  numCols - 1) &&
           //         stringIndex != 0)
           //   {
           //   }
@@ -2571,6 +2619,8 @@ void printUserInput(const std::unordered_map<int, CursesWindow*>& wins,
             0,
             tempOutputString.c_str());
   wmove(wins.at(_USERINPUTWIN)->getWindow(), 0, cursorPosition);
+
+  return endFunction;
 } // end of "printUserInput"
 
 
