@@ -125,7 +125,6 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
               // update the offsets of the cursor and index and move the cursor
               stringIndex++;
               cursorPosition++;
-              wmove(wins.at(_USERINPUTWIN)->getWindow(), 0, cursorPosition);
             }
           break;
         default:
