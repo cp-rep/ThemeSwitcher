@@ -2427,25 +2427,29 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
         {
           //stringIndexOffset--;
           log << std::endl << "Left Key Inputted" << std::endl;
-          log << "actual current index before: " << actualCurrIndex << std::endl;
+          log << "Actual Current Index Before: " << actualCurrIndex << std::endl;
           actualCurrIndex--;
-          log << "actual current index after: " << actualCurrIndex << std::endl;
+          log << "Actual Current Index After: " << actualCurrIndex << std::endl;
 
-          // if(cursorPosition == _MINCURSOR)
-          //   {
-          //     if(actualCurrIndex > 2)
-          //       {
-          //         int i, j;
-          //         outputString.clear();
-          //         for(i = 0, j = actualCurrIndex; (i < numCols - 1) &&
-          //                                         (i < fullPath.length() - 1) &&
-          //                                         (j < fullPath.length() - 1); i++, j++)
-          //           {
-          //             outputString.push_back(fullPath.at(j));
-          //           }
-
-          //       }
-          //   }
+          if(cursorPosition == _MINCURSOR)
+            {
+              if(actualCurrIndex >= 2)
+                {
+                  log << std::endl<< "Case: Cursor All The Way Left. Actual Index Not All The Way Left"
+                    << std::endl;
+                  log << "Output String Before: " << outputString << std::endl;
+                  int i, j;
+                  outputString.clear();
+                  for(i = 0, j = actualCurrIndex; (i < numCols - 1) &&
+                                                  (i < fullPath.length() - 1) &&
+                                                  (j < fullPath.length() - 1); i++, j++)
+                    {
+                      outputString.push_back(fullPath.at(j));
+                    }
+                  outputString.insert(0, "> ");
+                  log << "Output String After:  " << outputString << std::endl;
+                }
+            }
         }
       if(cursorPosition > _MINCURSOR)
         {
@@ -2457,10 +2461,10 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
       if(actualCurrIndex < fullPath.length())
         {
           log << std::endl << "Right Key Inputted" << std::endl;
-          log << "actual current index before: " << actualCurrIndex << std::endl;
+          log << "Actual Current Index Before: " << actualCurrIndex << std::endl;
           //stringIndexOffset++;
           actualCurrIndex++;
-          log << "actual current index after: " << actualCurrIndex << std::endl;
+          log << "Actual Current Index After: " << actualCurrIndex << std::endl;
 
           // // case cursor at end and still more string to go
           // if(cursorPosition == numCols - 1)
@@ -2535,7 +2539,7 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
           if(fullPath.length() < numCols - 1)
             {
               outputString.clear();
-              log << "inserting: " << (char)userInput << " at " << (char)userInput << std::endl;
+              // log << "inserting: " << (char)userInput << " at " << (char)userInput << std::endl;
               fullPath.insert(actualCurrIndex, 1, (char)userInput);
               outputString = fullPath;
               actualCurrIndex++;
@@ -2547,8 +2551,6 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
             }
           }
     }
-
-
 
   werase(wins.at(_USERINPUTWIN)->getWindow());
   mvwaddstr(wins.at(_USERINPUTWIN)->getWindow(),
