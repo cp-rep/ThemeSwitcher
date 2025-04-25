@@ -2494,16 +2494,6 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
   if((userInput >= 32) &&
      (userInput <= 126))
     {
-      // if(fullPath.empty())
-      //   {
-      //     outputString.clear();
-      //     fullPath.push_back(userInput);
-      //     outputString = fullPath;
-      //     actualCurrIndex++;
-      //     cursorPosition++;
-      //     log << "Adding First Char: " << (char)userInput << " at " << actualCurrIndex << std::endl;
-      //     log << "path length: " << fullPath.length() << std::endl;
-      //   }
       // cursor at end of full output string cases
       if(actualCurrIndex == fullPath.length())
         {
