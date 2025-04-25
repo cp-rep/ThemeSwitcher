@@ -2484,7 +2484,7 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
   if((userInput >= 32) &&
      (userInput <= 126))
     {
-      // cursor at end of full output string cases
+      // case: cursor at end of full path string
       if(actualCurrIndex == fullPath.length())
         {
           if(fullPath.length() < numCols - 1)
@@ -2510,10 +2510,10 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
               outputString.replace(0, 2, "> ");
             }
         }
-      // cursor not at end of string cases
+      // cursor not at end of full path cases
       else
         {
-          // case: outputstring shorter than window size
+          // case: full path shorter than window size
           if(fullPath.length() < numCols - 1)
             {
               outputString.clear();
@@ -2524,6 +2524,27 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
               if(cursorPosition < numCols - 1)
                 {
                   cursorPosition++;
+                }
+            }
+          // case: full path  greater than the window size
+          else
+            {
+              // case: cursor not at end of user input window
+              if(cursorPosition != numCols -1)
+                {
+                  fullPath.insert(actualCurrIndex, 1, (char)userInput);
+                  outputString.insert(cursorPosition, 1, (char)userInput);
+                  outputString.pop_back();
+                  cursorPosition++;
+                  actualCurrIndex++;
+                }
+              // case: cursor at end of user input window
+              else
+                {
+                  outputString.erase(3, 1);
+                  outputString.push_back(userInput);
+                  fullPath.insert(actualCurrIndex, 1, (char)userInput);
+                  actualCurrIndex++;
                 }
             }
         }
