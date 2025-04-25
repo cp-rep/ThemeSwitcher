@@ -2499,26 +2499,34 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
         {
           if(fullPath.length() < numCols - 1)
             {
-              log << "Adding next Char: " << (char)userInput << " at " << actualCurrIndex << std::endl;
-              log << "path length: " << fullPath.length() << std::endl;
+              log << std::endl << "Case: Fullpath Smaller Than Window. Cursor at end." << std::endl;
+              log << "Adding Char: " << (char)userInput << " at " << actualCurrIndex << std::endl;
               outputString.clear();
               fullPath.push_back(userInput);
               outputString = fullPath;
               cursorPosition++;
               actualCurrIndex++;
+              log << "Full Path Length: " << fullPath.length() << std::endl;
+              log << "Outstring Length: " << outputString.length() << std::endl;
             }
-          // else if(fullPath.length() >=  numCols - 1)
-          //   {
-          //     fullPath.push_back(userInput);
-          //     outputString.clear();
-          //     int difference = fullPath.length() - numCols;
+          else if(fullPath.length() >=  numCols - 1)
+            {
+              log << std::endl << "Case: FullPath Greater Than Window, cursor at end." << std::endl;
+              log << "Adding Char: " << (char)userInput << " at " << actualCurrIndex << std::endl;
+              outputString.clear();
+              fullPath.push_back(userInput);
+              actualCurrIndex++;
+              int difference = fullPath.length() - numCols;
 
-          //     for(int i = difference + 1; i < fullPath.length(); i++)
-          //       {
-          //         char c = fullPath.at(i);
-          //         outputString.push_back(c);
-          //       }
-          //   }
+              for(int i = difference + 1; i < fullPath.length(); i++)
+                {
+                  char c = fullPath.at(i);
+                  outputString.push_back(c);
+                }
+              outputString.replace(0, 2, "> ");
+              log << "Full Path Length: " << fullPath.length() << std::endl;
+              log << "Outstring Length: " << outputString.length() << std::endl;
+            }
         }
       // cursor not at end of string cases
       else
@@ -2527,9 +2535,8 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
           if(fullPath.length() < numCols - 1)
             {
               outputString.clear();
-              char inputtedChar = userInput;
-              log << "inserting: " << inputtedChar << " at " << actualCurrIndex << std::endl;
-              fullPath.insert(actualCurrIndex, 1, inputtedChar);
+              log << "inserting: " << (char)userInput << " at " << (char)userInput << std::endl;
+              fullPath.insert(actualCurrIndex, 1, (char)userInput);
               outputString = fullPath;
               actualCurrIndex++;
               // // update the cursor position
