@@ -2426,27 +2426,26 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
       if(actualCurrIndex > 2)
         {
           //stringIndexOffset--;
-          log << std::endl << "Left Key Inputted" << std::endl;
-          log << "Actual Current Index Before: " << actualCurrIndex << std::endl;
+          // log << std::endl << "Left Key Inputted" << std::endl;
+          // log << "Actual Current Index Before: " << actualCurrIndex << std::endl;
           actualCurrIndex--;
-          log << "Actual Current Index After: " << actualCurrIndex << std::endl;
+          // log << "Actual Current Index After: " << actualCurrIndex << std::endl;
 
           if(cursorPosition == _MINCURSOR)
             {
               if(actualCurrIndex >= 2)
                 {
-                  log << std::endl<< "Case: Cursor All The Way Left. Actual Index Not All The Way Left"
-                    << std::endl;
-                  log << "Output String Before: " << outputString << std::endl;
-                  int i, j;
+                  // log << std::endl<< "Case: Cursor All The Way Left. Actual Index Not All The Way Left"
+                  //   << std::endl;
+                  // log << "Output String Before: " << outputString << std::endl;
+
                   outputString.clear();
-                  for(i = 0, j = actualCurrIndex; (i < numCols - 1) &&
-                                                  (i < fullPath.length() - 1) &&
-                                                  (j < fullPath.length() - 1); i++, j++)
+                  outputString = "> ";
+                  int i, j;
+                  for(i = 0, j = actualCurrIndex; i < numCols - 3; i++, j++)
                     {
                       outputString.push_back(fullPath.at(j));
                     }
-                  outputString.insert(0, "> ");
                   log << "Output String After:  " << outputString << std::endl;
                 }
             }
@@ -2460,27 +2459,34 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
       // enter if the actual index is not at the end of the full file string
       if(actualCurrIndex < fullPath.length())
         {
-          log << std::endl << "Right Key Inputted" << std::endl;
-          log << "Actual Current Index Before: " << actualCurrIndex << std::endl;
+          // log << std::endl << "Right Key Inputted" << std::endl;
+          // log << "Actual Current Index Before: " << actualCurrIndex << std::endl;
           //stringIndexOffset++;
           actualCurrIndex++;
-          log << "Actual Current Index After: " << actualCurrIndex << std::endl;
+          // log << "Actual Current Index After: " << actualCurrIndex << std::endl;
 
-          // // case cursor at end and still more string to go
-          // if(cursorPosition == numCols - 1)
-          //   {
-          //     if(actualCurrIndex < fullPath.length() - 1)
-          //       {
-          //         int i, j;
-          //         outputString.clear();
-          //         for(i = 0, j = actualCurrIndex - (numCols - 1); (i < numCols - 1) &&
-          //                                                         (i < fullPath.length() - 1) &&
-          //                                                         (j < fullPath.length() - 1); i++, j++)
-          //           {
-          //             outputString.push_back(fullPath.at(j));
-          //           }
-          //       }
-          //   }
+          // case cursor at end and still more string to go
+          if(cursorPosition == numCols - 2)
+            {
+              log << "this should print 5 times" << std::endl;
+              if(actualCurrIndex < fullPath.length())
+                {
+                  log << std::endl<< "Case: Cursor All The Way Right. Actual Index Not All The Way Right"
+                      << std::endl;
+                  log << "Output String Before: " << outputString << std::endl;
+                  int i, j;
+                  outputString.clear();
+                  // for(i = 0, j = actualCurrIndex - (numCols - 2); (i < numCols - 2) &&
+                  //                                                 (i < fullPath.length() - 1) &&
+                  //                                                 (j < fullPath.length() - 1); i++, j++)
+                  for(i = 0, j = actualCurrIndex - (numCols - 1); i < numCols - 1; i++,j++)
+                    {
+                      outputString.push_back(fullPath.at(j));
+                    }
+                  outputString.replace(0, 2, "> ");
+                  log << "Output String After:  " << outputString << std::endl;
+                }
+            }
         }
       // enter if the cursor is not at the end of the printable window
       // and keep it within bounds of the printable file string
@@ -2503,20 +2509,20 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
         {
           if(fullPath.length() < numCols - 1)
             {
-              log << std::endl << "Case: Fullpath Smaller Than Window. Cursor at end." << std::endl;
-              log << "Adding Char: " << (char)userInput << " at " << actualCurrIndex << std::endl;
+              // log << std::endl << "Case: Fullpath Smaller Than Window. Cursor at end." << std::endl;
+              // log << "Adding Char: " << (char)userInput << " at " << actualCurrIndex << std::endl;
               outputString.clear();
               fullPath.push_back(userInput);
               outputString = fullPath;
               cursorPosition++;
               actualCurrIndex++;
-              log << "Full Path Length: " << fullPath.length() << std::endl;
-              log << "Outstring Length: " << outputString.length() << std::endl;
+              // log << "Full Path Length: " << fullPath.length() << std::endl;
+              // log << "Outstring Length: " << outputString.length() << std::endl;
             }
           else if(fullPath.length() >=  numCols - 1)
             {
-              log << std::endl << "Case: FullPath Greater Than Window, cursor at end." << std::endl;
-              log << "Adding Char: " << (char)userInput << " at " << actualCurrIndex << std::endl;
+              // log << std::endl << "Case: FullPath Greater Than Window, cursor at end." << std::endl;
+              // log << "Adding Char: " << (char)userInput << " at " << actualCurrIndex << std::endl;
               outputString.clear();
               fullPath.push_back(userInput);
               actualCurrIndex++;
@@ -2528,8 +2534,8 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
                   outputString.push_back(c);
                 }
               outputString.replace(0, 2, "> ");
-              log << "Full Path Length: " << fullPath.length() << std::endl;
-              log << "Outstring Length: " << outputString.length() << std::endl;
+              // log << "Full Path Length: " << fullPath.length() << std::endl;
+              // log << "Outstring Length: " << outputString.length() << std::endl;
             }
         }
       // cursor not at end of string cases
