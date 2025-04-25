@@ -2403,10 +2403,7 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
                     const int& userInput,
                     std::string& fullPath,
                     std::string& outputString,
-                    int& stringIndexOffset,
-                    int& yOffset,
                     int& cursorPosition,
-                    int& stringLen,
                     int& actualCurrIndex,
                     std::ofstream& log)
 {
@@ -2425,7 +2422,6 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
     case KEY_LEFT:
       if(actualCurrIndex > 2)
         {
-          //stringIndexOffset--;
           actualCurrIndex--;
 
           if(cursorPosition == _MINCURSOR)
@@ -2476,6 +2472,9 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
           cursorPosition++;
         }
       break;
+    case KEY_BACKSPACE:
+
+      break;
     default:
       break;
     }
@@ -2498,7 +2497,7 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
           else if(fullPath.length() >=  numCols - 1)
             {
               fullPath.push_back(userInput);
-              outputString.erase(3,1);
+              outputString.erase(2,1);
               outputString.push_back(userInput);
               actualCurrIndex++;
             }
