@@ -2497,17 +2497,10 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
             }
           else if(fullPath.length() >=  numCols - 1)
             {
-              outputString.clear();
               fullPath.push_back(userInput);
+              outputString.erase(3,1);
+              outputString.push_back(userInput);
               actualCurrIndex++;
-              int difference = fullPath.length() - numCols;
-
-              for(int i = difference + 1; i < fullPath.length(); i++)
-                {
-                  char c = fullPath.at(i);
-                  outputString.push_back(c);
-                }
-              outputString.replace(0, 2, "> ");
             }
         }
       // cursor not at end of full path cases
