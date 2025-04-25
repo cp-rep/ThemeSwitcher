@@ -157,6 +157,7 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
                     int& yOffset,
                     int& cursorPosition,
                     int& stringLen,
+                    int& actualCurrIndex,
                     std::ofstream& log);
 void refreshSFStringWins(const std::vector<CursesWindow*>& sfStringWins,
                          std::ofstream& log);

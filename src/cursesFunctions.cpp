@@ -2407,11 +2407,12 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
                     int& yOffset,
                     int& cursorPosition,
                     int& stringLen,
+                    int& actualCurrIndex,
                     std::ofstream& log)
 {
   const int numCols =  wins.at(_USERINPUTWIN)->getNumCols();
   bool endFunction = false;
-  int actualCurrIndex = fullPath.length() + stringIndexOffset - 1;
+  const int _MINCURSOR = 2;
 
   switch(userInput)
     {
@@ -2422,92 +2423,112 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
       endFunction = true;
       break;
     case KEY_LEFT:
-      // enter if the actual index is within the zero bound of the full file string
-      if(actualCurrIndex >= 0)
+      if(actualCurrIndex > 2)
         {
-          // subtract 1 from the index offset
-          stringIndexOffset--;
+          //stringIndexOffset--;
+          log << std::endl << "Left Key Inputted" << std::endl;
+          log << "actual current index before: " << actualCurrIndex << std::endl;
+          actualCurrIndex--;
+          log << "actual current index after: " << actualCurrIndex << std::endl;
+
+          // if(cursorPosition == _MINCURSOR)
+          //   {
+          //     if(actualCurrIndex > 2)
+          //       {
+          //         int i, j;
+          //         outputString.clear();
+          //         for(i = 0, j = actualCurrIndex; (i < numCols - 1) &&
+          //                                         (i < fullPath.length() - 1) &&
+          //                                         (j < fullPath.length() - 1); i++, j++)
+          //           {
+          //             outputString.push_back(fullPath.at(j));
+          //           }
+
+          //       }
+          //   }
         }
-
-      actualCurrIndex = fullPath.length() + stringIndexOffset - 1;
-
-      // if the visual cursor is not at the far left end, move it left
-      if(cursorPosition > 0)
+      if(cursorPosition > _MINCURSOR)
         {
           cursorPosition--;
         }
-      // the cursor is at 0 and the index is greater 0 for left scroll
-      else if((actualCurrIndex > 0) &&
-              (cursorPosition == 0))
-        {
-          outputString.clear();
-
-          if(actualCurrIndex - 1 >= 0)
-            {
-              int j = 0;
-              for(int i = actualCurrIndex - 1, j = 0; (j < numCols - 1) &&
-                    (i < fullPath.length()); i++, j++)
-                {
-                  outputString.push_back(fullPath.at(i));
-                }
-            }
-        }
-
       break;
     case KEY_RIGHT:
       // enter if the actual index is not at the end of the full file string
-      if(actualCurrIndex < fullPath.length() - 1)
+      if(actualCurrIndex < fullPath.length())
         {
-          stringIndexOffset++;
-        }
+          log << std::endl << "Right Key Inputted" << std::endl;
+          log << "actual current index before: " << actualCurrIndex << std::endl;
+          //stringIndexOffset++;
+          actualCurrIndex++;
+          log << "actual current index after: " << actualCurrIndex << std::endl;
 
+          // // case cursor at end and still more string to go
+          // if(cursorPosition == numCols - 1)
+          //   {
+          //     if(actualCurrIndex < fullPath.length() - 1)
+          //       {
+          //         int i, j;
+          //         outputString.clear();
+          //         for(i = 0, j = actualCurrIndex - (numCols - 1); (i < numCols - 1) &&
+          //                                                         (i < fullPath.length() - 1) &&
+          //                                                         (j < fullPath.length() - 1); i++, j++)
+          //           {
+          //             outputString.push_back(fullPath.at(j));
+          //           }
+          //       }
+          //   }
+        }
       // enter if the cursor is not at the end of the printable window
       // and keep it within bounds of the printable file string
       if((cursorPosition < numCols - 1) &&
-        cursorPosition < outputString.length())
+         cursorPosition < outputString.length())
         {
           cursorPosition++;
         }
-      actualCurrIndex = fullPath.length() + stringIndexOffset - 1;
       break;
     default:
       break;
     }
 
-  std::string tempString;
-  int tempLen;
-
   // enter on ascii user input in range 32-126
   if((userInput >= 32) &&
      (userInput <= 126))
     {
+      // if(fullPath.empty())
+      //   {
+      //     outputString.clear();
+      //     fullPath.push_back(userInput);
+      //     outputString = fullPath;
+      //     actualCurrIndex++;
+      //     cursorPosition++;
+      //     log << "Adding First Char: " << (char)userInput << " at " << actualCurrIndex << std::endl;
+      //     log << "path length: " << fullPath.length() << std::endl;
+      //   }
       // cursor at end of full output string cases
-      if(stringIndexOffset == 0)
+      if(actualCurrIndex == fullPath.length())
         {
           if(fullPath.length() < numCols - 1)
             {
-              fullPath.push_back(userInput);
-              outputString.push_back(userInput);
-              cursorPosition++;
-
-              if(stringIndexOffset < 0)
-                {
-                  stringIndexOffset++;
-                }
-
-            }
-          else if(fullPath.length() >=  numCols - 1)
-            {
-              fullPath.push_back(userInput);
+              log << "Adding next Char: " << (char)userInput << " at " << actualCurrIndex << std::endl;
+              log << "path length: " << fullPath.length() << std::endl;
               outputString.clear();
-              int difference = fullPath.length() - numCols;
-
-              for(int i = difference + 1; i < fullPath.length(); i++)
-                {
-                  char c = fullPath.at(i);
-                  outputString.push_back(c);
-                }
+              fullPath.push_back(userInput);
+              outputString = fullPath;
+              cursorPosition++;
+              actualCurrIndex++;
             }
+          // else if(fullPath.length() >=  numCols - 1)
+          //   {
+          //     fullPath.push_back(userInput);
+          //     outputString.clear();
+          //     int difference = fullPath.length() - numCols;
+
+          //     for(int i = difference + 1; i < fullPath.length(); i++)
+          //       {
+          //         char c = fullPath.at(i);
+          //         outputString.push_back(c);
+          //       }
+          //   }
         }
       // cursor not at end of string cases
       else
@@ -2515,15 +2536,24 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
           // case: outputstring shorter than window size
           if(fullPath.length() < numCols - 1)
             {
-              std::string beforeCursor;
+//              actualCurrIndex++;
+              outputString.clear();
               char inputtedChar = userInput;
-              std::string afterInputChar;
+              log << "inserting: " << inputtedChar << " at " << actualCurrIndex << std::endl;
+//              if(cursorPosition == 0)
+//                {
+                  fullPath.insert(actualCurrIndex, 1, inputtedChar);
+//                }
+              // else
+              //   {
+              //     fullPath.insert(actualCurrIndex + 1, 1, inputtedChar);
+              //     log << "inserting 1: " << inputtedChar << " at " << actualCurrIndex << std::endl;
+              //   }
 
-              // insert after the current index
-              log << "inputting character at position: " << actualCurrIndex + 1 << std::endl;
-              fullPath.insert(actualCurrIndex + 1, 1, inputtedChar);
+//              log << "inserting: " << inputtedChar << " at " << actualCurrIndex << std::endl;
+//              fullPath.insert(actualCurrIndex, 1, inputtedChar);
               outputString = fullPath;
-
+              actualCurrIndex++;
               // // update the cursor position
               if(cursorPosition < numCols - 1)
                 {
@@ -2531,125 +2561,9 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
                 }
             }
           }
-          // case: outputString greater than window size
-  //         else if(outputString.length() >=  numCols  - 1)
-  //           {
-  //             int actualIndex;
-  //             tempString = outputString;
-  //             actualIndex = tempString.length() + stringIndexOffset;
-  //             tempString.resize(actualIndex);
-  //             tempString.push_back(userInput);
+    }
 
-  //             // append the rest of the output string to the temp string after offset
-  //             for(int i = tempString.length() - 1; i < outputString.length(); i++)
-  //               {
-  //                 tempString.push_back(outputString.at(i));
-  //               }
 
-  //             // increment the cursor since we added a character
-  //             if(cursorPosition < numCols - 1)
-  //               {
-  //                 cursorPosition++;
-  //               }
-  //             stringIndexOffset++;
-
-  //             // the new full output string with the appended characters in the middle/beginning
-  //             outputString = tempString;
-
-  //             // now create the display string that fits in the window
-  //             outputString.clear();
-  //             int tempIndex = outputString.length() + stringIndexOffset;
-
-  //             // int difference = ((outputString.length() - numCols) - 1);
-
-  //             // for(int i = difference + 1; i < outputString.length(); i++)
-  //             //   {
-  //             //     char c = outputString.at(i);
-  //             //     outputString.push_back(c);
-  //             //   }
-  //           }
-  //       }
-  //     // // case: outputstring >= window size, cursor shifted left
-  //     // else
-  //     //   {
-  //     //     // append the character to the beginning/middle of the string at offset
-  //     //     tempString  = outputString;
-  //     //     tempLen = tempString.length() + stringIndexOffset;
-  //     //     tempString.resize(tempLen);
-  //     //     tempString.push_back(userInput);
-
-  //     //     // append the rest of the output string to the temp string after offset
-  //     //     for(int i = tempString.length() - 1; i < outputString.length(); i++)
-  //     //       {
-  //     //         tempString.push_back(outputString.at(i));
-  //     //       }
-
-  //     //     outputString = tempString;
-  //     //   }
-  //   }
-  // else if((userInput == KEY_BACKSPACE) &&
-  //         !outputString.empty())
-  //   {
-  //     // cursor at end of string cases
-  //     if(cursorPosition == outputString.length())
-  //       {
-  //         if(outputString.length() < numCols - 1)
-  //           {
-  //             outputString.pop_back();
-  //             outputString.pop_back();
-  //             cursorPosition--;
-  //           }
-  //         else if(outputString.length() ==  numCols - 1)
-  //           {
-  //             outputString.pop_back();
-  //             outputString.pop_back();
-  //             cursorPosition--;
-  //           }
-  //         else if(outputString.length() >  numCols - 1)
-  //           {
-  //             outputString.pop_back();
-  //             outputString.pop_back();
-  //           }
-  //     }
-  //     // cursor not at end of string cases
-  //     else
-  //       {
-  //         // if((outputString.length() < numCols - 1) &&
-  //         //    stringIndexOffset != 0)
-  //         //   {
-  //         //     cursorPosition--;
-  //         //   }
-  //         // // case: outputstring >= window size, cursor shifted left
-  //         // else if((outputString.length() >  numCols - 1) &&
-  //         //         stringIndexOffset != 0)
-  //         //   {
-  //         //   }
-  //       }
-  //     // else
-  //     //   {
-  //     //     tempString  = outputString;
-  //     //     tempLen = tempString.length() + stringIndexOffset;
-
-  //     //     outputString.erase(tempLen - 1, 1);
-
-  //     //     // enter if the offset is in the bounds of the string
-  //     //     if(tempLen > 0)
-  //     //       {
-  //     //         // remove character from beginning/middle of string
-  //     //         tempString.resize(tempLen);
-  //     //         tempString.pop_back();
-  //     //         xOffset--;
-
-  //     //         // append the rest of the output string to the temp string
-  //     //         for(int i = tempString.length() + 1; i < outputString.length(); ++i)
-  //     //           {
-  //     //             tempString.push_back(outputString.at(i));
-  //     //           }
-
-  //     //         outputString = tempString;
-  //     //       }
-  //     //   }
-        }
 
   werase(wins.at(_USERINPUTWIN)->getWindow());
   mvwaddstr(wins.at(_USERINPUTWIN)->getWindow(),
