@@ -38,18 +38,15 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
   bool isInWindow = false;
   int userInput = 0;
   std::string fullPath = "> ";
-  int stringIndex = 0;
-  int stringLen = 0;
+  std::string outputString = "> ";
   int cursorPosition = 2;
-  xOffset = 0;
-  curs_set(1);
   bool exitLoop = false;
   int currLines;
   int currCols;
-  std::string outputString = "> ";
-  int totalStringLength = 0;
-  int scrollCount = 0;
   int actualCurrIndex = 2;
+
+  xOffset = 0;
+  curs_set(1);
 
   while(true)
     {
@@ -86,10 +83,7 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                                 userInput,
                                 fullPath,
                                 outputString,
-                                stringIndex,
-                                startY,
                                 cursorPosition,
-                                stringLen,
                                 actualCurrIndex,
                                 log);
 
