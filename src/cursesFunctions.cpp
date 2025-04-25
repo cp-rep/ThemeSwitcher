@@ -2526,22 +2526,10 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
           // case: outputstring shorter than window size
           if(fullPath.length() < numCols - 1)
             {
-//              actualCurrIndex++;
               outputString.clear();
               char inputtedChar = userInput;
               log << "inserting: " << inputtedChar << " at " << actualCurrIndex << std::endl;
-//              if(cursorPosition == 0)
-//                {
-                  fullPath.insert(actualCurrIndex, 1, inputtedChar);
-//                }
-              // else
-              //   {
-              //     fullPath.insert(actualCurrIndex + 1, 1, inputtedChar);
-              //     log << "inserting 1: " << inputtedChar << " at " << actualCurrIndex << std::endl;
-              //   }
-
-//              log << "inserting: " << inputtedChar << " at " << actualCurrIndex << std::endl;
-//              fullPath.insert(actualCurrIndex, 1, inputtedChar);
+              fullPath.insert(actualCurrIndex, 1, inputtedChar);
               outputString = fullPath;
               actualCurrIndex++;
               // // update the cursor position
