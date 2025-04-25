@@ -2493,17 +2493,34 @@ bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
           outputString.erase(cursorPosition, 1);
           fullPath.erase(actualCurrIndex, 1);
         }
+      // case: index at end of full path path, full path larger than window size
+      else if((actualCurrIndex == fullPath.length()) &&
+              (fullPath.length() >= numCols - 1) &&
+              (cursorPosition == numCols - 1))
+        {
+          fullPath.pop_back();
+          actualCurrIndex--;
 
-      // if(cursorPosition == 2)
-      //   {
-      //     if(fullPath.length())
-      //   }
+          if(fullPath.length() >= numCols - 1)
+            {
+              outputString.clear();
+              int i, j;
+              for(i = 0, j = (actualCurrIndex - numCols) + 1; i < numCols - 1; i++,j++)
+                {
+                  outputString.push_back(fullPath.at(j));
+                }
+              outputString.replace(0, 2, "> ");
+            }
+          else
+            {
+              outputString.pop_back();
+            }
 
-      // if(fullPath.length() > 2)
-      //   {
-      //     outputString.erase(cursorPosition, 1);
-      //     fullPath.erase(actualCurrIndex, 1);
-      //   }
+          if(fullPath.length() < numCols - 1)
+            {
+              cursorPosition--;
+            }
+        }
       break;
     default:
       break;
