@@ -172,8 +172,8 @@ bool NcursesTextEditor::editText()
     }
 
   // enter on ascii user input in range 32-126
-  if((userInput >= 32) &&
-     (userInput <= 126))
+  if((userInput >= ' ') &&
+     (userInput <= '~'))
     {
       // case: cursor at end of full path string
       if(m_indexFullString  == m_fullString.length())
