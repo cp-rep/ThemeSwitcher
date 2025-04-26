@@ -87,82 +87,82 @@ bool NcursesTextEditor::editText()
           m_indexOutString--;
         }
       break;
-    // case KEY_RIGHT:
-    //   // enter if the actual index is not at the end of the full file string
-    //   if(actualCurrIndex < fullPath.length())
-    //     {
-    //       actualCurrIndex++;
-    //     }
-    //   p
-    //     // enter if the cursor is at the end of the printable window and
-    //     // our actual fullPath index is at the final index (technically 1 after)
-    //     if((cursorPosition == numCols - 1) &&
-    //        (actualCurrIndex <= fullPath.length()))
-    //       {
-    //         int i, j;
-    //         outputString.clear();
-    //         for(i = 0, j = (actualCurrIndex - numCols) + 1; i < numCols - 1; i++,j++)
-    //           {
-    //             outputString.push_back(fullPath.at(j));
-    //           }
-    //         outputString.replace(0, 2, "> ");
-    //       }
+    case KEY_RIGHT:
+      // enter if the actual index is not at the end of the full file string
+      if(m_indexFullString < m_fullString.length())
+        {
+          m_indexFullString++;
+        }
 
-    //   // enter if the cursor is not at the end of the printable window
-    //   // and keep it within bounds of the printable file string
-    //   if((cursorPosition < numCols - 1) &&
-    //      cursorPosition < outputString.length())
-    //     {
-    //       cursorPosition++;
-    //     }
+        // enter if the cursor is at the end of the printable window and
+        // our actual m_fullString index is at the final index (technically 1 after)
+        if((m_indexOutString == getNumCols() - 1) &&
+           (m_indexFullString <= m_fullString.length()))
+          {
+            int i, j;
+            m_outString.clear();
+            for(i = 0, j = (m_indexFullString - getNumCols()) + 1; i < getNumCols() - 1; i++,j++)
+              {
+                m_outString.push_back(m_fullString.at(j));
+              }
+            m_outString.replace(0, 2, "> ");
+          }
+
+      // enter if the cursor is not at the end of the printable window
+      // and keep it within bounds of the printable file string
+      if((m_indexOutString < getNumCols() - 1) &&
+         m_indexOutString < m_outString.length())
+        {
+          m_indexOutString++;
+        }
     //   break;
     // case KEY_BACKSPACE:
-    //   // case: index at the end of the fullPath, full path shorter than window size
-    //   if((actualCurrIndex == fullPath.length()) &&
-    //      (fullPath.length() < numCols - 1) &&
-    //      (actualCurrIndex > 2))
+    //   // case: index at the end of the m_fullString, full path shorter than window size
+    //   if((m_indexFullString == m_fullString.length()) &&
+    //      (m_fullString.length() < getNumCols() - 1) &&
+    //      (m_indexFullString > 2))
     //     {
-    //       outputString.pop_back();
-    //       fullPath.pop_back();
-    //       cursorPosition--;
-    //       actualCurrIndex--;
+    //       m_outString.pop_back();
+    //       m_fullString.pop_back();
+    //       m_indexOutString--;
+    //       m_indexFullString--;
     //     }
-    //   // case: index not at end of fullPath, fullPath shorter than window size
-    //   else if((actualCurrIndex < fullPath.length()) &&
-    //           (fullPath.length() < numCols - 1) &&
-    //           (actualCurrIndex > 2))
+    //   // case: index not at end of m_fullString, m_fullString shorter than window size
+    //   else if((m_indexFullString < m_fullString.length()) &&
+    //           (m_fullString.length() < getNumCols() - 1) &&
+    //           (m_indexFullString > 2))
     //     {
-    //       cursorPosition--;
-    //       actualCurrIndex--;
-    //       outputString.erase(cursorPosition, 1);
-    //       fullPath.erase(actualCurrIndex, 1);
+    //       m_indexOutString--;
+    //       m_indexFullString--;
+    //       m_outString.erase(m_indexOutString, 1);
+    //       m_fullString.erase(m_indexFullString, 1);
     //     }
     //   // case: index at end of full path path, full path larger than window size
-    //   else if((actualCurrIndex == fullPath.length()) &&
-    //           (fullPath.length() >= numCols - 1) &&
-    //           (cursorPosition == numCols - 1))
+    //   else if((m_indexFullString == m_fullString.length()) &&
+    //           (m_fullString.length() >= getNumCols() - 1) &&
+    //           (m_indexOutString == getNumCols() - 1))
     //     {
-    //       fullPath.pop_back();
-    //       actualCurrIndex--;
+    //       m_fullString.pop_back();
+    //       m_indexFullString--;
 
-    //       if(fullPath.length() >= numCols - 1)
+    //       if(m_fullString.length() >= getNumCols() - 1)
     //         {
-    //           outputString.clear();
+    //           m_outString.clear();
     //           int i, j;
-    //           for(i = 0, j = (actualCurrIndex - numCols) + 1; i < numCols - 1; i++,j++)
+    //           for(i = 0, j = (m_indexFullString - getNumCols()) + 1; i < getNumCols() - 1; i++,j++)
     //             {
-    //               outputString.push_back(fullPath.at(j));
+    //               m_outString.push_back(m_fullString.at(j));
     //             }
-    //           outputString.replace(0, 2, "> ");
+    //           m_outString.replace(0, 2, "> ");
     //         }
     //       else
     //         {
-    //           outputString.pop_back();
+    //           m_outString.pop_back();
     //         }
 
-    //       if(fullPath.length() < numCols - 1)
+    //       if(m_fullString.length() < getNumCols() - 1)
     //         {
-    //           cursorPosition--;
+    //           m_indexOutString--;
     //         }
     //     }
     //   break;
@@ -175,7 +175,7 @@ bool NcursesTextEditor::editText()
      (userInput <= 126))
     {
       // case: cursor at end of full path string
-      // if(actualCurrIndex == fullPath.length())
+      // if(m_indexFullString == m_fullString.length())
       if(m_indexFullString  == m_fullString.length())
       {
         if(m_fullString.length() < getNumCols() - 1)
@@ -214,21 +214,21 @@ bool NcursesTextEditor::editText()
           // else
           //   {
           //     // case: cursor not at end of user input window
-          //     if(cursorPosition != numCols -1)
+          //     if(m_indexOutString != getNumCols() -1)
           //       {
-          //         fullPath.insert(actualCurrIndex, 1, (char)userInput);
-          //         outputString.insert(cursorPosition, 1, (char)userInput);
-          //         outputString.pop_back();
-          //         cursorPosition++;
-          //         actualCurrIndex++;
+          //         m_fullString.insert(m_indexFullString, 1, (char)userInput);
+          //         m_outString.insert(m_indexOutString, 1, (char)userInput);
+          //         m_outString.pop_back();
+          //         m_indexOutString++;
+          //         m_indexFullString++;
           //       }
           //     // case: cursor at end of user input window
           //     else
           //       {
-          //         outputString.erase(3, 1);
-          //         outputString.push_back(userInput);
-          //         fullPath.insert(actualCurrIndex, 1, (char)userInput);
-          //         actualCurrIndex++;
+          //         m_outString.erase(3, 1);
+          //         m_outString.push_back(userInput);
+          //         m_fullString.insert(m_indexFullString, 1, (char)userInput);
+          //         m_indexFullString++;
           //       }
           //   }
         }
