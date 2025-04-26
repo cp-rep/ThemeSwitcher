@@ -14,11 +14,11 @@ public:
                     const int& startX); // inherit CursesWindow constructor
 
   // getters
-  const std::string& getFullString() { return m_fullString; }
-  const std::string& getOutString () { return m_outString; }
-  const std::string& getPrefixString() { return m_prefixString; }
-  const int& getIndexOutstring() { return m_indexOutString; }
-  const int& getIndexFullString() { return m_indexFullString; }
+  const std::string& getFullString() const { return m_fullString; }
+  const std::string& getOutString () const { return m_outString; }
+  const std::string& getPrefixString() const { return m_prefixString; }
+  const int& getIndexOutstring() const { return m_indexOutString; }
+  const int& getIndexFullString() const { return m_indexFullString; }
 
   // setters
   void setFullString(const std::string& fullString) { m_fullString = fullString; }
