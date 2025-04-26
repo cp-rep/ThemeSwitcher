@@ -63,30 +63,30 @@ bool NcursesTextEditor::editText()
     case KEY_ENTER:
       endFunction = true;
       break;
-    // case KEY_LEFT:
-    //   if(actualCurrIndex > 2)
-    //     {
-    //       actualCurrIndex--;
+    case KEY_LEFT:
+      if(m_indexFullString  > m_prefixStringLen)
+        {
+          m_indexFullString--;
 
-    //       if(cursorPosition == _MINCURSOR)
-    //         {
-    //           if(actualCurrIndex >= 2)
-    //             {
-    //               outputString.clear();
-    //               outputString = "> ";
-    //               int i, j;
-    //               for(i = 0, j = actualCurrIndex; i < numCols - 3; i++, j++)
-    //                 {
-    //                   outputString.push_back(fullPath.at(j));
-    //                 }
-    //             }
-    //         }
-    //     }
-    //   if(cursorPosition > _MINCURSOR)
-    //     {
-    //       cursorPosition--;
-    //     }
-    //   break;
+          if(m_indexOutString == m_prefixStringLen)
+            {
+              if(m_indexFullString >= m_prefixStringLen)
+                {
+                  m_outString.clear();
+                  m_outString = m_prefixString;
+                  int i, j;
+                  for(i = 0, j = m_indexFullString; i < getNumCols() - 3; i++, j++)
+                    {
+                      m_outString.push_back(m_fullString.at(j));
+                    }
+                }
+            }
+        }
+      if(m_indexOutString > m_prefixStringLen)
+        {
+          m_indexOutString--;
+        }
+      break;
     // case KEY_RIGHT:
     //   // enter if the actual index is not at the end of the full file string
     //   if(actualCurrIndex < fullPath.length())
@@ -176,6 +176,7 @@ bool NcursesTextEditor::editText()
     {
       // case: cursor at end of full path string
       // if(actualCurrIndex == fullPath.length())
+      if(m_indexFullString  == m_fullString.length())
       {
         if(m_fullString.length() < getNumCols() - 1)
           {
@@ -194,43 +195,43 @@ bool NcursesTextEditor::editText()
           }
       }
       // cursor not at end of full path cases
-      // else
-      //   {
-      //     // case: full path shorter than window size
-      //     if(fullPath.length() < numCols - 1)
-      //       {
-      //         outputString.clear();
-      //         fullPath.insert(actualCurrIndex, 1, (char)userInput);
-      //         outputString = fullPath;
-      //         actualCurrIndex++;
+      else
+        {
+          // case: full path shorter than window size
+          if(m_fullString.length() < getNumCols() - 1)
+            {
+              m_outString.clear();
+              m_fullString.insert(m_indexFullString, 1, (char)userInput);
+              m_outString = m_fullString;
+              m_indexFullString++;
 
-      //         if(cursorPosition < numCols - 1)
-      //           {
-      //             cursorPosition++;
-      //           }
-      //       }
-      //     // case: full path  greater than the window size
-      //     else
-      //       {
-      //         // case: cursor not at end of user input window
-      //         if(cursorPosition != numCols -1)
-      //           {
-      //             fullPath.insert(actualCurrIndex, 1, (char)userInput);
-      //             outputString.insert(cursorPosition, 1, (char)userInput);
-      //             outputString.pop_back();
-      //             cursorPosition++;
-      //             actualCurrIndex++;
-      //           }
-      //         // case: cursor at end of user input window
-      //         else
-      //           {
-      //             outputString.erase(3, 1);
-      //             outputString.push_back(userInput);
-      //             fullPath.insert(actualCurrIndex, 1, (char)userInput);
-      //             actualCurrIndex++;
-      //           }
-      //       }
-      //   }
+              if(m_indexOutString < getNumCols() - 1)
+                {
+                  m_indexOutString++;
+                }
+            }
+          // case: full path  greater than the window size
+          // else
+          //   {
+          //     // case: cursor not at end of user input window
+          //     if(cursorPosition != numCols -1)
+          //       {
+          //         fullPath.insert(actualCurrIndex, 1, (char)userInput);
+          //         outputString.insert(cursorPosition, 1, (char)userInput);
+          //         outputString.pop_back();
+          //         cursorPosition++;
+          //         actualCurrIndex++;
+          //       }
+          //     // case: cursor at end of user input window
+          //     else
+          //       {
+          //         outputString.erase(3, 1);
+          //         outputString.push_back(userInput);
+          //         fullPath.insert(actualCurrIndex, 1, (char)userInput);
+          //         actualCurrIndex++;
+          //       }
+          //   }
+        }
     }
 
   return endFunction;
