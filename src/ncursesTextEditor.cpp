@@ -18,7 +18,23 @@ NcursesTextEditor::NcursesTextEditor(WINDOW* win,
   m_prefixString = "";
   m_indexFullString = 0;
   m_indexOutString = 0;
-} // end of "Default Constructor"
+} // end of "Constructor"
+
+
+
+void NcursesTextEditor::defineTextData(const std::string& fullString,
+                                       const std::string& outString,
+                                       const std::string& prefixString,
+                                       const int& indexFullString,
+                                       const int& indexOutString)
+{
+  m_fullString = fullString;
+  m_outString = outString;
+  m_prefixString = prefixString;
+  m_indexFullString = indexFullString;
+  m_indexOutString = indexOutString;
+} // end of "defineTextData"
+
 
 
 bool NcursesTextEditor::editText()
