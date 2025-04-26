@@ -37,11 +37,12 @@ public:
 
 private:
   // member data
+  std::string m_prefixString;
   std::string m_fullString;
   std::string m_outString;
-  std::string m_prefixString;
   int m_indexFullString;
   int m_indexOutString;
+  int m_prefixStringLen;
 };
 
 #endif // NCURSESTEXTEDITOR_HPP
