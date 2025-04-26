@@ -13,6 +13,7 @@
 #include "cursesWindow.hpp"
 #include "fileOperations.hpp"
 #include "log.hpp"
+#include "ncursesTextEditor.hpp"
 
 void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                            MEVENT& mouse,
