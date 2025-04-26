@@ -1807,7 +1807,7 @@ void initializeCurses()
 void initializeWins(std::unordered_map<int, CursesWindow*>& wins,
                     std::ofstream& log)
 {
-  for(int i = _MAINWIN; i <= _USERINPUTWIN; i++)
+  for(int i = _MAINWIN; i <= _STPROMPTWIN; i++)
     {
       CursesWindow* newWindow = new CursesWindow();
       wins.insert(std::make_pair(i, newWindow));
