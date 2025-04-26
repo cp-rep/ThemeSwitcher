@@ -175,7 +175,6 @@ bool NcursesTextEditor::editText()
      (userInput <= 126))
     {
       // case: cursor at end of full path string
-      // if(m_indexFullString == m_fullString.length())
       if(m_indexFullString  == m_fullString.length())
       {
         if(m_fullString.length() < getNumCols() - 1)
@@ -211,26 +210,26 @@ bool NcursesTextEditor::editText()
                 }
             }
           // case: full path  greater than the window size
-          // else
-          //   {
-          //     // case: cursor not at end of user input window
-          //     if(m_indexOutString != getNumCols() -1)
-          //       {
-          //         m_fullString.insert(m_indexFullString, 1, (char)userInput);
-          //         m_outString.insert(m_indexOutString, 1, (char)userInput);
-          //         m_outString.pop_back();
-          //         m_indexOutString++;
-          //         m_indexFullString++;
-          //       }
-          //     // case: cursor at end of user input window
-          //     else
-          //       {
-          //         m_outString.erase(3, 1);
-          //         m_outString.push_back(userInput);
-          //         m_fullString.insert(m_indexFullString, 1, (char)userInput);
-          //         m_indexFullString++;
-          //       }
-          //   }
+          else
+            {
+              // case: cursor not at end of user input window
+              if(m_indexOutString != getNumCols() -1)
+                {
+                  m_fullString.insert(m_indexFullString, 1, (char)userInput);
+                  m_outString.insert(m_indexOutString, 1, (char)userInput);
+                  m_outString.pop_back();
+                  m_indexOutString++;
+                  m_indexFullString++;
+                }
+              // case: cursor at end of user input window
+              else
+                {
+                  m_outString.erase(3, 1);
+                  m_outString.push_back(userInput);
+                  m_fullString.insert(m_indexFullString, 1, (char)userInput);
+                  m_indexFullString++;
+                }
+            }
         }
     }
 
