@@ -50,12 +50,6 @@ std::vector<std::string> createSTOutputStrings(const std::unordered_map<int, Cur
                                                const std::vector<std::string>& stStrings,
                                                const int& stStringPos,
                                                std::ofstream& log);
-void createUserInputWin(std::unordered_map<int, CursesWindow*>& wins,
-                        const int startY,
-                        const int startX,
-                        const int numLines,
-                        const int numCols,
-                        std::ofstream& log);
 void defineArrowWin(std::unordered_map<int, CursesWindow*>& wins,
                     const int mainWin,
                     const int arrowWin,
@@ -148,14 +142,6 @@ void printSavedThemesStrings(const std::unordered_map<int, CursesWindow*>& wins,
                              std::ofstream& log);
 void printSavedThemesWin(const std::unordered_map<int, CursesWindow*>& wins,
                          std::ofstream& log);
-
-bool printUserInput(std::unordered_map<int, CursesWindow*>& wins,
-                    const int& userInput,
-                    std::string& fullPath,
-                    std::string& outputString,
-                    int& cursorPosition,
-                    int& actualCurrIndex,
-                    std::ofstream& log);
 void refreshSFStringWins(const std::vector<CursesWindow*>& sfStringWins,
                          std::ofstream& log);
 void refreshSTStringWins(const std::vector<CursesWindow*>& stStringWins,
