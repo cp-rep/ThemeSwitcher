@@ -27,7 +27,14 @@ public:
   void setIndexOutString(const int& indexOutString) { m_indexOutString = indexOutString; }
   void setIndexFullString(const int& indexFullString) { m_indexFullString = indexFullString; }
 
+  // member functions
+  void defineTextData(const std::string& fullString,
+                                       const std::string& outString,
+                                       const std::string& prefixString,
+                                       const int& indexFullString,
+                                       const int& indexOutString);
   bool editText();
+
 private:
   // member data
   std::string m_fullString;
@@ -36,6 +43,5 @@ private:
   int m_indexFullString;
   int m_indexOutString;
 };
-
 
 #endif // NCURSESTEXTEDITOR_HPP
