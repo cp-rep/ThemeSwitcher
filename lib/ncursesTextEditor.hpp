@@ -27,14 +27,6 @@ public:
   void setIndexOutString(const int& indexOutString) { m_indexOutString = indexOutString; }
   void setIndexFullString(const int& indexFullString) { m_indexFullString = indexFullString; }
 
-  // member functions
-  // bool printUserInput();
-  // void defineTextWin(WINDOW* win,
-  //   		   const std::string& windowName,
-  //   		   const int& numLines,
-  //   		   const int& numCols,
-  //   		   const int& startY,
-  //   		   const int& startX) : CursesWindow(win, windowName, numLines, numCols, startY, startX) {}
   bool editText();
 private:
   // member data
