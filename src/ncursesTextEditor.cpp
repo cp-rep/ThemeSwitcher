@@ -75,7 +75,8 @@ bool NcursesTextEditor::editText()
                   m_outString.clear();
                   m_outString = m_prefixString;
                   int i, j;
-                  for(i = 0, j = m_indexFullString; i < getNumCols() - 3; i++, j++)
+                  for(i = 0, j = m_indexFullString; i < getNumCols() - 1 - m_prefixStringLen;
+                      i++, j++)
                     {
                       m_outString.push_back(m_fullString.at(j));
                     }
@@ -105,7 +106,7 @@ bool NcursesTextEditor::editText()
               {
                 m_outString.push_back(m_fullString.at(j));
               }
-            m_outString.replace(0, 2, "> ");
+            m_outString.replace(0, m_prefixStringLen, m_prefixString);
           }
 
       // enter if the cursor is not at the end of the printable window
@@ -115,57 +116,57 @@ bool NcursesTextEditor::editText()
         {
           m_indexOutString++;
         }
-    //   break;
-    // case KEY_BACKSPACE:
-    //   // case: index at the end of the m_fullString, full path shorter than window size
-    //   if((m_indexFullString == m_fullString.length()) &&
-    //      (m_fullString.length() < getNumCols() - 1) &&
-    //      (m_indexFullString > 2))
-    //     {
-    //       m_outString.pop_back();
-    //       m_fullString.pop_back();
-    //       m_indexOutString--;
-    //       m_indexFullString--;
-    //     }
-    //   // case: index not at end of m_fullString, m_fullString shorter than window size
-    //   else if((m_indexFullString < m_fullString.length()) &&
-    //           (m_fullString.length() < getNumCols() - 1) &&
-    //           (m_indexFullString > 2))
-    //     {
-    //       m_indexOutString--;
-    //       m_indexFullString--;
-    //       m_outString.erase(m_indexOutString, 1);
-    //       m_fullString.erase(m_indexFullString, 1);
-    //     }
-    //   // case: index at end of full path path, full path larger than window size
-    //   else if((m_indexFullString == m_fullString.length()) &&
-    //           (m_fullString.length() >= getNumCols() - 1) &&
-    //           (m_indexOutString == getNumCols() - 1))
-    //     {
-    //       m_fullString.pop_back();
-    //       m_indexFullString--;
+      break;
+    case KEY_BACKSPACE:
+      // case: index at the end of the m_fullString, full path shorter than window size
+      if((m_indexFullString == m_fullString.length()) &&
+         (m_fullString.length() < getNumCols() - 1) &&
+         (m_indexFullString > m_prefixStringLen))
+        {
+          m_outString.pop_back();
+          m_fullString.pop_back();
+          m_indexOutString--;
+          m_indexFullString--;
+        }
+      // case: index not at end of m_fullString, m_fullString shorter than window size
+      else if((m_indexFullString < m_fullString.length()) &&
+              (m_fullString.length() < getNumCols() - 1) &&
+              (m_indexFullString > m_prefixStringLen))
+        {
+          m_indexOutString--;
+          m_indexFullString--;
+          m_outString.erase(m_indexOutString, 1);
+          m_fullString.erase(m_indexFullString, 1);
+        }
+      // case: index at end of full path path, full path larger than window size
+      else if((m_indexFullString == m_fullString.length()) &&
+              (m_fullString.length() >= getNumCols() - 1) &&
+              (m_indexOutString == getNumCols() - 1))
+        {
+          m_fullString.pop_back();
+          m_indexFullString--;
 
-    //       if(m_fullString.length() >= getNumCols() - 1)
-    //         {
-    //           m_outString.clear();
-    //           int i, j;
-    //           for(i = 0, j = (m_indexFullString - getNumCols()) + 1; i < getNumCols() - 1; i++,j++)
-    //             {
-    //               m_outString.push_back(m_fullString.at(j));
-    //             }
-    //           m_outString.replace(0, 2, "> ");
-    //         }
-    //       else
-    //         {
-    //           m_outString.pop_back();
-    //         }
+          if(m_fullString.length() >= getNumCols() - 1)
+            {
+              m_outString.clear();
+              int i, j;
+              for(i = 0, j = (m_indexFullString - getNumCols()) + 1; i < getNumCols() - 1; i++,j++)
+                {
+                  m_outString.push_back(m_fullString.at(j));
+                }
+              m_outString.replace(0, m_prefixStringLen, m_prefixString);
+            }
+          else
+            {
+              m_outString.pop_back();
+            }
 
-    //       if(m_fullString.length() < getNumCols() - 1)
-    //         {
-    //           m_indexOutString--;
-    //         }
-    //     }
-    //   break;
+          if(m_fullString.length() < getNumCols() - 1)
+            {
+              m_indexOutString--;
+            }
+        }
+      break;
     default:
       break;
     }
@@ -188,7 +189,7 @@ bool NcursesTextEditor::editText()
         else if(m_fullString.length() >=  getNumCols() - 1)
           {
             m_fullString.push_back(userInput);
-            m_outString.erase(2,1);
+            m_outString.erase(m_prefixStringLen, 1);
             m_outString.push_back(userInput);
             m_indexFullString++;
           }
@@ -224,7 +225,7 @@ bool NcursesTextEditor::editText()
               // case: cursor at end of user input window
               else
                 {
-                  m_outString.erase(3, 1);
+                  m_outString.erase(m_prefixStringLen + 1, 1);
                   m_outString.push_back(userInput);
                   m_fullString.insert(m_indexFullString, 1, (char)userInput);
                   m_indexFullString++;
