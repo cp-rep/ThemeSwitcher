@@ -20,6 +20,8 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
               _hwSFAddFileWin,
               log);
 
+  //NcursesTextEditor* userText = new NcursesTextEditor();
+
   // create user input window
   int yOffset = 2;
   int xOffset = 2;
@@ -27,12 +29,17 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
   int startX = wins.at(_SFPROMPTWIN)->getStartX() + xOffset;
   int numLines = 1;
   int numCols = wins.at(_SFPROMPTWIN)->getNumCols() - xOffset - xOffset;
-  createUserInputWin(wins,
-                     startY,
-                     startX,
-                     numLines,
-                     numCols,
-                     log);
+
+  if(wins.at(_USERINPUTWIN)->getWindow() != nullptr)
+    {
+      wins.at(_USERINPUTWIN)->deleteWindow();
+    }
+  NcursesTextEditor(wins.at(_USERINPUTWIN)->getWindow(),
+                    "_USERINPUTWIN",
+                    numLines,
+                    numCols,
+                    startY,
+                    startX);
 
   // get user input, dynamically print it, and store in string object
   bool isInWindow = false;
