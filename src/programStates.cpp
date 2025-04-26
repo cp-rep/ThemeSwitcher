@@ -20,8 +20,6 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
               _hwSFAddFileWin,
               log);
 
-  //NcursesTextEditor* userText = new NcursesTextEditor();
-
   // create user input window
   int yOffset = 2;
   int xOffset = 2;
@@ -29,32 +27,37 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
   int startX = wins.at(_SFPROMPTWIN)->getStartX() + xOffset;
   int numLines = 1;
   int numCols = wins.at(_SFPROMPTWIN)->getNumCols() - xOffset - xOffset;
+  NcursesTextEditor* textWin = new NcursesTextEditor(newwin(numLines,
+                                                            numCols,
+                                                            startY,
+                                                            startX),
+                                                     "_USERINPUTWIN",
+                                                     numLines,
+                                                     numCols,
+                                                     startY,
+                                                     startX);
 
-  if(wins.at(_USERINPUTWIN)->getWindow() != nullptr)
-    {
-      wins.at(_USERINPUTWIN)->deleteWindow();
-    }
-  NcursesTextEditor(wins.at(_USERINPUTWIN)->getWindow(),
-                    "_USERINPUTWIN",
-                    numLines,
-                    numCols,
-                    startY,
-                    startX);
+
 
   // get user input, dynamically print it, and store in string object
   bool isInWindow = false;
   int userInput = 0;
-  std::string fullPath = "> ";
-  std::string outputString = "> ";
-  int cursorPosition = 2;
+  std::string prefixString = "> ";
+  std::string fullPath = "";
+  std::string outputString = "";
+  int cursorPosition = 0;
   bool exitLoop = false;
   int currLines;
   int currCols;
-  int actualCurrIndex = 2;
+  int actualCurrIndex = 0;
 
-  xOffset = 0;
+  textWin->defineTextData(prefixString,
+                          fullPath,
+                          outputString,
+                          actualCurrIndex,
+                          cursorPosition);
+
   curs_set(1);
-
   while(true)
     {
       getmaxyx(stdscr, currLines, currCols);
@@ -66,6 +69,7 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
           break;
         }
 
+      // check if user clicked outside the _SFPROMPTWIN window parameters
       isInWindow = checkWindowClick(wins,
                                     _SFPROMPTWIN,
                                     mouse,
@@ -84,28 +88,30 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
         }
 
       // get user input
-      userInput = getch();
-      flushinp();
-      exitLoop = printUserInput(wins,
-                                userInput,
-                                fullPath,
-                                outputString,
-                                cursorPosition,
-                                actualCurrIndex,
-                                log);
+      exitLoop = textWin->editText();
+
+      // update the window buffer
+      werase(textWin->getWindow());
+      std::string temp = textWin->getOutString();
+      mvwaddstr(textWin->getWindow(),
+                0,
+                0,
+                textWin->getOutString().c_str());
+      wmove(textWin->getWindow(), 0, textWin->getIndexOutstring());
 
       if(exitLoop == true)
         {
           break;
         }
 
-      wrefresh(wins.at(_USERINPUTWIN)->getWindow());
+      // print the window buffer
+      wrefresh(textWin->getWindow());
       doupdate();
       usleep(15000);
     }
 
   // delete _USERINPUTWIN and return to starting program state
-  wins.at(_USERINPUTWIN)->deleteWindow();
+  textWin->deleteWindow();
   curs_set(0);
   printSavedFilesWin(wins,
                      log);
