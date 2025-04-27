@@ -1,5 +1,6 @@
 #include "programStates.hpp"
-#include <cmath>
+
+
 
 void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                            MEVENT& mouse,
@@ -37,16 +38,14 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                                                      startY,
                                                      startX);
 
-
-
   // get user input, dynamically print it, and store in string object
   bool isInWindow = false;
   int userInput = 0;
-  std::string prefixString = "> ";
+  std::string prefixString = "";
   std::string fullPath = "";
   std::string outputString = "";
   int cursorPosition = 0;
-  bool exitLoop = false;
+  bool pathReceived = false;
   int currLines;
   int currCols;
   int actualCurrIndex = 0;
@@ -88,7 +87,7 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
         }
 
       // get user input
-      exitLoop = textWin->editText();
+      pathReceived = textWin->editText();
 
       // update the window buffer
       werase(textWin->getWindow());
@@ -99,9 +98,12 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                 textWin->getOutString().c_str());
       wmove(textWin->getWindow(), 0, textWin->getIndexOutstring());
 
-      if(exitLoop == true)
+      if(pathReceived == true)
         {
-          break;
+          if(doesDirectoryExist(textWin->getFullString()))
+            {
+              break;
+            }
         }
 
       // print the window buffer
