@@ -2,7 +2,6 @@
 
 
 
-
 bool doesDirectoryExist(const std::string& directoryFullPath)
 {
   struct stat file;
@@ -21,3 +20,18 @@ int hwSFAddFile(std::vector<std::string> sfStrings)
 {
 
 }
+
+
+
+bool makeDirectory(const std::string& dirPath)
+{
+  if(doesDirectoryExist(dirPath))
+    {
+      return false;
+    }
+  else
+    {
+      mkdir(dirPath.c_str(), 0755);
+      return true;
+    }
+}}
