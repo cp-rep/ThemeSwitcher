@@ -6,6 +6,7 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                            MEVENT& mouse,
                            int& mouseLine,
                            int& mouseCol,
+                           std::vector<std::string>& sfStrings,
                            std::ofstream& log)
 {
   flashButton(wins,
@@ -98,12 +99,26 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                 textWin->getOutString().c_str());
       wmove(textWin->getWindow(), 0, textWin->getIndexOutstring());
 
+      // check if the user hit enter/return
       if(pathReceived == true)
         {
-          if(doesDirectoryExist(textWin->getFullString()))
-            {
-              break;
-            }
+          break;
+          // check if the text entered is a correct full path to a directory
+          // if(doesDirectoryExist(textWin->getFullString()))
+          //   {
+          //     // open the themeswitcher savedFiles file
+          //     std::ofstream savedFiles;
+          //     savedFiles.open("./savedFiles/savedFiles", std::ios::app);
+
+          //     // if success open, save the full file path in savedFiles
+          //     if(savedFiles.is_open())
+          //       {
+          //         savedFiles << textWin->getFullString() << std::endl;
+          //         savedFiles.close();
+          //         sfStrings.push_back(textWin->getFullString());
+          //         break;
+          //       }
+          //   }
         }
 
       // print the window buffer
@@ -114,6 +129,7 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
 
   // delete _USERINPUTWIN and return to starting program state
   textWin->deleteWindow();
+  delete textWin;
   curs_set(0);
   printSavedFilesWin(wins,
                      log);
