@@ -19,5 +19,11 @@ void enterHWSFAddFileState(std::unordered_map<int, CursesWindow*>& wins,
                            MEVENT& mouse,
                            int& mouseLine,
                            int& mouseCol,
+                           std::vector<std::string>& sfStrings,
                            std::ofstream& log);
+void enterHWSFAddThemeState(std::unordered_map<int, CursesWindow*>& wins,
+                            MEVENT& mouse,
+                            int& mouseLine,
+                            int& mouseCol,
+                            std::ofstream& log);
 #endif // PROGRAMSTATES_HPP
