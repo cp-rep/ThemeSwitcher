@@ -34,4 +34,4 @@ bool makeDirectory(const std::string& dirPath)
       mkdir(dirPath.c_str(), 0755);
       return true;
     }
-}}
+}
