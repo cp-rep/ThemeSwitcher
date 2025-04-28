@@ -363,6 +363,7 @@ int main()
                                     mouse,
                                     mouseLine,
                                     mouseCol,
+				    sfStrings,
                                     log);
               break;
             case _HWSFEDITFILEPATH:
